@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.nscet.cms.ui.controller.MainShellController"
+            styleClass="main-shell">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="0">
+            <padding>
+                <Insets top="0" right="25" bottom="0" left="25"/>
+            </padding>
+
+            <Label text="NSCET CMS" styleClass="app-logo"/>
+            <Label text="  |  " styleClass="top-bar-separator"/>
+            <Label fx:id="portalLabel" styleClass="portal-badge"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label fx:id="academicYearLabel" styleClass="year-badge"/>
+
+            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label fx:id="userNameLabel" styleClass="user-name"/>
+            </HBox>
+
+            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+            <Button text="Logout" styleClass="logout-button" onAction="#handleLogout"/>
+        </HBox>
+    </top>
+
+    <!-- Left Sidebar -->
+    <left>
+        <ScrollPane fitToWidth="true" pannable="true" styleClass="sidebar-scroll" prefWidth="220">
+            <VBox fx:id="sidebar" styleClass="sidebar" spacing="0">
+                <padding>
+                    <Insets top="10" right="0" bottom="10" left="0"/>
+                </padding>
+
+                <!-- Dashboard -->
+                <Button text="Dashboard" styleClass="sidebar-button dashboard-btn"
+                        onAction="#handleDashboard" maxWidth="Infinity"/>
+
+                <Separator styleClass="sidebar-separator"/>
+
+                <!-- Masters -->
+                <ToggleButton fx:id="mastersToggle" text="Masters" styleClass="sidebar-toggle"
+                              onAction="#toggleMasters" maxWidth="Infinity"/>
+                <VBox fx:id="mastersMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+                <!-- Transactions -->
+                <ToggleButton fx:id="transactionsToggle" text="Transactions" styleClass="sidebar-toggle"
+                              onAction="#toggleTransactions" maxWidth="Infinity"/>
+                <VBox fx:id="transactionsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+                <!-- Reports -->
+                <ToggleButton fx:id="reportsToggle" text="Reports" styleClass="sidebar-toggle"
+                              onAction="#toggleReports" maxWidth="Infinity"/>
+                <VBox fx:id="reportsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+                <!-- Tools -->
+                <ToggleButton fx:id="toolsToggle" text="Tools" styleClass="sidebar-toggle"
+                              onAction="#toggleTools" maxWidth="Infinity"/>
+                <VBox fx:id="toolsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </left>
+
+    <!-- Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <Label text="Welcome to NSCET CMS" styleClass="welcome-label"/>
+        </StackPane>
+    </center>
+
+    <!-- Footer -->
+    <bottom>
+        <HBox styleClass="footer-bar" alignment="CENTER" spacing="10">
+            <padding>
+                <Insets top="4" right="20" bottom="4" left="20"/>
+            </padding>
+            <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
+        </HBox>
+    </bottom>
+</BorderPane>

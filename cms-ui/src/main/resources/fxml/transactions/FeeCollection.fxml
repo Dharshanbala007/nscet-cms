@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.FeeCollectionController"
+      styleClass="master-container">
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Fee Collection (Receipt)" styleClass="module-title"/>
+    </HBox>
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <!-- Student Selection -->
+        <TitledPane text="Student Selection" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <RadioButton fx:id="currentRadio" text="Current"/>
+                    <RadioButton fx:id="passedOutRadio" text="Passed Out"/>
+                    <RadioButton fx:id="staffRadio" text="Staff"/>
+                    <RadioButton fx:id="miscRadio" text="Misc"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="studentSearchField" promptText="Enter Roll No or Admission No" styleClass="search-field" prefWidth="300"/>
+                    <Button text="Search" styleClass="btn-primary" onAction="#handleStudentSearch"/>
+                </HBox>
+                <HBox spacing="30" styleClass="student-info-bar">
+                    <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
+                    <HBox spacing="5"><Label text="Name:" style="-fx-font-weight: bold;"/><Label fx:id="studentNameLabel" text="--"/></HBox>
+                    <HBox spacing="5"><Label text="Roll No:" style="-fx-font-weight: bold;"/><Label fx:id="rollLabel" text="--"/></HBox>
+                    <HBox spacing="5"><Label text="Dept:" style="-fx-font-weight: bold;"/><Label fx:id="deptLabel" text="--"/></HBox>
+                    <HBox spacing="5"><Label text="Sem:" style="-fx-font-weight: bold;"/><Label fx:id="semLabel" text="--"/></HBox>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <!-- Payment Section -->
+        <VBox fx:id="itemsPane" spacing="10">
+            <TitledPane text="Payment Details" expanded="true">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <GridPane hgap="15" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100" prefWidth="110"/>
+                            <ColumnConstraints minWidth="180" prefWidth="200"/>
+                            <ColumnConstraints minWidth="100" prefWidth="110"/>
+                            <ColumnConstraints minWidth="180" prefWidth="200"/>
+                        </columnConstraints>
+                        <Label text="Base Account:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="baseAccountCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Select"/>
+                        <Label text="Pay Type:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="payTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select"/>
+                        <Label text="Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="amountField" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Enter amount"/>
+                        <Button text="Auto-Allocate" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#handleAutoAllocate"/>
+                    </GridPane>
+                    <Label fx:id="runningTotalLabel" text="₹0.00" styleClass="running-total"/>
+                </VBox>
+            </TitledPane>
+            <!-- Fee Items Table -->
+            <TitledPane text="Fee Allocation" expanded="true">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="feeNameCombo" promptText="Select"/>
+                        <TextField fx:id="manualAmtField" promptText="Amount" prefWidth="120"/>
+                        <Button text="Add" styleClass="btn-primary" onAction="#handleManualAdd"/>
+                        <Button text="Remove Selected" styleClass="btn-sm-danger" onAction="#handleRemoveItem"/>
+                    </HBox>
+                    <TableView fx:id="itemsTable" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="feeNameCol" text="Fee Name" prefWidth="200"/>
+                            <TableColumn fx:id="feeAmtCol" text="Amount" prefWidth="120"/>
+                            <TableColumn fx:id="allocCol" text="Allocated To" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    <HBox alignment="CENTER_RIGHT" spacing="20">
+                        <Label text="Total: " styleClass="total-label"/>
+                        <Label fx:id="totalLabel" text="₹0.00" styleClass="total-amount"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+            <!-- Actions -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <padding><Insets top="5"/></padding>
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Print Preview" styleClass="btn-secondary" onAction="#handlePrint"/>
+                <Button fx:id="saveBtn" text="Save Receipt" styleClass="btn-primary" onAction="#handleSave"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</VBox>

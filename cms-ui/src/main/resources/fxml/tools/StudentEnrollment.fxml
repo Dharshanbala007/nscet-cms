@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.StudentEnrollmentController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Student Enrollment" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Enrollment Details" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <GridPane hgap="15" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="200" prefWidth="250"/>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="200" prefWidth="250"/>
+                    </columnConstraints>
+                    <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="rollNoField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Button text="Search" GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#handleSearch"/>
+                    <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="nameLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Department:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Label fx:id="deptLabel" text="--" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    <Label text="Semester:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="semesterCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select"/>
+                    <Label text="Academic Year:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="academicYearCombo" GridPane.columnIndex="3" GridPane.rowIndex="2" promptText="Select"/>
+                </GridPane>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Enroll" styleClass="btn-primary" onAction="#handleEnroll"/>
+                    <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+            <TableView fx:id="enrollmentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
+                    <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
+                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
+                    <TableColumn fx:id="semesterCol" text="Semester" prefWidth="80"/>
+                    <TableColumn fx:id="enrollmentDateCol" text="Enrollment Date" prefWidth="120"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</VBox>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.TcPrintController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="TC Print" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Search Student" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Roll No:"/>
+                    <TextField fx:id="rollNoField" prefWidth="200"/>
+                    <Button text="Search" styleClass="btn-primary" onAction="#handleSearch"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <VBox fx:id="detailsPane" visible="false" managed="false" spacing="10">
+            <TitledPane text="Student Details" expanded="true">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="30">
+                        <HBox spacing="5"><Label text="Name:" style="-fx-font-weight: bold;"/><Label fx:id="nameLabel" text="--"/></HBox>
+                        <HBox spacing="5"><Label text="Roll No:" style="-fx-font-weight: bold;"/><Label fx:id="rollNoLabel" text="--"/></HBox>
+                        <HBox spacing="5"><Label text="Department:" style="-fx-font-weight: bold;"/><Label fx:id="deptLabel" text="--"/></HBox>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Print TC" styleClass="btn-primary" onAction="#handlePrint"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </VBox>
+</VBox>

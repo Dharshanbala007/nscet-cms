@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.nscet.cms.ui.controller.LoginController"
+           styleClass="login-container">
+
+    <VBox alignment="CENTER" spacing="20" maxWidth="400" maxHeight="500" styleClass="login-card">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="NSCET" styleClass="login-title"/>
+            <Label text="College Management System" styleClass="login-subtitle"/>
+        </VBox>
+
+        <!-- Form -->
+        <VBox alignment="CENTER" spacing="15">
+            <TextField fx:id="usernameField" promptText="Username" styleClass="login-input"
+                       onAction="#handleLogin"/>
+
+            <StackPane>
+                <PasswordField fx:id="passwordField" promptText="Password" styleClass="login-input"
+                               onAction="#handleLogin" visible="true" managed="true"/>
+                <TextField fx:id="passwordTextField" promptText="Password" styleClass="login-input"
+                           onAction="#handleLogin" visible="false" managed="false"/>
+                <ToggleButton fx:id="togglePasswordBtn" onAction="#handleTogglePassword"
+                        styleClass="toggle-password-btn" maxWidth="36" maxHeight="36"
+                        StackPane.alignment="CENTER_RIGHT">
+                    <graphic>
+                        <Label fx:id="togglePasswordIcon" text="&#x25CF;">
+                        </Label>
+                    </graphic>
+                </ToggleButton>
+            </StackPane>
+
+            <HBox alignment="CENTER_LEFT">
+                <CheckBox fx:id="rememberUsernameCheck" text="Remember username" styleClass="remember-check"/>
+            </HBox>
+
+            <Label fx:id="errorLabel" styleClass="error-label" visible="false" wrapText="true"/>
+
+            <Button fx:id="loginButton" text="LOGIN" styleClass="login-button"
+                    onAction="#handleLogin" maxWidth="Infinity"/>
+
+            <ProgressIndicator fx:id="progressIndicator" maxHeight="30"/>
+        </VBox>
+
+        <!-- Footer -->
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Nadar Saraswathi College of Engineering and Technology" styleClass="footer-text"/>
+            <Label text="Theni" styleClass="footer-text"/>
+        </VBox>
+    </VBox>
+</StackPane>

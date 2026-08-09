@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.ApplicationReportController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Application Report" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Report Filters" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Department:"/>
+                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
+                    <Label text="From Date:"/>
+                    <DatePicker fx:id="fromDate"/>
+                    <Label text="To Date:"/>
+                    <DatePicker fx:id="toDate"/>
+                    <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+                    <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExport"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
+                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
+                    <TableColumn fx:id="applicationDateCol" text="Application Date" prefWidth="120"/>
+                    <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</VBox>

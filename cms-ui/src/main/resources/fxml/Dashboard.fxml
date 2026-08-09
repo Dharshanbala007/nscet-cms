@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.nscet.cms.ui.controller.DashboardController"
+           styleClass="dashboard-root">
+
+    <!-- Background Image -->
+    <ImageView fx:id="bgImage" fitWidth="1280" fitHeight="800" preserveRatio="false" opacity="0.20">
+        <StackPane.alignment>CENTER</StackPane.alignment>
+    </ImageView>
+
+    <!-- Overlay Content -->
+    <VBox styleClass="dashboard-content" spacing="20">
+        <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+        <!-- Welcome Header -->
+        <VBox styleClass="dashboard-welcome" spacing="5">
+            <padding><Insets top="25" right="30" bottom="25" left="30"/></padding>
+            <Label text="Welcome to NSCET CMS" styleClass="welcome-title"/>
+            <Label fx:id="welcomeSubtitle" text="Nadar Saraswathi College of Engineering and Technology, Theni" styleClass="welcome-sub"/>
+            <Label fx:id="welcomeDate" styleClass="welcome-date"/>
+        </VBox>
+
+        <!-- Summary Cards Row -->
+        <HBox spacing="18">
+            <VBox styleClass="dash-card dash-card-blue" spacing="4" prefWidth="230" HBox.hgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <Label text="  STUDENTS" styleClass="dash-card-header"/>
+                <Label fx:id="totalStudents" text="0" styleClass="dash-card-number"/>
+                <Label text="Enrolled students" styleClass="dash-card-sub"/>
+            </VBox>
+            <VBox styleClass="dash-card dash-card-green" spacing="4" prefWidth="230" HBox.hgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <Label text="  STAFF" styleClass="dash-card-header"/>
+                <Label fx:id="totalStaff" text="0" styleClass="dash-card-number"/>
+                <Label text="Active staff members" styleClass="dash-card-sub"/>
+            </VBox>
+            <VBox styleClass="dash-card dash-card-orange" spacing="4" prefWidth="230" HBox.hgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <Label text="  COLLECTION TODAY" styleClass="dash-card-header"/>
+                <Label fx:id="todayCollection" text="Rs.0" styleClass="dash-card-number"/>
+                <Label fx:id="todayReceipts" text="0 receipts" styleClass="dash-card-sub"/>
+            </VBox>
+            <VBox styleClass="dash-card dash-card-purple" spacing="4" prefWidth="230" HBox.hgrow="ALWAYS">
+                <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+                <Label text="  PENDING FEES" styleClass="dash-card-header"/>
+                <Label fx:id="pendingFees" text="Rs.0" styleClass="dash-card-number"/>
+                <Label text="Outstanding across all" styleClass="dash-card-sub"/>
+            </VBox>
+        </HBox>
+
+        <!-- Quick Actions + Departments -->
+        <HBox spacing="18">
+            <!-- Quick Actions -->
+            <VBox styleClass="dash-section" spacing="10" HBox.hgrow="ALWAYS">
+                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                <Label text="QUICK ACTIONS" styleClass="dash-section-title"/>
+                <HBox spacing="10">
+                    <Button text="Fee Collection" styleClass="dash-action-btn" onAction="#handleFeeCollection"/>
+                    <Button text="Generate TC" styleClass="dash-action-btn" onAction="#handleGenerateTC"/>
+                    <Button text="Day Settlement" styleClass="dash-action-btn" onAction="#handleDaySettlement"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Button text="Pending Fees" styleClass="dash-action-btn" onAction="#handlePendingFees"/>
+                    <Button text="Student Master" styleClass="dash-action-btn" onAction="#handleStudentMaster"/>
+                    <Button text="Staff Master" styleClass="dash-action-btn" onAction="#handleStaffMaster"/>
+                </HBox>
+            </VBox>
+
+            <!-- Departments -->
+            <VBox styleClass="dash-section" spacing="10" prefWidth="350">
+                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                <Label text="DEPARTMENTS" styleClass="dash-section-title"/>
+                <Label fx:id="deptCount" text="0 departments configured" styleClass="info-text"/>
+                <HBox spacing="10">
+                    <Button text="View All" styleClass="dash-outline-btn" onAction="#handleViewDepartments"/>
+                    <Button text="Designations" styleClass="dash-outline-btn" onAction="#handleViewDesignations"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Recent Transactions -->
+        <VBox styleClass="dash-section" spacing="10">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label text="RECENT TRANSACTIONS" styleClass="dash-section-title"/>
+            <TableView fx:id="recentTable" prefHeight="180" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="colReceipt" text="Receipt No" prefWidth="130"/>
+                    <TableColumn fx:id="colDate" text="Date" prefWidth="110"/>
+                    <TableColumn fx:id="colStudent" text="Student" prefWidth="220"/>
+                    <TableColumn fx:id="colAmount" text="Amount" prefWidth="120"/>
+                    <TableColumn fx:id="colAccount" text="Account" prefWidth="140"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</StackPane>

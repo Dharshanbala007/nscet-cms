@@ -1,0 +1,70 @@
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Log files
+*.log
+module-error.log
+run-output*.txt
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+.vscode/
+.factorypath
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# JavaFX
+*.jmod
+
+# Build artifacts
+*.exe
+*.msi
+*.dmg
+*.deb
+*.rpm
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# Database files
+*.db
+*.sqlite
+
+# Environment
+.env
+.env.local
+
+# Package-specific
+cms-installer/src/main/resources/installer/*.exe
+cms-installer/target/

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.TransferCertificateController"
+      styleClass="master-container">
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Transfer Certificate" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Enter Roll No to search student" styleClass="search-field" prefWidth="300"/>
+        <Button text="Search Student" styleClass="btn-primary" onAction="#handleSearch"/>
+    </HBox>
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <!-- Student Info -->
+        <HBox spacing="30" styleClass="student-info-bar">
+            <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
+            <HBox spacing="5"><Label text="Student:" style="-fx-font-weight: bold;"/><Label fx:id="studentNameLabel" text="--"/></HBox>
+            <HBox spacing="5"><Label text="Father:" style="-fx-font-weight: bold;"/><Label fx:id="fatherNameLabel" text="--"/></HBox>
+            <HBox spacing="5"><Label text="DOB:" style="-fx-font-weight: bold;"/><Label fx:id="dobLabel" text="--"/></HBox>
+            <HBox spacing="5"><Label text="Course:" style="-fx-font-weight: bold;"/><Label fx:id="courseLabel" text="--"/></HBox>
+            <HBox spacing="5"><Label text="Sem:" style="-fx-font-weight: bold;"/><Label fx:id="semLabel" text="--"/></HBox>
+        </HBox>
+        <!-- TC Form -->
+        <VBox fx:id="formPane" spacing="10">
+            <TitledPane text="Transfer Certificate Details" expanded="true">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <GridPane hgap="15" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="130"/>
+                            <ColumnConstraints minWidth="200" prefWidth="220"/>
+                            <ColumnConstraints minWidth="120" prefWidth="130"/>
+                            <ColumnConstraints minWidth="200" prefWidth="220"/>
+                        </columnConstraints>
+                        <Label text="TC Number:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="tcNumberField" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false"/>
+                        <Label text="Serial No:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <TextField fx:id="serialNoField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label text="Admission No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="admissionNoField" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
+                        <Label text="TC Date:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <DatePicker fx:id="tcDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label text="Date of Left:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <DatePicker fx:id="leftDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Application Date:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <DatePicker fx:id="appDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                        <Label text="ID Marks:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <TextField fx:id="idMarksField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Course Completion:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <TextField fx:id="courseCompletionField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                        <Label text="Promotion Status:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="promotionStatusField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="Fee Status:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        <TextField fx:id="feeStatusField" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                        <Label text="Character:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="characterConductCombo" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="Select"/>
+                        <Label text="Batch:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                        <TextField fx:id="batchField" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+                        <Label text="UMIS No:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <TextField fx:id="umisField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label text="Remarks:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <TextField fx:id="remarksField" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+                    </GridPane>
+                </VBox>
+            </TitledPane>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Print TC" styleClass="btn-secondary" onAction="#handlePrint"/>
+                <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</VBox>

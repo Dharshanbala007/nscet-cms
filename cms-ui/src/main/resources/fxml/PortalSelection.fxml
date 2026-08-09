@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.nscet.cms.ui.controller.PortalSelectionController"
+           styleClass="login-container">
+
+    <!-- Background -->
+    <ImageView fx:id="bgImage" fitWidth="1024" fitHeight="700" preserveRatio="false" opacity="0.12"/>
+
+    <VBox alignment="CENTER" spacing="30">
+        <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="8">
+            <Label text="NSCET" styleClass="login-title"/>
+            <Label text="College Management System" styleClass="login-subtitle"/>
+            <Label text="Nadar Saraswathi College of Engineering and Technology, Theni" styleClass="footer-text"/>
+        </VBox>
+
+        <!-- Portal Cards -->
+        <HBox alignment="CENTER" spacing="30">
+            <!-- Admin Portal -->
+            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
+                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
+                <Label text="A" styleClass="portal-icon portal-icon-admin"/>
+                <Label text="Admin Portal" styleClass="portal-card-title"/>
+                <Label text="System administration,\nmaster data, users\nand full access" styleClass="portal-card-desc"/>
+                <Region prefHeight="10"/>
+                <Button text="OPEN ADMIN" styleClass="portal-btn-admin" onAction="#handleAdmin" maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- Accounts Portal -->
+            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
+                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
+                <Label text="Ac" styleClass="portal-icon portal-icon-accounts"/>
+                <Label text="Accounts Portal" styleClass="portal-card-title"/>
+                <Label text="Financial operations,\nledgers, vouchers\nand reporting" styleClass="portal-card-desc"/>
+                <Region prefHeight="10"/>
+                <Button text="COMING SOON" styleClass="portal-btn-disabled" maxWidth="Infinity" disable="true"/>
+            </VBox>
+
+            <!-- Payroll Portal -->
+            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
+                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
+                <Label text="P" styleClass="portal-icon portal-icon-payroll"/>
+                <Label text="Payroll Portal" styleClass="portal-card-title"/>
+                <Label text="Salary processing,\nattendance, deductions\nand payslips" styleClass="portal-card-desc"/>
+                <Region prefHeight="10"/>
+                <Button text="COMING SOON" styleClass="portal-btn-disabled" maxWidth="Infinity" disable="true"/>
+            </VBox>
+        </HBox>
+
+        <!-- Footer -->
+        <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
+    </VBox>
+</StackPane>

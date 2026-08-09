@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.DaySettlementController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Day Settlement" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Settlement Details" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Date:"/>
+                    <DatePicker fx:id="settlementDate"/>
+                    <Label text="Base Account:"/>
+                    <ComboBox fx:id="baseAccountCombo" prefWidth="200" promptText="Select"/>
+                    <Button text="Load Transactions" styleClass="btn-primary" onAction="#handleLoad"/>
+                </HBox>
+                <HBox spacing="30" styleClass="summary-bar">
+                    <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
+                    <HBox spacing="5"><Label text="Total Cash:" style="-fx-font-weight: bold;"/><Label fx:id="totalCashLabel" text="₹0.00"/></HBox>
+                    <HBox spacing="5"><Label text="Total Cheque:" style="-fx-font-weight: bold;"/><Label fx:id="totalChequeLabel" text="₹0.00"/></HBox>
+                    <HBox spacing="5"><Label text="Total Online:" style="-fx-font-weight: bold;"/><Label fx:id="totalOnlineLabel" text="₹0.00"/></HBox>
+                    <HBox spacing="5"><Label text="Grand Total:" style="-fx-font-weight: bold;"/><Label fx:id="grandTotalLabel" text="₹0.00"/></HBox>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
+                    <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="120"/>
+                    <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="150"/>
+                    <TableColumn fx:id="amountCol" text="Amount" prefWidth="100"/>
+                    <TableColumn fx:id="payModeCol" text="Payment Mode" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Settle" styleClass="btn-primary" onAction="#handleSettle"/>
+            <Button text="Print Summary" styleClass="btn-secondary" onAction="#handlePrint"/>
+        </HBox>
+    </VBox>
+</VBox>

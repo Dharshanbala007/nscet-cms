@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      styleClass="master-container" spacing="15">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    <Label text="Payroll Portal" styleClass="module-title"/>
+    <Label text="Module Coming Soon" styleClass="placeholder-label"/>
+    <VBox spacing="10" styleClass="form-container">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <Label text="The following modules will be available in a future update:" styleClass="info-text"/>
+        <Label text="- Salary Structure"/>
+        <Label text="- Monthly Payroll Run"/>
+        <Label text="- Payslip Generation"/>
+        <Label text="- PF/ESI/TDS Deductions"/>
+        <Label text="- Staff Loan/Advance Tracking"/>
+    </VBox>
+</VBox>

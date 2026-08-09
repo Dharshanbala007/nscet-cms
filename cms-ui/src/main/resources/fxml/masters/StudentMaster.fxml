@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.StudentMasterController"
+      styleClass="master-container" spacing="0">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Student Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by roll, name, admission no..." styleClass="search-field" onKeyTyped="#handleSearch"/>
+        <Button fx:id="headerAddBtn" text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+        <Button fx:id="headerModifyBtn" text="Modify" styleClass="btn-secondary" onAction="#handleModify"/>
+        <Button fx:id="headerDeleteBtn" text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
+        <Button fx:id="headerCloseBtn" text="Close" styleClass="btn-secondary" onAction="#handleClose"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="rollCol" text="Roll No" prefWidth="100"/>
+                <TableColumn fx:id="nameCol" text="Name" prefWidth="160"/>
+                <TableColumn fx:id="fatherCol" text="Father Name" prefWidth="140"/>
+                <TableColumn fx:id="genderCol" text="Gender" prefWidth="70"/>
+                <TableColumn fx:id="phoneCol" text="Phone" prefWidth="100"/>
+                <TableColumn fx:id="admNoCol" text="Admission No" prefWidth="100"/>
+                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
+            <padding><Insets top="10" bottom="10"/></padding>
+            <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
+            <Label fx:id="pageInfo"/>
+            <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+        </HBox>
+    </VBox>
+
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="0" VBox.vgrow="ALWAYS">
+        <padding><Insets top="10" right="20" bottom="5" left="20"/></padding>
+
+        <Label text="Student Details" styleClass="form-title">
+            <VBox.margin><Insets bottom="5"/></VBox.margin>
+        </Label>
+
+        <TabPane fx:id="formTabs" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" prefHeight="300">
+            <Tab text="Personal Details">
+                <VBox>
+                    <GridPane hgap="12" vgap="10" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100" prefWidth="120"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                            <ColumnConstraints minWidth="100" prefWidth="120"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                        </columnConstraints>
+                        <Label text="Degree:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="degreeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Select" maxWidth="1.7976931348623157E308"/>
+                        <Label text="Dept:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="deptCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select" maxWidth="1.7976931348623157E308"/>
+                        <Label text="Admission No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="admNoField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Reg.No:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <TextField fx:id="regField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label text="Student Name:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" maxWidth="1.7976931348623157E308"/>
+                        <Label text="Gender:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="genderCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select"/>
+                        <Label text="Date of Joining:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <DatePicker fx:id="dojPicker" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                        <Label text="Date of Birth:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <DatePicker fx:id="dobPicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="Aadhar No:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        <TextField fx:id="aadharField" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                    </GridPane>
+                </VBox>
+            </Tab>
+            <Tab text="Family Details">
+                <VBox>
+                    <GridPane hgap="12" vgap="10" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100" prefWidth="130"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                            <ColumnConstraints minWidth="100" prefWidth="130"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                        </columnConstraints>
+                        <Label text="Father's Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="fatherField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Mother's Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <TextField fx:id="motherField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label text="Father's Occupation:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="fatherOccupationField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Mother's Occupation:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <TextField fx:id="motherOccupationField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label text="Parents Phone:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="parentPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Student Phone:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <TextField fx:id="phoneField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                        <Label text="Religion:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="religionCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select"/>
+                        <Label text="Community:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="communityCombo" GridPane.columnIndex="3" GridPane.rowIndex="3" promptText="Select"/>
+                        <Label text="Caste:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="casteField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    </GridPane>
+                </VBox>
+            </Tab>
+            <Tab text="Address Details">
+                <VBox>
+                    <GridPane hgap="12" vgap="10" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100" prefWidth="120"/>
+                            <ColumnConstraints minWidth="300" prefWidth="450"/>
+                        </columnConstraints>
+                        <Label text="Address 1:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="address1Field" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308"/>
+                        <Label text="Address 2:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="address2Field" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308"/>
+                        <Label text="City:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Pin Code:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <TextField fx:id="pinCodeField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    </GridPane>
+                </VBox>
+            </Tab>
+            <Tab text="Educational Details">
+                <VBox>
+                    <GridPane hgap="12" vgap="10" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100" prefWidth="130"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                            <ColumnConstraints minWidth="100" prefWidth="130"/>
+                            <ColumnConstraints minWidth="180" prefWidth="220"/>
+                        </columnConstraints>
+                        <Label text="10th Mark:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="tenthMarkField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="HSC Mark:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <TextField fx:id="hscMarkField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label text="Cut Off Mark:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="cutOffField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Year of Passing:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <TextField fx:id="yearOfPassingField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label text="Medium:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="mediumCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select"/>
+                        <Label text="Board of Study:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <TextField fx:id="boardOfStudyField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                        <Label text="Qualifying Exam:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="qualifyingExamCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select"/>
+                    </GridPane>
+                </VBox>
+            </Tab>
+        </TabPane>
+
+        <HBox spacing="10" alignment="CENTER">
+            <padding><Insets top="8" bottom="5"/></padding>
+            <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+            <Button text="Modify" styleClass="btn-secondary" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
+            <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+            <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+            <Button text="Close" styleClass="btn-secondary" onAction="#handleClose"/>
+        </HBox>
+    </VBox>
+
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="status-bar">
+        <padding><Insets top="5" right="20" bottom="5" left="20"/></padding>
+        <Label text="Student Master"/>
+        <Label fx:id="statusDate"/>
+        <Label text="2024-2025"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.FeesMasterController"
+      styleClass="master-container">
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Fees Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search..." styleClass="search-field" onKeyTyped="#handleSearch"/>
+        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+    </HBox>
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="nameCol" text="Fee Name" prefWidth="200"/>
+                <TableColumn fx:id="groupCol" text="Fee Group" prefWidth="150"/>
+                <TableColumn fx:id="fromDateCol" text="From Date" prefWidth="100"/>
+                <TableColumn fx:id="toDateCol" text="To Date" prefWidth="100"/>
+                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
+            <padding><Insets top="10" bottom="10"/></padding>
+            <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
+            <Label fx:id="pageInfo"/>
+            <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+        </HBox>
+    </VBox>
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <Label text="Fee Details" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+            </columnConstraints>
+            <Label text="Fee Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Fee Group:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="groupCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select"/>
+        </GridPane>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+            <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+        </HBox>
+    </VBox>
+</VBox>

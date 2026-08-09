@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="DailyCollectionRegister" pageWidth="842" pageHeight="595"
+              columnWidth="762" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40"
+              orientation="Landscape">
+
+    <parameter name="COLLEGE_NAME" class="java.lang.String"/>
+    <parameter name="COLLECTION_DATE" class="java.time.LocalDate"/>
+
+    <field name="receiptNumber" class="java.lang.String"/>
+    <field name="receiptDate" class="java.time.LocalDate"/>
+    <field name="rollNumber" class="java.lang.String"/>
+    <field name="studentName" class="java.lang.String"/>
+    <field name="department" class="java.lang.String"/>
+    <field name="semester" class="java.lang.Integer"/>
+    <field name="feeName" class="java.lang.String"/>
+    <field name="amount" class="java.math.BigDecimal"/>
+    <field name="paymentMode" class="java.lang.String"/>
+    <field name="baseAccount" class="java.lang.String"/>
+
+    <title>
+        <band height="70">
+            <staticText>
+                <reportElement x="0" y="0" width="762" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nadar Saraswathi College of Engineering and Technology, Theni]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="25" width="762" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[DAILY FEES COLLECTION REGISTER]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="65" width="762" height="2"/>
+            </line>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <staticText>
+                <reportElement x="0" y="0" width="50" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[S.No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="50" y="0" width="80" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Receipt No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="130" y="0" width="80" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Roll No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="210" y="0" width="120" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Student Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="330" y="0" width="80" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Department]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="410" y="0" width="60" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Sem]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="470" y="0" width="100" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fee Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="570" y="0" width="70" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="640" y="0" width="60" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Payment]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="700" y="0" width="62" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Account]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="18">
+            <textField>
+                <reportElement x="0" y="0" width="50" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="80" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{receiptNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="130" y="0" width="80" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{rollNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="210" y="0" width="120" height="18"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="330" y="0" width="80" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{department}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="410" y="0" width="60" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{semester}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="470" y="0" width="100" height="18"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{feeName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="570" y="0" width="70" height="18"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="640" y="0" width="60" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{paymentMode}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="700" y="0" width="62" height="18"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{baseAccount}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="25">
+            <line>
+                <reportElement x="0" y="0" width="762" height="1"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="5" width="100" height="15"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Total Receipts:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="5" width="100" height="15"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

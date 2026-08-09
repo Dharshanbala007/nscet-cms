@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.RegistrationUpdateController"
+      styleClass="master-container">
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Bulk Registration No. Update" styleClass="module-title"/>
+    </HBox>
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Registration Number Update" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Department:"/>
+                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
+                    <Label text="Starting Reg No:"/>
+                    <TextField fx:id="startRegField" promptText="e.g. 9210251001" prefWidth="150"/>
+                    <Button text="View" styleClass="btn-primary"/>
+                </HBox>
+                <Label text="Students will be listed in alphabetical order with auto-generated registration numbers." styleClass="info-text"/>
+                <TableView fx:id="table" prefHeight="300">
+                    <columns>
+                        <TableColumn text="S.No" prefWidth="50"/>
+                        <TableColumn text="Roll No" prefWidth="100"/>
+                        <TableColumn text="Student Name" prefWidth="200"/>
+                        <TableColumn text="Current Reg No" prefWidth="120"/>
+                        <TableColumn text="New Reg No" prefWidth="120"/>
+                    </columns>
+                </TableView>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Save" styleClass="btn-primary"/>
+                    <Button text="Close" styleClass="btn-secondary"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+    </VBox>
+</VBox>

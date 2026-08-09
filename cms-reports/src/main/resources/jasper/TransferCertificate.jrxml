@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="TransferCertificate" pageWidth="595" pageHeight="842"
+              columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40">
+
+    <parameter name="COLLEGE_NAME" class="java.lang.String"/>
+    <parameter name="COLLEGE_LOCATION" class="java.lang.String"/>
+
+    <field name="tcNumber" class="java.lang.String"/>
+    <field name="serialNo" class="java.lang.String"/>
+    <field name="studentName" class="java.lang.String"/>
+    <field name="fatherName" class="java.lang.String"/>
+    <field name="rollNumber" class="java.lang.String"/>
+    <field name="admissionNo" class="java.lang.String"/>
+    <field name="course" class="java.lang.String"/>
+    <field name="semester" class="java.lang.Integer"/>
+    <field name="dateOfBirth" class="java.time.LocalDate"/>
+    <field name="tcDate" class="java.time.LocalDate"/>
+    <field name="dateOfLeft" class="java.time.LocalDate"/>
+    <field name="characterConduct" class="java.lang.String"/>
+    <field name="idMarks" class="java.lang.String"/>
+    <field name="courseCompletion" class="java.lang.String"/>
+    <field name="promotionStatus" class="java.lang.String"/>
+    <field name="feeStatus" class="java.lang.String"/>
+    <field name="batch" class="java.lang.String"/>
+    <field name="umisNo" class="java.lang.String"/>
+    <field name="academicYear" class="java.lang.String"/>
+
+    <title>
+        <band height="150">
+            <staticText>
+                <reportElement x="0" y="0" width="515" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TRANSFER CERTIFICATE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="35" width="515" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Nadar Saraswathi College of Engineering and Technology, Theni]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="60" width="515" height="2"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="70" width="200" height="20"/>
+                <textElement><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[TC Number:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="70" width="200" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{tcNumber}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="300" y="70" width="80" height="20"/>
+                <textElement><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="380" y="70" width="135" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{tcDate}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="95" width="150" height="20"/>
+                <textElement><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[This is to certify that]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="150" y="95" width="365" height="20"/>
+                <textElement><font size="12" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="120" width="515" height="25"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[son/daughter of $F{fatherName}, was a student of this institution studying $F{course} from $F{academicYear}.]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <detail>
+        <band height="300">
+            <staticText>
+                <reportElement x="0" y="0" width="515" height="250"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[
+Date of Birth: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="0" width="200" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{dateOfBirth}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="25" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[Date of Leaving: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="120" y="25" width="200" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{dateOfLeft}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="50" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[ID Marks: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="80" y="50" width="435" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{idMarks}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="75" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[Course Completed: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="75" width="385" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{courseCompletion}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="100" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[Promotion Status: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="100" width="385" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{promotionStatus}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="125" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[Fee Status: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="125" width="415" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{feeStatus}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="150" width="515" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[Character and Conduct: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="150" y="150" width="365" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{characterConduct}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="200" width="515" height="30"/>
+                <textElement><font size="10"/></textElement>
+                <text><![CDATA[He/She bore a good moral character during the period of study in this institution.]]></text>
+            </staticText>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="100">
+            <staticText>
+                <reportElement x="300" y="20" width="215" height="20"/>
+                <textElement textAlignment="Right"><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Signature of Principal]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="300" y="40" width="215" height="20"/>
+                <textElement textAlignment="Right"><font size="10"/></textElement>
+                <text><![CDATA[Nadar Saraswathi College of Engineering and Technology]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="300" y="60" width="215" height="20"/>
+                <textElement textAlignment="Right"><font size="10"/></textElement>
+                <text><![CDATA[Theni]]></text>
+            </staticText>
+        </band>
+    </summary>
+</jasperReport>

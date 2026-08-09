@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.BulkFeeEntryController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Bulk Fee Entry" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <TitledPane text="Fee Configuration" expanded="true">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Department:"/>
+                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
+                    <Label text="Semester:"/>
+                    <ComboBox fx:id="semesterCombo" prefWidth="150" promptText="Select"/>
+                    <Label text="Fee Name:"/>
+                    <ComboBox fx:id="feeNameCombo" prefWidth="200" promptText="Select"/>
+                    <Label text="Amount:"/>
+                    <TextField fx:id="amountField" prefWidth="120"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+            <TableView fx:id="studentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="selectCol" text="Select" prefWidth="60"/>
+                    <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
+                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
+                    <TableColumn fx:id="feeAmountCol" text="Fee Amount" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Load Students" styleClass="btn-secondary" onAction="#handleLoadStudents"/>
+            <Button text="Apply Fee" styleClass="btn-primary" onAction="#handleApplyFee"/>
+        </HBox>
+    </VBox>
+</VBox>

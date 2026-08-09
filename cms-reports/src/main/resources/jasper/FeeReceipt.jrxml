@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FeeReceipt" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40">
+
+    <parameter name="COLLEGE_NAME" class="java.lang.String"/>
+    <parameter name="COLLEGE_LOCATION" class="java.lang.String"/>
+    <parameter name="ACADEMIC_YEAR" class="java.lang.String"/>
+
+    <field name="receiptNumber" class="java.lang.String"/>
+    <field name="receiptDate" class="java.time.LocalDate"/>
+    <field name="studentName" class="java.lang.String"/>
+    <field name="rollNumber" class="java.lang.String"/>
+    <field name="department" class="java.lang.String"/>
+    <field name="semester" class="java.lang.Integer"/>
+    <field name="paymentMode" class="java.lang.String"/>
+    <field name="baseAccount" class="java.lang.String"/>
+    <field name="totalAmount" class="java.math.BigDecimal"/>
+    <field name="feeName" class="java.lang.String"/>
+    <field name="feeAmount" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="120">
+            <staticText>
+                <reportElement x="0" y="0" width="515" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nadar Saraswathi College of Engineering and Technology]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="30" width="515" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Theni]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="60" width="515" height="25"/>
+                <textElement textAlignment="Center">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FEE RECEIPT]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="90" width="515" height="1"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="95" width="100" height="20"/>
+                <textElement><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Receipt No:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="95" width="150" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{receiptNumber}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="300" y="95" width="80" height="20"/>
+                <textElement><font size="10" isBold="true"/></textElement>
+                <text><![CDATA[Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="380" y="95" width="135" height="20"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{receiptDate}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="100" y="0" width="200" height="15"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="310" y="0" width="100" height="15"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{rollNumber}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="420" y="0" width="95" height="15"/>
+                <textElement><font size="10"/></textElement>
+                <textFieldExpression><![CDATA[$F{feeAmount}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="60">
+            <line>
+                <reportElement x="0" y="0" width="515" height="1"/>
+            </line>
+            <staticText>
+                <reportElement x="300" y="5" width="115" height="20"/>
+                <textElement><font size="12" isBold="true"/></textElement>
+                <text><![CDATA[Total Amount:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="420" y="5" width="95" height="20"/>
+                <textElement><font size="12" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

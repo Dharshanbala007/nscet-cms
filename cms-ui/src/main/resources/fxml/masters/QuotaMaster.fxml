@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.QuotaMasterController"
+      styleClass="master-container">
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Quota Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search..." styleClass="search-field" onKeyTyped="#handleSearch"/>
+        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+    </HBox>
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="codeCol" text="Code" prefWidth="80"/>
+                <TableColumn fx:id="nameCol" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="pctCol" text="Discount %" prefWidth="100"/>
+                <TableColumn fx:id="amtCol" text="Amount" prefWidth="100"/>
+                <TableColumn fx:id="discCol" text="Discount Amt" prefWidth="100"/>
+                <TableColumn fx:id="admTypeCol" text="Admission Type" prefWidth="120"/>
+                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
+            <padding><Insets top="10" bottom="10"/></padding>
+            <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
+            <Label fx:id="pageInfo"/>
+            <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+        </HBox>
+    </VBox>
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <Label text="Quota Details" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+            </columnConstraints>
+            <Label text="Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="codeField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="nameField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+            <Label text="Discount %:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="pctField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Amount:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="amtField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            <Label text="Discount Amt:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="discField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Admission Type:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="admTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="2" promptText="Select"/>
+        </GridPane>
+        <Label fx:id="previewLabel" styleClass="preview-label" text="Live preview: Discount = ₹0.00"/>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+            <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+        </HBox>
+    </VBox>
+</VBox>

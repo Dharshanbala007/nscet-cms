@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.BankMasterController"
+      styleClass="master-container">
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+        <Label text="Bank Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search..." styleClass="search-field" onKeyTyped="#handleSearch"/>
+        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="bankNameCol" text="Bank Name" prefWidth="150"/>
+                <TableColumn fx:id="shortNameCol" text="Short Name" prefWidth="100"/>
+                <TableColumn fx:id="accNoCol" text="Account No" prefWidth="120"/>
+                <TableColumn fx:id="branchCol" text="Branch" prefWidth="120"/>
+                <TableColumn fx:id="remarksCol" text="Remarks" prefWidth="150"/>
+                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
+            <padding><Insets top="10" bottom="10"/></padding>
+            <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
+            <Label fx:id="pageInfo"/>
+            <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+        </HBox>
+    </VBox>
+
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <Label text="Bank Details" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="250"/>
+            </columnConstraints>
+            <Label text="Bank Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="bankNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Short Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="shortNameField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+            <Label text="Account No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="accNoField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Branch:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="branchField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            <Label text="IFSC Code:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="ifscField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Remarks:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <TextField fx:id="remarksField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+        </GridPane>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+            <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+        </HBox>
+    </VBox>
+</VBox>
