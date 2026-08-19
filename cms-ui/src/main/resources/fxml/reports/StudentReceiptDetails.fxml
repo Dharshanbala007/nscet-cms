@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.StudentReceiptDetailsController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <Label text="Student Receipt Details" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handlePrint"/>
+    </HBox>
+
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="Dept:"/>
+        <ComboBox fx:id="deptCombo" prefWidth="120"/>
+        <Label text="Student / Roll No:"/>
+        <TextField fx:id="studentSearchField" promptText="Enter Roll No or Name..." prefWidth="200" onKeyTyped="#handleGenerate"/>
+        <Button text="Search" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: #e3f2fd; -fx-padding: 8; -fx-border-color: #90caf9; -fx-border-radius: 4;">
+        <Label fx:id="studentNameLabel" text="Student Name: SANTHOSH M" style="-fx-font-weight: bold;"/>
+        <Label fx:id="rollNoLabel" text="Roll No: 2024FMEO13" style="-fx-font-weight: bold;"/>
+        <Label fx:id="regNoLabel" text="Reg No: 921024114021" style="-fx-font-weight: bold;"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="160"/>
+            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="110"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
+            <TableColumn fx:id="feeHeadCol" text="Fee Head" prefWidth="220"/>
+            <TableColumn fx:id="amountCol" text="Amount (₹)" prefWidth="120"/>
+            <TableColumn fx:id="semesterCol" text="Sem" prefWidth="60"/>
+            <TableColumn fx:id="remarksCol" text="Remarks / Mode" prefWidth="200"/>
+        </columns>
+    </TableView>
+</VBox>

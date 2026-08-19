@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.DfcrReportController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <Label text="Daily Fees Collection Register (DFCR)" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="120"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="120"/>
+        <Label text="Account:"/>
+        <ComboBox fx:id="baseAccountCombo" prefWidth="130"/>
+        <Label text="Mode:"/>
+        <ComboBox fx:id="modeCombo" prefWidth="110"/>
+        <Button text="Generate DFCR" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="160"/>
+            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="110"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
+            <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="180"/>
+            <TableColumn fx:id="deptCol" text="Dept" prefWidth="70"/>
+            <TableColumn fx:id="baseAccountCol" text="Base Account" prefWidth="150"/>
+            <TableColumn fx:id="paymentModeCol" text="Payment Mode" prefWidth="120"/>
+            <TableColumn fx:id="totalAmountCol" text="Total Amount (₹)" prefWidth="130"/>
+        </columns>
+    </TableView>
+</VBox>

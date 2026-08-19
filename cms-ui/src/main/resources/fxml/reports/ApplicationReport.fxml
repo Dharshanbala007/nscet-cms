@@ -5,42 +5,44 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.ApplicationReportController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
         <Label text="Application Report" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / View" styleClass="btn-secondary" onAction="#handleExport"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Report Filters" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Department:"/>
-                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="From Date:"/>
-                    <DatePicker fx:id="fromDate"/>
-                    <Label text="To Date:"/>
-                    <DatePicker fx:id="toDate"/>
-                    <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
-                    <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExport"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
-                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
-                    <TableColumn fx:id="applicationDateCol" text="Application Date" prefWidth="120"/>
-                    <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </VBox>
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <RadioButton fx:id="summaryRadio" text="Summary" selected="true">
+            <toggleGroup><ToggleGroup fx:id="reportTypeGroup"/></toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="detailRadio" text="Detail" toggleGroup="$reportTypeGroup"/>
+        <Label text="From:"/>
+        <DatePicker fx:id="fromDate" prefWidth="120"/>
+        <Label text="To:"/>
+        <DatePicker fx:id="toDate" prefWidth="120"/>
+        <Label text="Order By:"/>
+        <ComboBox fx:id="orderByCombo" prefWidth="130"/>
+        <Button text="View Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="slNoCol" text="S.No" prefWidth="50"/>
+            <TableColumn fx:id="appNoCol" text="App No" prefWidth="90"/>
+            <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="150"/>
+            <TableColumn fx:id="addressCol" text="Address" prefWidth="180"/>
+            <TableColumn fx:id="hscMarkCol" text="HSC Mark" prefWidth="80"/>
+            <TableColumn fx:id="doteCutOffCol" text="Cut Off" prefWidth="70"/>
+            <TableColumn fx:id="communityCol" text="Community" prefWidth="85"/>
+            <TableColumn fx:id="mgGqCol" text="MQ / GQ" prefWidth="95"/>
+            <TableColumn fx:id="amountCol" text="Amount Paid" prefWidth="100"/>
+            <TableColumn fx:id="deptCol" text="Dept" prefWidth="60"/>
+            <TableColumn fx:id="schoolNameCol" text="School Name" prefWidth="160"/>
+            <TableColumn fx:id="hostelCol" text="Hostel" prefWidth="60"/>
+        </columns>
+    </TableView>
 </VBox>

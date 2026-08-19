@@ -31,10 +31,15 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("feesReport", "/fxml/reports/FeesDetailsReport.fxml");
         MODULE_FXML_MAP.put("pendingFees", "/fxml/reports/PendingFeesReport.fxml");
         MODULE_FXML_MAP.put("pendingBusFees", "/fxml/reports/PendingBusFeesReport.fxml");
+        MODULE_FXML_MAP.put("studentReceiptDetails", "/fxml/reports/StudentReceiptDetails.fxml");
+        MODULE_FXML_MAP.put("examFeesReport", "/fxml/reports/ExamFeesReport.fxml");
+        MODULE_FXML_MAP.put("receiptBankChecking", "/fxml/reports/ReceiptBankChecking.fxml");
         MODULE_FXML_MAP.put("headwise", "/fxml/reports/HeadwiseDetailsReport.fxml");
         MODULE_FXML_MAP.put("receiptReprint", "/fxml/reports/ReceiptReprint.fxml");
         MODULE_FXML_MAP.put("strength", "/fxml/reports/StrengthReport.fxml");
         MODULE_FXML_MAP.put("tcPrint", "/fxml/reports/TcPrint.fxml");
+        MODULE_FXML_MAP.put("dfcrReport", "/fxml/reports/DfcrReport.fxml");
+        MODULE_FXML_MAP.put("dfcrGroupwiseReport", "/fxml/reports/DfcrGroupwiseReport.fxml");
         MODULE_FXML_MAP.put("daySettlement", "/fxml/tools/DaySettlement.fxml");
         MODULE_FXML_MAP.put("bulkFeeEntry", "/fxml/tools/BulkFeeEntry.fxml");
         MODULE_FXML_MAP.put("busFeesUpdate", "/fxml/tools/BusFeesUpdate.fxml");

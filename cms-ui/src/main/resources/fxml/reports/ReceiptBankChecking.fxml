@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.ReceiptBankCheckingController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <Label text="Receipt Bank Checking" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="Bank Account:"/>
+        <ComboBox fx:id="bankAccountCombo" prefWidth="220"/>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="120"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="120"/>
+        <Button text="Verify &amp; Search" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="160"/>
+            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="110"/>
+            <TableColumn fx:id="bankNameCol" text="Bank Account Name" prefWidth="180"/>
+            <TableColumn fx:id="accountNoCol" text="Account No" prefWidth="160"/>
+            <TableColumn fx:id="paymentModeCol" text="Payment Mode" prefWidth="120"/>
+            <TableColumn fx:id="amountCol" text="Total Amount (₹)" prefWidth="140"/>
+            <TableColumn fx:id="statusCol" text="Status" prefWidth="110"/>
+        </columns>
+    </TableView>
+</VBox>

@@ -16,7 +16,7 @@ public class FeeReceiptItem extends BaseEntity {
     @JoinColumn(name = "receipt_id", nullable = false)
     private FeeReceipt receipt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fees_name_id")
     private FeesMaster feesName;
 

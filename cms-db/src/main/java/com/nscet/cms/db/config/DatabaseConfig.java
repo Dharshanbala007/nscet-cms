@@ -98,6 +98,9 @@ public class DatabaseConfig {
                 .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
                 .load();
+        try {
+            flyway.repair();
+        } catch (Exception ignored) {}
         flyway.migrate();
         return flyway;
     }

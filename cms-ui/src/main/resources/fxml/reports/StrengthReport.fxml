@@ -5,41 +5,35 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.StrengthReportController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
         <Label text="Strength Report" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Report Filters" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Department:"/>
-                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="Semester:"/>
-                    <ComboBox fx:id="semesterCombo" prefWidth="150" promptText="Select"/>
-                    <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
-                    <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExport"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
-                    <TableColumn fx:id="deptCol" text="Department" prefWidth="150"/>
-                    <TableColumn fx:id="semesterCol" text="Semester" prefWidth="100"/>
-                    <TableColumn fx:id="totalStrengthCol" text="Total Strength" prefWidth="120"/>
-                    <TableColumn fx:id="maleCountCol" text="Male" prefWidth="80"/>
-                    <TableColumn fx:id="femaleCountCol" text="Female" prefWidth="80"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </VBox>
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="Dept:"/>
+        <ComboBox fx:id="deptCombo" prefWidth="110"/>
+        <Button text="Generate" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
+            <TableColumn fx:id="degreeCol" text="Degree" prefWidth="80"/>
+            <TableColumn fx:id="yearCol" text="Year" prefWidth="90"/>
+            <TableColumn fx:id="semesterCol" text="Sem" prefWidth="60"/>
+            <TableColumn fx:id="maleCol" text="Male" prefWidth="80"/>
+            <TableColumn fx:id="femaleCol" text="Female" prefWidth="80"/>
+            <TableColumn fx:id="totalCol" text="Total Strength" prefWidth="110"/>
+            <TableColumn fx:id="ocCol" text="OC" prefWidth="70"/>
+            <TableColumn fx:id="bcCol" text="BC" prefWidth="70"/>
+            <TableColumn fx:id="mbcCol" text="MBC" prefWidth="70"/>
+            <TableColumn fx:id="scstCol" text="SC/ST" prefWidth="70"/>
+        </columns>
+    </TableView>
 </VBox>

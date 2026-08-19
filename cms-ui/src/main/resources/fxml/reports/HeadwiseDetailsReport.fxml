@@ -5,42 +5,41 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.HeadwiseDetailsReportController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Headwise Details Report" styleClass="module-title"/>
+        <Label text="Headwise Details" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Report Filters" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Fee Head:"/>
-                    <ComboBox fx:id="feeHeadCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="From Date:"/>
-                    <DatePicker fx:id="fromDate"/>
-                    <Label text="To Date:"/>
-                    <DatePicker fx:id="toDate"/>
-                    <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
-                    <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExport"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
-                    <TableColumn fx:id="feeHeadCol" text="Fee Head" prefWidth="150"/>
-                    <TableColumn fx:id="totalCollectedCol" text="Total Collected" prefWidth="120"/>
-                    <TableColumn fx:id="totalPendingCol" text="Total Pending" prefWidth="120"/>
-                    <TableColumn fx:id="studentCountCol" text="Student Count" prefWidth="100"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </VBox>
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <RadioButton fx:id="paidListRadio" text="Paid List" selected="true">
+            <toggleGroup><ToggleGroup fx:id="listTypeGroup"/></toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="pendingListRadio" text="Pending List" toggleGroup="$listTypeGroup"/>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="120"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="120"/>
+        <Label text="Dept:"/>
+        <ComboBox fx:id="deptCombo" prefWidth="90"/>
+        <Label text="Sem:"/>
+        <ComboBox fx:id="semesterCombo" prefWidth="70"/>
+        <Button text="View" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="150"/>
+            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="deptCol" text="Dept" prefWidth="60"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
+            <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="180"/>
+            <TableColumn fx:id="feeHeadCol" text="Fee Head Name" prefWidth="200"/>
+            <TableColumn fx:id="amountCol" text="Amount (₹)" prefWidth="120"/>
+        </columns>
+    </TableView>
 </VBox>

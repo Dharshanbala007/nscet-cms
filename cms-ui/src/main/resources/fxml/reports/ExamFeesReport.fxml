@@ -4,12 +4,12 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.nscet.cms.ui.controller.PendingFeesReportController"
+      fx:controller="com.nscet.cms.ui.controller.ExamFeesReportController"
       styleClass="master-container" spacing="10">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
     
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <Label text="Fees Pending Details" styleClass="module-title"/>
+        <Label text="Exam Fees Overall Report" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
     </HBox>
@@ -18,29 +18,23 @@
         <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
         <Label text="Year:"/>
         <ComboBox fx:id="academicYearCombo" prefWidth="100"/>
-        <Label text="Term:"/>
-        <ComboBox fx:id="termCombo" prefWidth="80"/>
         <Label text="Dept:"/>
         <ComboBox fx:id="deptCombo" prefWidth="100"/>
-        <Label text="Semester:"/>
-        <ComboBox fx:id="semesterCombo" prefWidth="70"/>
+        <Label text="Sem:"/>
+        <ComboBox fx:id="semesterCombo" prefWidth="80"/>
         <Button text="Generate" styleClass="btn-primary" onAction="#handleGenerate"/>
     </HBox>
 
     <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
             <TableColumn fx:id="deptCol" text="Dept" prefWidth="70"/>
-            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
-            <TableColumn fx:id="nameCol" text="Student Name" prefWidth="160"/>
-            <TableColumn fx:id="quotaCol" text="Quota" prefWidth="120"/>
-            <TableColumn fx:id="admissionTypeCol" text="Type" prefWidth="80"/>
-            <TableColumn fx:id="communityCol" text="Comm" prefWidth="70"/>
-            <TableColumn fx:id="prevPendingCol" text="Prev Pending" prefWidth="100"/>
-            <TableColumn fx:id="tuitionFeesCol" text="Tuition Fees" prefWidth="100"/>
-            <TableColumn fx:id="otherFeesCol" text="Other Fees" prefWidth="100"/>
-            <TableColumn fx:id="totalCol" text="Total" prefWidth="100"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
+            <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="180"/>
+            <TableColumn fx:id="examNameCol" text="Exam Description" prefWidth="240"/>
+            <TableColumn fx:id="amountCol" text="Fee Amt" prefWidth="100"/>
             <TableColumn fx:id="paidCol" text="Paid Amt" prefWidth="100"/>
             <TableColumn fx:id="balanceCol" text="Balance" prefWidth="100"/>
+            <TableColumn fx:id="statusCol" text="Status" prefWidth="90"/>
         </columns>
     </TableView>
 </VBox>

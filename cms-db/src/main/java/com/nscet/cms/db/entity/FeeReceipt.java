@@ -18,7 +18,7 @@ public class FeeReceipt extends BaseEntity {
     @Column(name = "receipt_number", unique = true, nullable = false, length = 30)
     private String receiptNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
     private StudentMaster student;
 
@@ -37,7 +37,7 @@ public class FeeReceipt extends BaseEntity {
     @Column(name = "base_account", length = 50)
     private String baseAccount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bank_id")
     private BankMaster bank;
 
@@ -56,7 +56,7 @@ public class FeeReceipt extends BaseEntity {
     @Column(name = "dd_cheque_bank", length = 100)
     private String ddChequeBank;
 
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FeeReceiptItem> items = new ArrayList<>();
 
     public void addItem(FeeReceiptItem item) {

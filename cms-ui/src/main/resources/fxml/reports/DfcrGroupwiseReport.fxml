@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.DfcrGroupwiseReportController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <Label text="DFCR Groupwise Report" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="120"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="120"/>
+        <Label text="Fee Group:"/>
+        <ComboBox fx:id="feeGroupCombo" prefWidth="150"/>
+        <Button text="Generate Groupwise" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="feeGroupCol" text="Fee Category Group" prefWidth="250"/>
+            <TableColumn fx:id="receiptCountCol" text="Receipt Count" prefWidth="150"/>
+            <TableColumn fx:id="totalCollectedCol" text="Total Collected Amount (₹)" prefWidth="250"/>
+        </columns>
+    </TableView>
+</VBox>

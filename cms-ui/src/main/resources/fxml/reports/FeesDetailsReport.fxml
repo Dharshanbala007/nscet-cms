@@ -5,44 +5,43 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.FeesDetailsReportController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Fees Details Report" styleClass="module-title"/>
+        <Label text="Fees Paid and Pending Details" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print Report" styleClass="btn-secondary" onAction="#handleExport"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Report Filters" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Department:"/>
-                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="Fee Name:"/>
-                    <ComboBox fx:id="feeNameCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="From Date:"/>
-                    <DatePicker fx:id="fromDate"/>
-                    <Label text="To Date:"/>
-                    <DatePicker fx:id="toDate"/>
-                    <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
-                    <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExport"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
-                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                    <TableColumn fx:id="feeNameCol" text="Fee Name" prefWidth="150"/>
-                    <TableColumn fx:id="amountCol" text="Amount" prefWidth="100"/>
-                    <TableColumn fx:id="paidDateCol" text="Paid Date" prefWidth="120"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </VBox>
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <Label text="Academic Period:"/>
+        <ComboBox fx:id="academicPeriodCombo" prefWidth="110"/>
+        <Label text="Branch:"/>
+        <ComboBox fx:id="branchCombo" prefWidth="90"/>
+        <RadioButton fx:id="semwiseRadio" text="Semwise" selected="true">
+            <toggleGroup><ToggleGroup fx:id="orderGroup"/></toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="branchwiseRadio" text="Branchwise" toggleGroup="$orderGroup"/>
+        <Button text="Generate" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="branchCol" text="Branch" prefWidth="70"/>
+            <TableColumn fx:id="semesterCol" text="Sem" prefWidth="50"/>
+            <TableColumn fx:id="strengthCol" text="Strength" prefWidth="65"/>
+            <TableColumn fx:id="prePendingCol" text="Pre. Pending" prefWidth="90"/>
+            <TableColumn fx:id="tuitionFeeCol" text="Tuition Fee" prefWidth="100"/>
+            <TableColumn fx:id="otherFeesCol" text="Other Fees" prefWidth="100"/>
+            <TableColumn fx:id="busFeesCol" text="Bus Fees" prefWidth="90"/>
+            <TableColumn fx:id="totalAmountCol" text="Total Amount" prefWidth="110"/>
+            <TableColumn fx:id="paidAmountCol" text="Paid Amount" prefWidth="110"/>
+            <TableColumn fx:id="pendingAmountCol" text="Pending Amount" prefWidth="110"/>
+            <TableColumn fx:id="colAmtCol" text="Col Amt" prefWidth="95"/>
+            <TableColumn fx:id="karAmtCol" text="Kar Amt" prefWidth="95"/>
+            <TableColumn fx:id="busAmtCol" text="Bus Amt" prefWidth="95"/>
+        </columns>
+    </TableView>
 </VBox>

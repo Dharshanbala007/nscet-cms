@@ -96,20 +96,35 @@ public class MainShellController implements Initializable {
         addMenuItem(transactionsMenu, "Registration Update", "regUpdate");
 
         reportsMenu.getChildren().clear();
+        addMenuHeader(reportsMenu, "--- Student Reports ---");
+        addMenuItem(reportsMenu, "  • Student Receipt Details", "studentReceiptDetails");
+        addMenuItem(reportsMenu, "  • Pending Fees", "pendingFees");
+        addMenuItem(reportsMenu, "  • Pending Bus Fee", "pendingBusFees");
+
+        addMenuHeader(reportsMenu, "--- General Reports ---");
         addMenuItem(reportsMenu, "Application Report", "appReport");
-        addMenuItem(reportsMenu, "Fees Details Report", "feesReport");
-        addMenuItem(reportsMenu, "Pending Fees", "pendingFees");
-        addMenuItem(reportsMenu, "Pending Bus Fees", "pendingBusFees");
+        addMenuItem(reportsMenu, "Fees Paid and Pending Details", "feesReport");
+        addMenuItem(reportsMenu, "Exam Fees Overall Report", "examFeesReport");
+        addMenuItem(reportsMenu, "Receipt Bank Checking", "receiptBankChecking");
         addMenuItem(reportsMenu, "Headwise Details", "headwise");
         addMenuItem(reportsMenu, "Receipt Reprint", "receiptReprint");
         addMenuItem(reportsMenu, "Strength Report", "strength");
-        addMenuItem(reportsMenu, "TC Print", "tcPrint");
+        addMenuItem(reportsMenu, "TC / CC PRINT", "tcPrint");
+        addMenuItem(reportsMenu, "Daily Fees Collection Register", "dfcrReport");
+        addMenuItem(reportsMenu, "DFCR Groupwise", "dfcrGroupwiseReport");
 
         toolsMenu.getChildren().clear();
         addMenuItem(toolsMenu, "Day Settlement", "daySettlement");
         addMenuItem(toolsMenu, "Bulk Fee Entry", "bulkFeeEntry");
         addMenuItem(toolsMenu, "Bus Fees Update", "busFeesUpdate");
         addMenuItem(toolsMenu, "Student Enrollment", "enrollment");
+    }
+
+    private void addMenuHeader(VBox menu, String title) {
+        Label label = new Label(title);
+        label.getStyleClass().add("sidebar-header-label");
+        label.setStyle("-fx-text-fill: #90caf9; -fx-font-weight: bold; -fx-padding: 6 0 2 10; -fx-font-size: 11px;");
+        menu.getChildren().add(label);
     }
 
     private void addMenuItem(VBox menu, String label, String module) {

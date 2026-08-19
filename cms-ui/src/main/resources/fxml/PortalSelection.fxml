@@ -57,4 +57,34 @@
         <!-- Footer -->
         <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
     </VBox>
+
+    <!-- Secondary Login Verification Overlay -->
+    <StackPane fx:id="verifyOverlay" visible="false" managed="false" style="-fx-background-color: rgba(0, 0, 0, 0.65);">
+        <VBox alignment="CENTER" spacing="15" maxWidth="420" maxHeight="330"
+              style="-fx-background-color: #ffffff; -fx-padding: 25; -fx-background-radius: 8; -fx-border-color: #1976d2; -fx-border-width: 2; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 15, 0, 0, 5);">
+            <Label fx:id="verifyTitleLabel" text="Admin Portal Login"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0d47a1;"/>
+            <Label text="Enter credentials to access portal:"
+                   style="-fx-font-size: 12px; -fx-text-fill: #555555;"/>
+            <Separator/>
+            <VBox spacing="10" alignment="CENTER_LEFT" maxWidth="Infinity">
+                <VBox spacing="4">
+                    <Label text="Username:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    <TextField fx:id="verifyUsernameField" promptText="Enter username..." prefHeight="35"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Password:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    <PasswordField fx:id="verifyPasswordField" promptText="Enter password..." prefHeight="35" onAction="#handleVerifyConfirm"/>
+                </VBox>
+                <Label fx:id="verifyErrorLabel" text="Invalid credentials" style="-fx-text-fill: #d32f2f; -fx-font-size: 11px;" visible="false"/>
+            </VBox>
+            <HBox spacing="15" alignment="CENTER_RIGHT">
+                <Button text="Cancel" onAction="#handleVerifyCancel"
+                        style="-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-padding: 8 18; -fx-cursor: hand; -fx-background-radius: 4;"/>
+                <Button text="Login to Portal" onAction="#handleVerifyConfirm"
+                        style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-cursor: hand; -fx-background-radius: 4;"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+
 </StackPane>

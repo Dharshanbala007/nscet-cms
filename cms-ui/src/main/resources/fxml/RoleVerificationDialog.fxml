@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.RoleVerificationDialogController"
+      spacing="15" prefWidth="420" prefHeight="260"
+      style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-border-color: #1976d2; -fx-border-width: 2; -fx-border-radius: 6;">
+
+    <VBox spacing="4" alignment="CENTER">
+        <Label fx:id="roleTitleLabel" text="Re-verify Password for ADMIN"
+               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0d47a1;"/>
+        <Label fx:id="userLabel" text="User: admin (Administrator)"
+               style="-fx-font-size: 12px; -fx-text-fill: #555555;"/>
+    </VBox>
+
+    <Separator/>
+
+    <VBox spacing="6">
+        <Label text="Enter Password Again to Confirm Access:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+        <PasswordField fx:id="passwordField" promptText="Enter password..." prefHeight="35" onAction="#handleConfirm"/>
+        <Label fx:id="errorLabel" text="Invalid password" style="-fx-text-fill: #d32f2f; -fx-font-size: 11px;" visible="false"/>
+    </VBox>
+
+    <Region VBox.hgrow="ALWAYS"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel"
+                style="-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-weight: bold; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        <Button text="Confirm Login" onAction="#handleConfirm"
+                style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

@@ -5,40 +5,52 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.TcPrintController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="TC Print" styleClass="module-title"/>
+        <Label text="TC \ CC PRINT (Transfer Certificate)" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print Certificate" styleClass="btn-primary" onAction="#handlePrint"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Search Student" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Roll No:"/>
-                    <TextField fx:id="rollNoField" prefWidth="200"/>
-                    <Button text="Search" styleClass="btn-primary" onAction="#handleSearch"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox fx:id="detailsPane" visible="false" managed="false" spacing="10">
-            <TitledPane text="Student Details" expanded="true">
-                <VBox spacing="10">
-                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                    <HBox spacing="30">
-                        <HBox spacing="5"><Label text="Name:" style="-fx-font-weight: bold;"/><Label fx:id="nameLabel" text="--"/></HBox>
-                        <HBox spacing="5"><Label text="Roll No:" style="-fx-font-weight: bold;"/><Label fx:id="rollNoLabel" text="--"/></HBox>
-                        <HBox spacing="5"><Label text="Department:" style="-fx-font-weight: bold;"/><Label fx:id="deptLabel" text="--"/></HBox>
-                    </HBox>
-                    <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button text="Print TC" styleClass="btn-primary" onAction="#handlePrint"/>
-                    </HBox>
-                </VBox>
-            </TitledPane>
-        </VBox>
+    <GridPane hgap="10" vgap="8" styleClass="form-container">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+        <columnConstraints>
+            <ColumnConstraints minWidth="120" prefWidth="130"/>
+            <ColumnConstraints minWidth="180" prefWidth="200"/>
+            <ColumnConstraints minWidth="120" prefWidth="130"/>
+            <ColumnConstraints minWidth="180" prefWidth="200"/>
+        </columnConstraints>
+        
+        <Label text="Academic Year:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="academicYearCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308"/>
+        
+        <Label text="Serial No:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <TextField fx:id="serialNoField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+        
+        <Label text="Search Roll / App No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="studentSearchField" promptText="Enter Roll No..." GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyTyped="#handleSearch"/>
+        
+        <Label text="Character &amp; Conduct:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <TextField fx:id="characterField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        
+        <Label text="Date Left:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <DatePicker fx:id="dateLeftField" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
+        
+        <Label text="TC Date:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <DatePicker fx:id="tcDateField" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
+        
+        <Label text="Application Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="applicationDateField" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308"/>
+        
+        <Button text="Generate Preview" styleClass="btn-secondary" GridPane.columnIndex="3" GridPane.rowIndex="3" onAction="#handleSearch"/>
+    </GridPane>
+
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        <Label text="Certificate Preview:" style="-fx-font-weight: bold;"/>
+        <TextArea fx:id="tcPreviewArea" VBox.vgrow="ALWAYS" editable="false"
+                  style="-fx-font-family: 'Courier New', monospace; -fx-font-size: 13px;"/>
     </VBox>
 </VBox>

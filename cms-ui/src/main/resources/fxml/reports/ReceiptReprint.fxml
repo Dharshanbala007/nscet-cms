@@ -5,41 +5,37 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.ReceiptReprintController"
-      styleClass="master-container">
-
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+    
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
         <Label text="Receipt Reprint" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Print Receipt" styleClass="btn-primary" onAction="#handlePrint"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Search Receipt" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Receipt No:"/>
-                    <TextField fx:id="receiptNoField" prefWidth="200"/>
-                    <Label text="From Date:"/>
-                    <DatePicker fx:id="fromDate"/>
-                    <Label text="To Date:"/>
-                    <DatePicker fx:id="toDate"/>
-                    <Button text="Search" styleClass="btn-primary" onAction="#handleSearch"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="120"/>
-                    <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="150"/>
-                    <TableColumn fx:id="amountCol" text="Amount" prefWidth="100"/>
-                    <TableColumn fx:id="dateCol" text="Date" prefWidth="120"/>
-                    <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
-                </columns>
-            </TableView>
-        </VBox>
+    <VBox spacing="10" styleClass="form-container">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <RadioButton fx:id="appReceiptRadio" text="Application Receipt">
+                <toggleGroup><ToggleGroup fx:id="reprintGroup"/></toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="nameReceiptRadio" text="Receipt with Name" toggleGroup="$reprintGroup"/>
+            <RadioButton fx:id="noReceiptRadio" text="Receipt with No" selected="true" toggleGroup="$reprintGroup"/>
+        </HBox>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Receipt Date:"/>
+            <DatePicker fx:id="receiptDate" prefWidth="130"/>
+            <Label text="Search / Receipt No:"/>
+            <TextField fx:id="receiptSearchField" promptText="Enter Receipt No / Roll No..." prefWidth="200" onKeyTyped="#handleSearch"/>
+            <Button text="Search &amp; Preview" styleClass="btn-secondary" onAction="#handleSearch"/>
+        </HBox>
+    </VBox>
+
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        <Label text="Receipt Copy Preview:" style="-fx-font-weight: bold;"/>
+        <TextArea fx:id="receiptPreviewArea" VBox.vgrow="ALWAYS" editable="false"
+                  style="-fx-font-family: 'Courier New', monospace; -fx-font-size: 13px;"/>
     </VBox>
 </VBox>
