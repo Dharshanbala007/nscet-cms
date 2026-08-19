@@ -12,82 +12,134 @@
     </HBox>
     <VBox VBox.vgrow="ALWAYS" spacing="10">
         <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <!-- Student Selection -->
-        <TitledPane text="Student Selection" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <RadioButton fx:id="currentRadio" text="Current"/>
-                    <RadioButton fx:id="passedOutRadio" text="Passed Out"/>
-                    <RadioButton fx:id="staffRadio" text="Staff"/>
-                    <RadioButton fx:id="miscRadio" text="Misc"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <TextField fx:id="studentSearchField" promptText="Enter Roll No or Admission No" styleClass="search-field" prefWidth="300"/>
-                    <Button text="Search" styleClass="btn-primary" onAction="#handleStudentSearch"/>
-                </HBox>
-                <HBox spacing="30" styleClass="student-info-bar">
-                    <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
-                    <HBox spacing="5"><Label text="Name:" style="-fx-font-weight: bold;"/><Label fx:id="studentNameLabel" text="--"/></HBox>
-                    <HBox spacing="5"><Label text="Roll No:" style="-fx-font-weight: bold;"/><Label fx:id="rollLabel" text="--"/></HBox>
-                    <HBox spacing="5"><Label text="Dept:" style="-fx-font-weight: bold;"/><Label fx:id="deptLabel" text="--"/></HBox>
-                    <HBox spacing="5"><Label text="Sem:" style="-fx-font-weight: bold;"/><Label fx:id="semLabel" text="--"/></HBox>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <!-- Payment Section -->
-        <VBox fx:id="itemsPane" spacing="10">
-            <TitledPane text="Payment Details" expanded="true">
-                <VBox spacing="10">
-                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                    <GridPane hgap="15" vgap="8">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="100" prefWidth="110"/>
-                            <ColumnConstraints minWidth="180" prefWidth="200"/>
-                            <ColumnConstraints minWidth="100" prefWidth="110"/>
-                            <ColumnConstraints minWidth="180" prefWidth="200"/>
-                        </columnConstraints>
-                        <Label text="Base Account:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <ComboBox fx:id="baseAccountCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Select"/>
-                        <Label text="Pay Type:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                        <ComboBox fx:id="payTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select"/>
-                        <Label text="Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="amountField" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Enter amount"/>
-                        <Button text="Auto-Allocate" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#handleAutoAllocate"/>
-                    </GridPane>
-                    <Label fx:id="runningTotalLabel" text="₹0.00" styleClass="running-total"/>
-                </VBox>
-            </TitledPane>
-            <!-- Fee Items Table -->
-            <TitledPane text="Fee Allocation" expanded="true">
-                <VBox spacing="10">
-                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <ComboBox fx:id="feeNameCombo" promptText="Select"/>
-                        <TextField fx:id="manualAmtField" promptText="Amount" prefWidth="120"/>
-                        <Button text="Add" styleClass="btn-primary" onAction="#handleManualAdd"/>
-                        <Button text="Remove Selected" styleClass="btn-sm-danger" onAction="#handleRemoveItem"/>
+        <HBox styleClass="form-container" spacing="15" alignment="CENTER_LEFT">
+            <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+            <RadioButton fx:id="currentRadio" text="Current"/>
+            <RadioButton fx:id="passedOutRadio" text="Passed Out"/>
+            <RadioButton fx:id="staffRadio" text="Staff"/>
+            <RadioButton fx:id="miscRadio" text="Misc"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Receipt Date:"/>
+            <DatePicker fx:id="receiptDatePicker" prefWidth="150"/>
+            <Label text="Pending Fees:"/>
+            <TextField fx:id="pendingFeesField" editable="false" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
+            <Label text="Bank A/C:"/>
+            <ComboBox fx:id="baseAccountCombo" prefWidth="150"/>
+            <Label text="Pay Type:"/>
+            <ComboBox fx:id="payTypeCombo" prefWidth="130"/>
+        </HBox>
+        <HBox VBox.vgrow="ALWAYS" spacing="10">
+            <VBox spacing="8" prefWidth="380">
+                <VBox styleClass="form-container" spacing="6">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="Student Search:"/>
+                        <TextField fx:id="studentSearchField" promptText="Roll No / Admission No" styleClass="search-field" prefWidth="180"/>
+                        <Button text="Search" styleClass="btn-primary" onAction="#handleStudentSearch"/>
                     </HBox>
-                    <TableView fx:id="itemsTable" prefHeight="200">
+                </VBox>
+                <VBox styleClass="form-container" spacing="5">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <GridPane hgap="8" vgap="5">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="85" prefWidth="95"/>
+                            <ColumnConstraints minWidth="150" prefWidth="175"/>
+                        </columnConstraints>
+                        <Label text="Receipt Type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <ComboBox fx:id="receiptTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="175"/>
+                        <Label text="Receipt No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="receiptNoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Student Name:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="studentNameLabel" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <TextField fx:id="rollLabel" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Reg. No.:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="regNoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="Caste:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                        <TextField fx:id="casteField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <Label text="Bus Route:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                        <TextField fx:id="busRouteField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label text="Period:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                        <ComboBox fx:id="periodCombo" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="175"/>
+                        <Label text="Degree:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                        <TextField fx:id="degreeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                        <Label text="Dept:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                        <TextField fx:id="deptLabel" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+                        <Label text="Semester:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                        <TextField fx:id="semLabel" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+                        <Label text="Ad. Type:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                        <TextField fx:id="adTypeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+                        <Label text="Quota:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                        <TextField fx:id="quotaField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+                        <Label text="Bus Stop:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
+                        <TextField fx:id="busStopField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+                    </GridPane>
+                </VBox>
+                <VBox styleClass="form-container" VBox.vgrow="ALWAYS" spacing="6">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <Label text="Fee Items" styleClass="section-title"/>
+                    <TableView fx:id="itemsTable" VBox.vgrow="ALWAYS" styleClass="data-table" prefHeight="180">
                         <columns>
-                            <TableColumn fx:id="feeNameCol" text="Fee Name" prefWidth="200"/>
-                            <TableColumn fx:id="feeAmtCol" text="Amount" prefWidth="120"/>
-                            <TableColumn fx:id="allocCol" text="Allocated To" prefWidth="150"/>
+                            <TableColumn fx:id="feeNameCol" text="Particulars" prefWidth="170"/>
+                            <TableColumn fx:id="feeAmtCol" text="Amount" prefWidth="100"/>
+                            <TableColumn fx:id="allocCol" text="Paid" prefWidth="100"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_RIGHT" spacing="20">
-                        <Label text="Total: " styleClass="total-label"/>
-                        <Label fx:id="totalLabel" text="₹0.00" styleClass="total-amount"/>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label fx:id="runningTotalLabel" text="Total: ₹0.00" styleClass="running-total"/>
                     </HBox>
                 </VBox>
-            </TitledPane>
-            <!-- Actions -->
-            <HBox spacing="10" alignment="CENTER_RIGHT">
-                <padding><Insets top="5"/></padding>
-                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
-                <Button text="Print Preview" styleClass="btn-secondary" onAction="#handlePrint"/>
-                <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExportPdf"/>
-                <Button fx:id="saveBtn" text="Save Receipt" styleClass="btn-primary" onAction="#handleSave"/>
-            </HBox>
-        </VBox>
+            </VBox>
+            <VBox spacing="8" VBox.hgrow="ALWAYS">
+                <VBox styleClass="form-container" VBox.vgrow="ALWAYS" spacing="6">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <Label text="Pending Fees" styleClass="section-title"/>
+                    <TableView fx:id="pendingFeesTable" VBox.vgrow="ALWAYS" styleClass="data-table" prefHeight="320">
+                        <columns>
+                            <TableColumn fx:id="pendingSemCol" text="Semester" prefWidth="80"/>
+                            <TableColumn fx:id="pendingPartCol" text="Particulars" prefWidth="190"/>
+                            <TableColumn fx:id="pendingAmtCol" text="Pending Amt" prefWidth="110"/>
+                            <TableColumn fx:id="pendingGroupCol" text="Fees Group" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox styleClass="form-container" spacing="6">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <GridPane hgap="8" vgap="5">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="80" prefWidth="90"/>
+                            <ColumnConstraints minWidth="150" prefWidth="200"/>
+                        </columnConstraints>
+                        <Label text="Remarks:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="remarksField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Fees Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="feeNameCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="200"/>
+                        <Label text="Amount:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextField fx:id="manualAmtField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    </GridPane>
+                </VBox>
+                <HBox styleClass="form-container" spacing="8" alignment="CENTER_LEFT">
+                    <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                    <Label text="Semesters:"/>
+                    <ToggleButton fx:id="sem1Tab" text="01-08-2025" toggleGroup="$semesterGroup" selected="true"/>
+                    <ToggleButton fx:id="sem2Tab" text="01-01-2026" toggleGroup="$semesterGroup"/>
+                    <ToggleButton fx:id="sem3Tab" text="01-06-2026" toggleGroup="$semesterGroup"/>
+                </HBox>
+                <HBox styleClass="form-container" spacing="12" alignment="CENTER_LEFT">
+                    <padding><Insets top="10" right="12" bottom="10" left="12"/></padding>
+                    <Label text="Receipt Total:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="totalLabel" editable="false" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+                    <Label text="Amount Paid (Cash / Bank):" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="amountField" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="addBtn" text="Add" styleClass="btn-primary" onAction="#handleManualAdd"/>
+                    <Button fx:id="modifyBtn" text="Modify" styleClass="btn-secondary" onAction="#handleAutoAllocate"/>
+                    <Button fx:id="deleteBtn" text="Delete" styleClass="btn-danger" onAction="#handleRemoveItem"/>
+                    <Button fx:id="saveBtn" text="Save" styleClass="btn-primary" onAction="#handleSave"/>
+                    <Button fx:id="cancelBtn" text="Cancel" styleClass="btn-secondary" onAction="#handleClear"/>
+                    <Button fx:id="closeBtn" text="Close" styleClass="btn-secondary" onAction="#handleClear"/>
+                </HBox>
+            </VBox>
+        </HBox>
     </VBox>
 </VBox>

@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class QuotaService {
 
@@ -17,6 +19,10 @@ public class QuotaService {
 
     public QuotaService(QuotaMasterRepository repository) {
         this.repository = repository;
+    }
+
+    public List<QuotaMaster> getAllActive() {
+        return repository.findAllActiveList();
     }
 
     public Page<QuotaMaster> getAll(String search, int page, int size, String sortBy, String sortDir) {

@@ -56,7 +56,7 @@ public class FeesMasterController implements Initializable {
             }
         });
         groupCombo.getItems().add("Select");
-        groupCombo.getItems().addAll("Clg Fees", "Exam Fees", "Miscellaneous", "Bus Fee", "Hostel Fee", "Other");
+        groupCombo.getItems().addAll("College Fees", "Exam Fees", "Karuna Donar Club", "Bus Fees", "Hostel Fees", "Activity", "Miscellaneous");
         groupCombo.getSelectionModel().selectFirst();
         table.setItems(tableData); loadData();
     }

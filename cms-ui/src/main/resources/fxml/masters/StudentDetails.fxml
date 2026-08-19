@@ -5,24 +5,27 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.StudentDetailsController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="0">
 
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
         <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
         <Label text="Student Details" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Search by Roll No or Name..." styleClass="search-field" onKeyTyped="#handleSearch"/>
+        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
     </HBox>
 
     <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
         <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
         <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-                <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
-                <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
-                <TableColumn fx:id="semesterCol" text="Semester" prefWidth="80"/>
-                <TableColumn fx:id="admissionTypeCol" text="Admission Type" prefWidth="120"/>
+                <TableColumn fx:id="deptCol" text="Dept" prefWidth="120"/>
+                <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="100"/>
+                <TableColumn fx:id="regNoCol" text="Reg No" prefWidth="100"/>
+                <TableColumn fx:id="nameCol" text="Student Name" prefWidth="150"/>
+                <TableColumn fx:id="fatherCol" text="Father Name" prefWidth="140"/>
+                <TableColumn fx:id="phoneCol" text="Phone No" prefWidth="100"/>
+                <TableColumn fx:id="admNoCol" text="Admission No" prefWidth="100"/>
                 <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
             </columns>
         </TableView>
@@ -34,30 +37,68 @@
         </HBox>
     </VBox>
 
-    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15" VBox.vgrow="ALWAYS">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
         <Label text="Student Details" styleClass="form-title"/>
         <GridPane hgap="15" vgap="10">
             <columnConstraints>
-                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="100" prefWidth="130"/>
                 <ColumnConstraints minWidth="200" prefWidth="250"/>
-                <ColumnConstraints minWidth="100" prefWidth="120"/>
+                <ColumnConstraints minWidth="100" prefWidth="130"/>
                 <ColumnConstraints minWidth="200" prefWidth="250"/>
             </columnConstraints>
-            <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="rollNoField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-            <TextField fx:id="nameField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-            <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="deptCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Select"/>
+
+            <Label text="Student Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="studentNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false"/>
+
+            <Label text="Dept:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="deptCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select" maxWidth="1.7976931348623157E308"/>
+
+            <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="rollNoField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
             <Label text="Semester:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
             <ComboBox fx:id="semesterCombo" GridPane.columnIndex="3" GridPane.rowIndex="1" promptText="Select"/>
-            <Label text="Admission Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="admissionTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select"/>
+
+            <Label text="Reg No:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="regNoField" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false"/>
+
+            <Label text="Quota:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="quotaCombo" GridPane.columnIndex="3" GridPane.rowIndex="2" promptText="Select" maxWidth="1.7976931348623157E308"/>
+
+            <Label text="Caste Category:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="casteCategoryCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select"/>
+
+            <Label text="Bus Stop:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <TextField fx:id="busStopField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+            <Label text="Hostel:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="hostelCombo" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Select"/>
+
+            <Label text="Bus Route:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <TextField fx:id="busRouteField" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+            <Label text="State:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <ComboBox fx:id="stateCombo" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="Select"/>
+
+            <Label text="Transport Type:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+            <ComboBox fx:id="transportTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="5" promptText="Select"/>
+
+            <Label text="Academic Year:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <ComboBox fx:id="academicYearCombo" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="Select"/>
+
+            <Label text="Sem Type:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+            <ComboBox fx:id="semTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="6" promptText="Select"/>
         </GridPane>
+
         <HBox spacing="10" alignment="CENTER_RIGHT">
+            <padding><Insets top="8" bottom="5"/></padding>
+            <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
+            <Button text="Modify" styleClass="btn-secondary" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
             <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
             <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+            <Button text="Close" styleClass="btn-secondary" onAction="#handleClose"/>
         </HBox>
     </VBox>
 </VBox>
