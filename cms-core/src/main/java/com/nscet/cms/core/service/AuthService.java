@@ -19,6 +19,7 @@ public class AuthService {
         this.passwordUtil = passwordUtil;
     }
 
+    @Transactional
     public User authenticate(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -36,6 +37,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid username or password");
         }
 
+        user.getRoles().forEach(r -> r.getName()); // Force initialization of roles
         resetFailedAttempts(user);
         return user;
     }

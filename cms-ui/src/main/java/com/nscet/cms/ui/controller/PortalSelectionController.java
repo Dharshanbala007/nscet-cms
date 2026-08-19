@@ -101,7 +101,10 @@ public class PortalSelectionController implements Initializable {
                 NavigationManager.openAccountsShell();
             }
         } catch (Exception e) {
-            verifyErrorLabel.setText("Invalid username or password for " + targetPortal + " portal.");
+            String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) 
+                    ? e.getMessage() 
+                    : "Invalid username or password for " + targetPortal + " portal.";
+            verifyErrorLabel.setText(msg);
             verifyErrorLabel.setVisible(true);
         }
     }
