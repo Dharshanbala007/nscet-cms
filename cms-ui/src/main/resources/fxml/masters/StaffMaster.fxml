@@ -57,7 +57,7 @@
                     <TextField fx:id="staffGroupField" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
                     <Label text="Email:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                     <TextField fx:id="emailField" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
-                    <Label text="College SCode:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label text="College Code:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                     <TextField fx:id="collegeCodeField" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308"/>
                     <Label text="Transport:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
                     <ComboBox fx:id="transportCombo" GridPane.columnIndex="3" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308" promptText="Select"/>

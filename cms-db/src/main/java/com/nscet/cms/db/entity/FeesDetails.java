@@ -25,11 +25,11 @@ public class FeesDetails extends BaseEntity {
     @Column(name = "semester")
     private Integer semester;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quota_id")
     private QuotaMaster quota;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private DepartmentMaster department;
 
@@ -39,7 +39,7 @@ public class FeesDetails extends BaseEntity {
     @Column(name = "admission_type", length = 50)
     private String admissionType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fees_name_id")
     private FeesMaster feesName;
 

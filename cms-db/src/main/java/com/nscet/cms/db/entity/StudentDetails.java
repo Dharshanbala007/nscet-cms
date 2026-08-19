@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "semester", "admission_year"}))
 public class StudentDetails extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
     private StudentMaster student;
 
@@ -39,11 +39,11 @@ public class StudentDetails extends BaseEntity {
     @Column(name = "sem_type", length = 20)
     private String semType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private DepartmentMaster department;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quota_id")
     private QuotaMaster quota;
 
