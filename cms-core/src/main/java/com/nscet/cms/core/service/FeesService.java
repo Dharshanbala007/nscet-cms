@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class FeesService {
 
@@ -27,6 +29,18 @@ public class FeesService {
             return repository.search(search, pageable);
         }
         return repository.findAllActive(pageable);
+    }
+
+    public List<FeesMaster> getAllActiveList() {
+        return repository.findAllActiveList();
+    }
+
+    public List<FeesMaster> getSemesterFees() {
+        return repository.findSemesterFees();
+    }
+
+    public List<FeesMaster> getOtherFees() {
+        return repository.findOtherFees();
     }
 
     public FeesMaster getById(Long id) {
@@ -47,6 +61,7 @@ public class FeesService {
         existing.setFeesGroup(updated.getFeesGroup());
         existing.setFromDate(updated.getFromDate());
         existing.setToDate(updated.getToDate());
+        existing.setSemesterFee(updated.getSemesterFee());
         return repository.save(existing);
     }
 

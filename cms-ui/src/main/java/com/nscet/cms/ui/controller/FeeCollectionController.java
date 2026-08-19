@@ -1,27 +1,30 @@
 package com.nscet.cms.ui.controller;
 
 import com.nscet.cms.core.service.FeeCollectionService;
+import com.nscet.cms.core.service.FeesService;
 import com.nscet.cms.core.service.StudentService;
 import com.nscet.cms.db.entity.FeeReceipt;
 import com.nscet.cms.db.entity.FeeReceiptItem;
+import com.nscet.cms.db.entity.FeesMaster;
 import com.nscet.cms.db.entity.StudentMaster;
+import com.nscet.cms.reports.ReportManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.stage.FileChooser;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -41,10 +44,12 @@ public class FeeCollectionController implements Initializable {
 
     @Autowired private StudentService studentService;
     @Autowired private FeeCollectionService receiptService;
+    @Autowired private FeesService feesService;
 
     private StudentMaster selectedStudent;
     private ObservableList<FeeReceiptItem> items = FXCollections.observableArrayList();
     private BigDecimal runningTotal = BigDecimal.ZERO;
+    private List<FeesMaster> allFees = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,12 +66,11 @@ public class FeeCollectionController implements Initializable {
         payTypeCombo.getItems().add("Select");
         payTypeCombo.getItems().addAll("Pay", "OLP", "DD/Cheque", "Adjust Bill");
         payTypeCombo.getSelectionModel().selectFirst();
-        feeNameCombo.getItems().add("Select");
-        feeNameCombo.getItems().addAll("Tuition Fee", "Admission Fees", "Bus Fee", "Exam Fee", "Library Fee", "Lab Fee", "Hostel Fee", "Uniform Fee", "Placement Fee", "Sports Fee");
-        feeNameCombo.getSelectionModel().selectFirst();
+
+        loadFeesFromDB();
 
         feeNameCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
-            c.getValue().getFeesName() != null ? c.getValue().getFeesName().getName() : ""));
+            c.getValue().getAllocatedTo() != null ? c.getValue().getAllocatedTo() : ""));
         feeAmtCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
             "₹" + c.getValue().getAmount()));
         allocCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
@@ -75,6 +79,24 @@ public class FeeCollectionController implements Initializable {
         itemsTable.setItems(items);
         itemsPane.setVisible(false); itemsPane.setManaged(false);
         studentNameLabel.setText("--"); rollLabel.setText("--"); deptLabel.setText("--"); semLabel.setText("--");
+    }
+
+    private void loadFeesFromDB() {
+        try {
+            allFees = feesService.getAllActiveList();
+            feeNameCombo.getItems().clear();
+            feeNameCombo.getItems().add("Select");
+            for (FeesMaster fee : allFees) {
+                String label = fee.getName() + (Boolean.TRUE.equals(fee.getSemesterFee()) ? " [Sem]" : " [Other]");
+                feeNameCombo.getItems().add(label);
+            }
+            feeNameCombo.getSelectionModel().selectFirst();
+        } catch (Exception e) {
+            feeNameCombo.getItems().clear();
+            feeNameCombo.getItems().add("Select");
+            feeNameCombo.getItems().addAll("Tuition Fee", "Admission Fees", "Bus Fee", "Exam Fee", "Library Fee", "Lab Fee", "Hostel Fee", "Uniform Fee", "Placement Fee", "Sports Fee");
+            feeNameCombo.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML
@@ -111,9 +133,12 @@ public class FeeCollectionController implements Initializable {
 
             items.clear();
 
-            // Auto-allocate: Tuition -> Other -> Bus
+            List<FeesMaster> semesterFees = feesService.getSemesterFees();
+            List<FeesMaster> otherFees = feesService.getOtherFees();
+
             if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
                 FeeReceiptItem tuition = new FeeReceiptItem();
+                tuition.setFeesName(findFeeByName("Tuition Fee"));
                 tuition.setAllocatedTo("Tuition Fee");
                 tuition.setAmount(totalAmount.min(new BigDecimal("20000")));
                 items.add(tuition);
@@ -121,6 +146,7 @@ public class FeeCollectionController implements Initializable {
                 BigDecimal remaining = totalAmount.subtract(tuition.getAmount());
                 if (remaining.compareTo(BigDecimal.ZERO) > 0) {
                     FeeReceiptItem other = new FeeReceiptItem();
+                    other.setFeesName(findFeeByName("Other fee"));
                     other.setAllocatedTo("Other Fee");
                     other.setAmount(remaining.min(new BigDecimal("15000")));
                     items.add(other);
@@ -129,6 +155,7 @@ public class FeeCollectionController implements Initializable {
 
                 if (remaining.compareTo(BigDecimal.ZERO) > 0) {
                     FeeReceiptItem bus = new FeeReceiptItem();
+                    bus.setFeesName(findFeeByName("Bus Fees"));
                     bus.setAllocatedTo("Bus Fee");
                     bus.setAmount(remaining);
                     items.add(bus);
@@ -141,6 +168,10 @@ public class FeeCollectionController implements Initializable {
         }
     }
 
+    private FeesMaster findFeeByName(String name) {
+        return allFees.stream().filter(f -> f.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
     @FXML
     private void handleManualAdd() {
         if (feeNameCombo.getValue() == null || "Select".equals(feeNameCombo.getValue()) || manualAmtField.getText().isEmpty()) {
@@ -148,8 +179,12 @@ public class FeeCollectionController implements Initializable {
             return;
         }
 
+        String selectedLabel = feeNameCombo.getValue();
+        String feeName = selectedLabel.replace(" [Sem]", "").replace(" [Other]", "").trim();
+
         FeeReceiptItem item = new FeeReceiptItem();
-        item.setAllocatedTo(feeNameCombo.getValue());
+        item.setFeesName(findFeeByName(feeName));
+        item.setAllocatedTo(feeName);
         item.setAmount(new BigDecimal(manualAmtField.getText().trim()));
         items.add(item);
 
@@ -197,6 +232,7 @@ public class FeeCollectionController implements Initializable {
 
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Receipt Created");
+            success.setHeaderText("Receipt saved successfully");
             success.setContentText("Receipt Number: " + saved.getReceiptNumber() + "\nAmount: ₹" + saved.getTotalAmount());
             success.showAndWait();
 
@@ -220,6 +256,94 @@ public class FeeCollectionController implements Initializable {
 
     @FXML
     private void handlePrint() {
-        new Alert(Alert.AlertType.INFORMATION, "Print functionality will open receipt preview").showAndWait();
+        if (selectedStudent == null) {
+            new Alert(Alert.AlertType.WARNING, "Select a student first").showAndWait();
+            return;
+        }
+        if (items.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Add fee items before printing").showAndWait();
+            return;
+        }
+
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("COLLEGE_NAME", "Nadar Saraswathi College of Engineering and Technology");
+            params.put("COLLEGE_LOCATION", "Theni");
+            params.put("ACADEMIC_YEAR", "2025-2026");
+
+            List<Map<String, Object>> reportData = new ArrayList<>();
+            for (FeeReceiptItem item : items) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("receiptNumber", "PREVIEW");
+                row.put("receiptDate", LocalDate.now());
+                row.put("studentName", selectedStudent.getName());
+                row.put("rollNumber", selectedStudent.getRollNumber());
+                row.put("department", selectedStudent.getAdmissionType() != null ? selectedStudent.getAdmissionType() : "");
+                row.put("semester", 1);
+                row.put("paymentMode", payTypeCombo.getValue() != null ? payTypeCombo.getValue() : "Cash");
+                row.put("baseAccount", baseAccountCombo.getValue() != null ? baseAccountCombo.getValue() : "Cash");
+                row.put("totalAmount", runningTotal);
+                row.put("feeName", item.getAllocatedTo());
+                row.put("feeAmount", item.getAmount());
+                reportData.add(row);
+            }
+
+            ReportManager.printReport("FeeReceipt", reportData, params);
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error generating receipt: " + e.getMessage()).showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleExportPdf() {
+        if (selectedStudent == null) {
+            new Alert(Alert.AlertType.WARNING, "Select a student first").showAndWait();
+            return;
+        }
+        if (items.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Add fee items before exporting").showAndWait();
+            return;
+        }
+
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("COLLEGE_NAME", "Nadar Saraswathi College of Engineering and Technology");
+            params.put("COLLEGE_LOCATION", "Theni");
+            params.put("ACADEMIC_YEAR", "2025-2026");
+
+            List<Map<String, Object>> reportData = new ArrayList<>();
+            for (FeeReceiptItem item : items) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("receiptNumber", "PREVIEW");
+                row.put("receiptDate", LocalDate.now());
+                row.put("studentName", selectedStudent.getName());
+                row.put("rollNumber", selectedStudent.getRollNumber());
+                row.put("department", selectedStudent.getAdmissionType() != null ? selectedStudent.getAdmissionType() : "");
+                row.put("semester", 1);
+                row.put("paymentMode", payTypeCombo.getValue() != null ? payTypeCombo.getValue() : "Cash");
+                row.put("baseAccount", baseAccountCombo.getValue() != null ? baseAccountCombo.getValue() : "Cash");
+                row.put("totalAmount", runningTotal);
+                row.put("feeName", item.getAllocatedTo());
+                row.put("feeAmount", item.getAmount());
+                reportData.add(row);
+            }
+
+            byte[] pdfBytes = ReportManager.exportToPdf("FeeReceipt", reportData, params);
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Fee Receipt PDF");
+            fileChooser.setInitialFileName("FeeReceipt_" + selectedStudent.getRollNumber() + ".pdf");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            File file = fileChooser.showSaveDialog(null);
+
+            if (file != null) {
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    fos.write(pdfBytes);
+                }
+                new Alert(Alert.AlertType.INFORMATION, "PDF exported successfully:\n" + file.getAbsolutePath()).showAndWait();
+            }
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error exporting PDF: " + e.getMessage()).showAndWait();
+        }
     }
 }

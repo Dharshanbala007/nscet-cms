@@ -22,9 +22,10 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class FeesMasterController implements Initializable {
     @FXML private TableView<FeesMaster> table;
-    @FXML private TableColumn<FeesMaster, String> nameCol, groupCol, fromDateCol, toDateCol, actionsCol;
+    @FXML private TableColumn<FeesMaster, String> nameCol, groupCol, fromDateCol, toDateCol, semesterFeeCol, actionsCol;
     @FXML private TextField searchField, nameField;
     @FXML private ComboBox<String> groupCombo;
+    @FXML private CheckBox semesterFeeCheck;
     @FXML private VBox formPane;
     @FXML private Label pageInfo;
     @FXML private Button prevBtn, nextBtn;
@@ -39,6 +40,7 @@ public class FeesMasterController implements Initializable {
         groupCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFeesGroup()));
         fromDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFromDate() != null ? c.getValue().getFromDate().toString() : ""));
         toDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getToDate() != null ? c.getValue().getToDate().toString() : ""));
+        semesterFeeCol.setCellValueFactory(c -> new SimpleStringProperty(Boolean.TRUE.equals(c.getValue().getSemesterFee()) ? "Yes" : "No"));
         actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
         actionsCol.setCellFactory(col -> new TableCell<>() {
             protected void updateItem(String item, boolean empty) {
@@ -54,7 +56,7 @@ public class FeesMasterController implements Initializable {
             }
         });
         groupCombo.getItems().add("Select");
-        groupCombo.getItems().addAll("Clg Fees", "Exam Fees", "Kanna Donor Club", "Bus Fee", "Hostel Fee", "Alumni Activity");
+        groupCombo.getItems().addAll("Clg Fees", "Exam Fees", "Miscellaneous", "Bus Fee", "Hostel Fee", "Other");
         groupCombo.getSelectionModel().selectFirst();
         table.setItems(tableData); loadData();
     }
@@ -70,17 +72,20 @@ public class FeesMasterController implements Initializable {
     @FXML private void handlePrevious() { currentPage--; loadData(); }
     @FXML private void handleNext() { currentPage++; loadData(); }
     @FXML private void handleAdd() {
-        editingId = null; nameField.clear(); groupCombo.getSelectionModel().selectFirst();
+        editingId = null; nameField.clear(); groupCombo.getSelectionModel().selectFirst(); semesterFeeCheck.setSelected(false);
         formPane.setVisible(true); formPane.setManaged(true);
     }
     @FXML private void handleEdit(FeesMaster f) {
         editingId = f.getId(); nameField.setText(f.getName()); groupCombo.setValue(f.getFeesGroup());
+        semesterFeeCheck.setSelected(Boolean.TRUE.equals(f.getSemesterFee()));
         formPane.setVisible(true); formPane.setManaged(true);
     }
     @FXML private void handleSave() {
         try {
             FeesMaster f = new FeesMaster();
-            f.setName(nameField.getText().trim()); f.setFeesGroup(groupCombo.getValue() != null && !"Select".equals(groupCombo.getValue()) ? groupCombo.getValue() : null);
+            f.setName(nameField.getText().trim());
+            f.setFeesGroup(groupCombo.getValue() != null && !"Select".equals(groupCombo.getValue()) ? groupCombo.getValue() : null);
+            f.setSemesterFee(semesterFeeCheck.isSelected());
             if (editingId != null) service.update(editingId, f); else service.create(f);
             formPane.setVisible(false); formPane.setManaged(false); loadData();
         } catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait(); }

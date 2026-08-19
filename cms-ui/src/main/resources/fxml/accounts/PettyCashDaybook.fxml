@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.PettyCashDaybookController"
+      styleClass="master-container" spacing="15">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <Label text="Petty Cash Daybook" styleClass="module-title"/>
+
+    <VBox spacing="10" styleClass="form-container">
+        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date:" prefWidth="50"/>
+                <DatePicker fx:id="datePicker" prefWidth="160"/>
+            </HBox>
+            <Button text="View" styleClass="dash-action-btn" onAction="#handleView"/>
+            <Button text="Save" styleClass="save-button" onAction="#handleSave"/>
+            <Button text="Print" styleClass="dash-action-btn" onAction="#handlePrint"/>
+        </HBox>
+
+        <TableView fx:id="daybookTable" prefHeight="400" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="60"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="80"/>
+                <TableColumn fx:id="colVchNo" text="Vch. No" prefWidth="100"/>
+                <TableColumn fx:id="colParticulars" text="Particulars" prefWidth="250"/>
+                <TableColumn fx:id="colDrAmount" text="Dr Amount" prefWidth="120"/>
+                <TableColumn fx:id="colCrAmount" text="Cr Amount" prefWidth="120"/>
+            </columns>
+        </TableView>
+
+        <!-- Summary Row -->
+        <HBox spacing="20" alignment="CENTER_RIGHT" styleClass="summary-row">
+            <padding><Insets top="5"/></padding>
+            <Label text="Total:" styleClass="section-title"/>
+            <TextField fx:id="totalDrField" prefWidth="100" editable="false" styleClass="readonly-field"/>
+            <TextField fx:id="totalCrField" prefWidth="100" editable="false" styleClass="readonly-field"/>
+        </HBox>
+    </VBox>
+</VBox>

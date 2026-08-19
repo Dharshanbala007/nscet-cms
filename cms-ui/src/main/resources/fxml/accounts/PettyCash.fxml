@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.PettyCashController"
+      styleClass="master-container" spacing="15">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <Label text="Petty Cash" styleClass="module-title"/>
+
+    <VBox spacing="10" styleClass="form-container">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date:" prefWidth="60"/>
+                <DatePicker fx:id="datePicker" prefWidth="180"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Type:" prefWidth="60"/>
+                <ComboBox fx:id="typeCombo" prefWidth="180" promptText="Select"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Balance:" prefWidth="60"/>
+                <TextField fx:id="balanceField" prefWidth="180" editable="false" styleClass="readonly-field"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Amount:" prefWidth="60"/>
+                <TextField fx:id="amountField" prefWidth="180" promptText="0.00"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="button-bar">
+            <padding><Insets top="10"/></padding>
+            <Button text="Save" styleClass="save-button" onAction="#handleSave"/>
+            <Button text="Close" styleClass="cancel-button" onAction="#handleClose"/>
+        </HBox>
+    </VBox>
+</VBox>

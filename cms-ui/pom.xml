@@ -19,6 +19,10 @@
             <groupId>com.nscet</groupId>
             <artifactId>cms-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.nscet</groupId>
+            <artifactId>cms-reports</artifactId>
+        </dependency>
 
         <!-- JavaFX -->
         <dependency>

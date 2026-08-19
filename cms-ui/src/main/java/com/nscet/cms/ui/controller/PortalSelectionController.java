@@ -31,11 +31,22 @@ public class PortalSelectionController implements Initializable {
 
     @FXML
     private void handleAdmin() {
-        System.out.println("[PortalSelection] Admin clicked, opening login...");
+        System.out.println("[PortalSelection] Admin clicked, opening main shell...");
         try {
-            NavigationManager.openLogin();
+            NavigationManager.openMainShell();
         } catch (Exception e) {
-            System.err.println("[PortalSelection] Failed to open login");
+            System.err.println("[PortalSelection] Failed to open main shell");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAccounts() {
+        System.out.println("[PortalSelection] Accounts clicked, opening accounts shell...");
+        try {
+            NavigationManager.openAccountsShell();
+        } catch (Exception e) {
+            System.err.println("[PortalSelection] Failed to open accounts shell");
             e.printStackTrace();
         }
     }

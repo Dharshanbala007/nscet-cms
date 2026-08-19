@@ -40,7 +40,7 @@
                 <Label text="Accounts Portal" styleClass="portal-card-title"/>
                 <Label text="Financial operations,\nledgers, vouchers\nand reporting" styleClass="portal-card-desc"/>
                 <Region prefHeight="10"/>
-                <Button text="COMING SOON" styleClass="portal-btn-disabled" maxWidth="Infinity" disable="true"/>
+                <Button text="OPEN ACCOUNTS" styleClass="portal-btn-admin" onAction="#handleAccounts" maxWidth="Infinity"/>
             </VBox>
 
             <!-- Payroll Portal -->

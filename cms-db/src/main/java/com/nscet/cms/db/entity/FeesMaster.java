@@ -23,4 +23,7 @@ public class FeesMaster extends BaseEntity {
 
     @Column(name = "to_date")
     private LocalDate toDate;
+
+    @Column(name = "semester_fee")
+    private Boolean semesterFee = false;
 }

@@ -85,6 +85,7 @@
                 <padding><Insets top="5"/></padding>
                 <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
                 <Button text="Print Preview" styleClass="btn-secondary" onAction="#handlePrint"/>
+                <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExportPdf"/>
                 <Button fx:id="saveBtn" text="Save Receipt" styleClass="btn-primary" onAction="#handleSave"/>
             </HBox>
         </VBox>

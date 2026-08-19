@@ -17,8 +17,9 @@
         <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
         <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-                <TableColumn fx:id="nameCol" text="Fee Name" prefWidth="200"/>
-                <TableColumn fx:id="groupCol" text="Fee Group" prefWidth="150"/>
+                <TableColumn fx:id="nameCol" text="Fee Name" prefWidth="180"/>
+                <TableColumn fx:id="groupCol" text="Fee Group" prefWidth="120"/>
+                <TableColumn fx:id="semesterFeeCol" text="Sem Fee" prefWidth="80"/>
                 <TableColumn fx:id="fromDateCol" text="From Date" prefWidth="100"/>
                 <TableColumn fx:id="toDateCol" text="To Date" prefWidth="100"/>
                 <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
@@ -45,6 +46,8 @@
             <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             <Label text="Fee Group:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
             <ComboBox fx:id="groupCombo" GridPane.columnIndex="3" GridPane.rowIndex="0" promptText="Select"/>
+            <Label text="Show in Receipt:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <CheckBox fx:id="semesterFeeCheck" GridPane.columnIndex="1" GridPane.rowIndex="1" text="Yes (semester_fee=1 shows in receipt, 0=other fee)"/>
         </GridPane>
         <HBox spacing="10" alignment="CENTER_RIGHT">
             <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>

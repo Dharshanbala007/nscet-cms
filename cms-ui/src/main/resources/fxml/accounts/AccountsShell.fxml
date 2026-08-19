@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+
+<BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.nscet.cms.ui.controller.AccountsShellController"
+            styleClass="main-shell">
+
+    <!-- Top Bar -->
+    <top>
+        <VBox>
+            <!-- Menu Bar -->
+            <MenuBar>
+                <menus>
+                    <Menu text="Masters">
+                        <items>
+                            <MenuItem text="Bank Master" onAction="#handleBankMaster"/>
+                            <MenuItem text="Department Master" onAction="#handleDepartmentMaster"/>
+                            <MenuItem text="Designation Master" onAction="#handleDesignationMaster"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Staff Master" onAction="#handleStaffMaster"/>
+                        </items>
+                    </Menu>
+                    <Menu text="Transaction">
+                        <items>
+                            <MenuItem text="Pending Bills" onAction="#handlePendingBills"/>
+                            <MenuItem text="Daily Transaction" onAction="#handleDailyTransaction"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Petty Cash" onAction="#handlePettyCash"/>
+                            <MenuItem text="Petty Cash (Suspense)" onAction="#handlePettyCashSuspense"/>
+                            <MenuItem text="Petty Voucher" onAction="#handlePettyVoucher"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Function Expense" onAction="#handleFunctionExpense"/>
+                        </items>
+                    </Menu>
+                    <Menu text="Reports">
+                        <items>
+                            <MenuItem text="Day Book Petty Cash" onAction="#handleDayBookPettyCash"/>
+                            <MenuItem text="Day Book" onAction="#handleDayBook"/>
+                            <MenuItem text="Cash Book" onAction="#handleCashBook"/>
+                            <MenuItem text="Daybook Report" onAction="#handleDaybookReport"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Bank Book" onAction="#handleBankBook"/>
+                            <MenuItem text="Expenditure Summary" onAction="#handleExpenditureSummary"/>
+                            <MenuItem text="Trial Balance" onAction="#handleTrialBalance"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Income and Expenditure Ac" onAction="#handleIncomeExpenditure"/>
+                            <MenuItem text="Profit Loss Ac" onAction="#handleProfitLoss"/>
+                            <MenuItem text="Balance Sheet" onAction="#handleBalanceSheet"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Petty Cash Suspense" onAction="#handlePettyCashSuspenseReport"/>
+                            <MenuItem text="Pending Bill Details" onAction="#handlePendingBillDetails"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+
+            <!-- Action Bar -->
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="5">
+                <padding><Insets top="5" right="25" bottom="5" left="25"/></padding>
+                <Button text="Find" styleClass="dash-action-btn" onAction="#handleFind"/>
+                <Button text="Exit" styleClass="logout-button" onAction="#handleExit"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <ImageView fx:id="bgImage" fitWidth="600" fitHeight="500" preserveRatio="true" opacity="0.35"/>
+        </StackPane>
+    </center>
+
+    <!-- Footer -->
+    <bottom>
+        <HBox styleClass="footer-bar" alignment="CENTER" spacing="10">
+            <padding>
+                <Insets top="4" right="20" bottom="4" left="20"/>
+            </padding>
+            <Label text="NSCET - Accounts" styleClass="footer-text"/>
+        </HBox>
+    </bottom>
+</BorderPane>

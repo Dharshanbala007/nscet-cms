@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.PettyCashSuspenseController"
+      styleClass="master-container" spacing="15">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <Label text="Petty Cash (Suspense Amount)" styleClass="module-title"/>
+
+    <VBox spacing="10" styleClass="form-container">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+        <!-- College / Hostel Radio -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <RadioButton fx:id="collegeRadio" text="College" toggleGroup="$sourceGroup" selected="true"/>
+            <RadioButton fx:id="hostelRadio" text="Hostel" toggleGroup="$sourceGroup"/>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Sus.V.No:" prefWidth="80"/>
+                <TextField fx:id="voucherNoField" prefWidth="180" editable="false" styleClass="readonly-field"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Date:" prefWidth="50"/>
+                <DatePicker fx:id="datePicker" prefWidth="180"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Staff Name:" prefWidth="80"/>
+                <TextField fx:id="staffNameField" prefWidth="180" promptText="Staff Name"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Dept:" prefWidth="50"/>
+                <TextField fx:id="deptField" prefWidth="180" promptText="Department"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Designation:" prefWidth="80"/>
+                <TextField fx:id="designationField" prefWidth="180" promptText="Designation"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Amount:" prefWidth="50"/>
+                <TextField fx:id="amountField" prefWidth="180" promptText="0.00"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Amount (in words):" prefWidth="110"/>
+            <TextField fx:id="amountWordsField" prefWidth="370" editable="false" styleClass="readonly-field"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Purpose:"/>
+        </HBox>
+        <TextArea fx:id="purposeField" prefHeight="80" prefWidth="490" promptText="Purpose"/>
+
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="button-bar">
+            <padding><Insets top="10"/></padding>
+            <Button text="Add" styleClass="save-button" onAction="#handleAdd"/>
+            <Button text="Modify" styleClass="dash-action-btn" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="cancel-button" onAction="#handleDelete"/>
+            <Button text="Cancel" styleClass="cancel-button" onAction="#handleCancel"/>
+            <Button text="Save" styleClass="save-button" onAction="#handleSave"/>
+            <Button text="Close" styleClass="cancel-button" onAction="#handleClose"/>
+        </HBox>
+
+        <!-- Data Table -->
+        <TableView fx:id="dataTable" prefHeight="200" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="50"/>
+                <TableColumn fx:id="colVNo" text="V.No" prefWidth="80"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colStaff" text="Staff Name" prefWidth="150"/>
+                <TableColumn fx:id="colDept" text="Dept" prefWidth="100"/>
+                <TableColumn fx:id="colAmount" text="Amount" prefWidth="100"/>
+                <TableColumn fx:id="colPurpose" text="Purpose" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

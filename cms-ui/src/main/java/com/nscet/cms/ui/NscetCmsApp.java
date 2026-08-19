@@ -40,7 +40,7 @@ public class NscetCmsApp extends Application {
         stage.setMaximized(true);
         stage.show();
 
-        NavigationManager.openPortalSelection();
+        NavigationManager.openLogin();
     }
 
     public static AnnotationConfigApplicationContext getContext() {

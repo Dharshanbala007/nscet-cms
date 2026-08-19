@@ -40,6 +40,12 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("busFeesUpdate", "/fxml/tools/BusFeesUpdate.fxml");
         MODULE_FXML_MAP.put("enrollment", "/fxml/tools/StudentEnrollment.fxml");
         MODULE_FXML_MAP.put("dashboard", "/fxml/Dashboard.fxml");
+        MODULE_FXML_MAP.put("pettyCash", "/fxml/accounts/PettyCash.fxml");
+        MODULE_FXML_MAP.put("pettyCashSuspense", "/fxml/accounts/PettyCashSuspense.fxml");
+        MODULE_FXML_MAP.put("pettyVoucher", "/fxml/accounts/PettyVoucher.fxml");
+        MODULE_FXML_MAP.put("pettyCashDaybook", "/fxml/accounts/PettyCashDaybook.fxml");
+        MODULE_FXML_MAP.put("dailyTransaction", "/fxml/accounts/DailyTransaction.fxml");
+        MODULE_FXML_MAP.put("functionExpense", "/fxml/accounts/FunctionExpense.fxml");
     }
 
     private static String currentStylesheet;
@@ -125,6 +131,24 @@ public class NavigationManager {
         }
     }
 
+    public static void openAccountsShell() {
+        try {
+            FXMLLoader loader = new FXMLLoader(NavigationManager.class.getResource("/fxml/accounts/AccountsShell.fxml"));
+            loader.setControllerFactory(NscetCmsApp.getContext()::getBean);
+            Parent root = loader.load();
+            switchRoot(root);
+            NscetCmsApp.getPrimaryStage().setMinWidth(1024);
+            NscetCmsApp.getPrimaryStage().setMinHeight(768);
+        } catch (Exception e) {
+            System.err.println("[NavigationManager] Failed to load AccountsShell");
+            e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
+                pw.println("Failed to load AccountsShell");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
+        }
+    }
+
     public static void loadModule(String module, StackPane contentArea) {
         String fxmlPath = MODULE_FXML_MAP.get(module);
         if (fxmlPath == null) {
@@ -151,7 +175,7 @@ public class NavigationManager {
         }
     }
 
-    private static void loadPlaceholder(String module, StackPane contentArea) {
+    public static void loadPlaceholder(String module, StackPane contentArea) {
         javafx.scene.control.Label placeholder = new javafx.scene.control.Label("Module: " + module + "\nComing Soon...");
         placeholder.getStyleClass().add("placeholder-label");
         contentArea.getChildren().clear();

@@ -99,7 +99,7 @@ public class LoginController implements Initializable {
             User user = authService.authenticate(username, password);
             userSession.login(user);
             safeAuditLog(username, true, user.getId());
-            NavigationManager.openMainShell();
+            NavigationManager.openPortalSelection();
         } catch (Exception e) {
             failedAttempts++;
             safeAuditLog(username, false, null);

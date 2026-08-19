@@ -159,8 +159,9 @@
             </Tab>
         </TabPane>
 
-        <HBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER_RIGHT">
             <padding><Insets top="8" bottom="5"/></padding>
+            <Region HBox.hgrow="ALWAYS"/>
             <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
             <Button text="Modify" styleClass="btn-secondary" onAction="#handleModify"/>
             <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>

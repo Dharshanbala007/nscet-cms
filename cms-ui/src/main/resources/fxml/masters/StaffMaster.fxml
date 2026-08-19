@@ -102,13 +102,13 @@
                 </GridPane>
             </Tab>
         </TabPane>
-        <HBox spacing="8" alignment="CENTER_LEFT">
+        <HBox spacing="8" alignment="CENTER_RIGHT">
             <padding><Insets top="5"/></padding>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="warningLabel" styleClass="warning-label" text=""/>
             <Button text="Add" styleClass="btn-secondary" onAction="#handleAdd"/>
             <Button text="Modify" styleClass="btn-secondary" onAction="#handleModify"/>
             <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="warningLabel" styleClass="warning-label" text=""/>
             <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
             <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
             <Button text="Close" styleClass="btn-secondary" onAction="#handleClose"/>
