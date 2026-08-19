@@ -30,6 +30,7 @@ public class AccountsShellController implements Initializable {
         } catch (Exception e) {
             System.out.println("nscet.png not found: " + e.getMessage());
         }
+        NavigationManager.loadModule("dailyTransaction", contentArea);
     }
 
     @FXML

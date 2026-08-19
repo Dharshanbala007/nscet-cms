@@ -35,67 +35,73 @@
     </VBox>
     <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="10">
         <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <HBox spacing="20" VBox.vgrow="ALWAYS">
-            <TitledPane text="Official Details" expanded="true" collapsible="false" HBox.hgrow="ALWAYS" minHeight="320">
-                <GridPane hgap="10" vgap="8">
+        <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS">
+            <Tab text="Official Details">
+                <GridPane hgap="10" vgap="6">
                     <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
                     <columnConstraints>
-                        <ColumnConstraints minWidth="110" prefWidth="130"/>
-                        <ColumnConstraints minWidth="160" prefWidth="180" HBox.hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
                     </columnConstraints>
                     <Label text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                     <ComboBox fx:id="categoryCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308" promptText="Select"/>
-                    <Label text="Date of Joining:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <DatePicker fx:id="dojPicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <ComboBox fx:id="deptCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308" promptText="Select"/>
-                    <Label text="Designation:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <ComboBox fx:id="desigCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308" promptText="Select"/>
-                    <Label text="Staff Group:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                    <TextField fx:id="staffGroupField" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="1.7976931348623157E308"/>
-                    <Label text="College SCode:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                    <TextField fx:id="collegeCodeField" GridPane.columnIndex="1" GridPane.rowIndex="6" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Transport:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                    <ComboBox fx:id="transportCombo" GridPane.columnIndex="1" GridPane.rowIndex="7" maxWidth="1.7976931348623157E308" promptText="Select"/>
-                    <Label text="Essl Id:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                    <TextField fx:id="esslField" GridPane.columnIndex="1" GridPane.rowIndex="8" maxWidth="1.7976931348623157E308"/>
-                    <Label text="EPF DOJ:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                    <DatePicker fx:id="pfCheck" GridPane.columnIndex="1" GridPane.rowIndex="9" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Date of Joining:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <DatePicker fx:id="dojPicker" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="deptCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308" promptText="Select"/>
+                    <Label text="Designation:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="desigCombo" GridPane.columnIndex="3" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308" promptText="Select"/>
+                    <Label text="Staff Group:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="staffGroupField" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Email:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                    <TextField fx:id="emailField" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
+                    <Label text="College SCode:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <TextField fx:id="collegeCodeField" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Transport:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                    <ComboBox fx:id="transportCombo" GridPane.columnIndex="3" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308" promptText="Select"/>
+                    <Label text="Essl Id:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <TextField fx:id="esslField" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="1.7976931348623157E308"/>
+                    <Label text="EPF DOJ:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                    <CheckBox fx:id="pfCheck" GridPane.columnIndex="3" GridPane.rowIndex="4" text="PF Active"/>
                 </GridPane>
-            </TitledPane>
-            <TitledPane text="Personal Details" expanded="true" collapsible="false" HBox.hgrow="ALWAYS" minHeight="320">
-                <GridPane hgap="10" vgap="8">
+            </Tab>
+            <Tab text="Personal Details">
+                <GridPane hgap="10" vgap="6">
                     <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
                     <columnConstraints>
-                        <ColumnConstraints minWidth="110" prefWidth="130"/>
-                        <ColumnConstraints minWidth="160" prefWidth="180" HBox.hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
                     </columnConstraints>
                     <Label text="Staff Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                     <TextField fx:id="staffCodeField" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Address 1:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <TextField fx:id="address1Field" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="1.7976931348623157E308"/>
                     <Label text="Staff Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Address 2:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <TextField fx:id="address2Field" GridPane.columnIndex="3" GridPane.rowIndex="1" maxWidth="1.7976931348623157E308"/>
                     <Label text="Sex:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     <ComboBox fx:id="genderCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308" promptText="Select"/>
+                    <Label text="City:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                    <TextField fx:id="cityField" GridPane.columnIndex="3" GridPane.rowIndex="2" maxWidth="1.7976931348623157E308"/>
                     <Label text="Date of Birth:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                     <DatePicker fx:id="dobPicker" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308"/>
-                    <HBox GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2" alignment="CENTER_RIGHT">
-                        <CheckBox fx:id="activeCheck" text="Active" selected="true"/>
-                    </HBox>
-                    <Label text="Address 1:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                    <TextField fx:id="address1Field" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Address 2:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                    <TextField fx:id="address2Field" GridPane.columnIndex="1" GridPane.rowIndex="6" maxWidth="1.7976931348623157E308"/>
-                    <Label text="City:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                    <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="7" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Pin Code:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                    <TextField fx:id="pinField" GridPane.columnIndex="1" GridPane.rowIndex="8" maxWidth="1.7976931348623157E308"/>
-                    <Label text="Cell No:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                    <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="9" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Pin Code:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                    <TextField fx:id="pinField" GridPane.columnIndex="3" GridPane.rowIndex="3" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Cell No:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Blood Group:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                    <TextField fx:id="bloodGroupField" GridPane.columnIndex="3" GridPane.rowIndex="4" maxWidth="1.7976931348623157E308"/>
+                    <Label text="Aadhar Number:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                    <TextField fx:id="aadharField" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="1.7976931348623157E308"/>
+                    <CheckBox fx:id="activeCheck" GridPane.columnIndex="3" GridPane.rowIndex="5" text="Active" selected="true"/>
                 </GridPane>
-            </TitledPane>
-        </HBox>
+            </Tab>
+        </TabPane>
         <HBox spacing="8" alignment="CENTER_RIGHT">
             <padding><Insets top="5"/></padding>
             <Region HBox.hgrow="ALWAYS"/>

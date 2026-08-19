@@ -86,7 +86,11 @@
         <!-- Recent Transactions -->
         <VBox styleClass="dash-section" spacing="10">
             <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-            <Label text="RECENT TRANSACTIONS" styleClass="dash-section-title"/>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="RECENT TRANSACTIONS" styleClass="dash-section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="View Full Log" styleClass="dash-outline-btn" onAction="#handleAccountsLog"/>
+            </HBox>
             <TableView fx:id="recentTable" prefHeight="180" styleClass="data-table">
                 <columns>
                     <TableColumn fx:id="colReceipt" text="Receipt No" prefWidth="130"/>

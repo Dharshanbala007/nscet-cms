@@ -185,4 +185,5 @@ public class DashboardController implements Initializable {
     @FXML private void handleStaffMaster() { NavigationManager.loadModule("staff", getContentArea()); }
     @FXML private void handleViewDepartments() { NavigationManager.loadModule("department", getContentArea()); }
     @FXML private void handleViewDesignations() { NavigationManager.loadModule("designation", getContentArea()); }
+    @FXML private void handleAccountsLog() { NavigationManager.loadModule("dailyTransaction", getContentArea()); }
 }

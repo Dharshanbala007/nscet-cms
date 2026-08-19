@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.DailyTransactionController"
+      styleClass="dashboard-root" spacing="15">
+    <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
+
+    <!-- Title & Top Action Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="module-header">
+        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="Accounts Log &amp; Daily Transactions" styleClass="module-title"/>
+            <Label text="View, search, and export real-time account receipts and ledger logs" styleClass="login-subtitle"/>
+        </VBox>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="New Fee Entry" styleClass="save-button" onAction="#handleNewFeeEntry"/>
+            <Button text="Export CSV" styleClass="dash-action-btn" onAction="#handleExport"/>
+            <Button text="Print Log" styleClass="dash-action-btn" onAction="#handlePrint"/>
+        </HBox>
+    </HBox>
+
+    <!-- Summary Metrics Row -->
+    <HBox spacing="15">
+        <VBox styleClass="dash-card dash-card-blue" spacing="4" prefWidth="210" HBox.hgrow="ALWAYS">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="TOTAL COLLECTION" styleClass="dash-card-header"/>
+            <Label fx:id="totalCollectionLabel" text="Rs.0" styleClass="dash-card-number"/>
+            <Label fx:id="receiptCountLabel" text="0 receipts total" styleClass="dash-card-sub"/>
+        </VBox>
+
+        <VBox styleClass="dash-card dash-card-green" spacing="4" prefWidth="210" HBox.hgrow="ALWAYS">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="FEDERAL BANK" styleClass="dash-card-header"/>
+            <Label fx:id="federalBankLabel" text="Rs.0" styleClass="dash-card-number"/>
+            <Label text="Federal Bank &amp; Online" styleClass="dash-card-sub"/>
+        </VBox>
+
+        <VBox styleClass="dash-card dash-card-orange" spacing="4" prefWidth="210" HBox.hgrow="ALWAYS">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="TMB MAIN" styleClass="dash-card-header"/>
+            <Label fx:id="tmbMainLabel" text="Rs.0" styleClass="dash-card-number"/>
+            <Label text="Tamilnad Mercantile Bank" styleClass="dash-card-sub"/>
+        </VBox>
+
+        <VBox styleClass="dash-card dash-card-purple" spacing="4" prefWidth="210" HBox.hgrow="ALWAYS">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="CASH &amp; OTHER" styleClass="dash-card-header"/>
+            <Label fx:id="cashLabel" text="Rs.0" styleClass="dash-card-number"/>
+            <Label text="Direct Cash &amp; Misc Accounts" styleClass="dash-card-sub"/>
+        </VBox>
+    </HBox>
+
+    <!-- Filters Bar -->
+    <VBox styleClass="form-container" spacing="10">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <!-- Search Text -->
+            <VBox spacing="4">
+                <Label text="Search Receipt/Student:" styleClass="section-title"/>
+                <TextField fx:id="searchField" promptText="Receipt No or Student..." prefWidth="210" styleClass="search-field"/>
+            </VBox>
+
+            <!-- From Date -->
+            <VBox spacing="4">
+                <Label text="From Date:" styleClass="section-title"/>
+                <DatePicker fx:id="fromDatePicker" prefWidth="135"/>
+            </VBox>
+
+            <!-- To Date -->
+            <VBox spacing="4">
+                <Label text="To Date:" styleClass="section-title"/>
+                <DatePicker fx:id="toDatePicker" prefWidth="135"/>
+            </VBox>
+
+            <!-- Account Filter -->
+            <VBox spacing="4">
+                <Label text="Account:" styleClass="section-title"/>
+                <ComboBox fx:id="accountFilterCombo" prefWidth="150" promptText="All Accounts"/>
+            </VBox>
+
+            <!-- Payment Mode Filter -->
+            <VBox spacing="4">
+                <Label text="Payment Mode:" styleClass="section-title"/>
+                <ComboBox fx:id="modeFilterCombo" prefWidth="125" promptText="All Modes"/>
+            </VBox>
+
+            <!-- Filter Buttons -->
+            <VBox spacing="4" alignment="BOTTOM_LEFT">
+                <Label text=" " styleClass="section-title"/>
+                <HBox spacing="8">
+                    <Button text="Filter" styleClass="save-button" onAction="#handleApplyFilter"/>
+                    <Button text="Reset" styleClass="cancel-button" onAction="#handleResetFilter"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Accounts Log Data Table -->
+    <VBox styleClass="dash-section" spacing="10" VBox.vgrow="ALWAYS">
+        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="ACCOUNTS LOG TRANSACTIONS" styleClass="dash-section-title" HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="recordSummaryLabel" text="Showing 0 entries" styleClass="info-text"/>
+        </HBox>
+
+        <TableView fx:id="logTable" prefHeight="380" styleClass="data-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colReceipt" text="Receipt No" prefWidth="140"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="110"/>
+                <TableColumn fx:id="colStudent" text="Student" prefWidth="220"/>
+                <TableColumn fx:id="colAmount" text="Amount" prefWidth="130"/>
+                <TableColumn fx:id="colAccount" text="Account" prefWidth="150"/>
+                <TableColumn fx:id="colMode" text="Payment Mode" prefWidth="120"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                <TableColumn fx:id="colActions" text="Action" prefWidth="110"/>
+            </columns>
+        </TableView>
+
+        <!-- Summary Row Footer -->
+        <HBox alignment="CENTER_RIGHT" spacing="20" styleClass="summary-row">
+            <padding><Insets top="5" right="10" bottom="5" left="10"/></padding>
+            <Label text="Filtered Total:" styleClass="section-title"/>
+            <Label fx:id="filteredTotalLabel" text="Rs.0.00" styleClass="running-total"/>
+        </HBox>
+    </VBox>
+</VBox>

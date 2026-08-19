@@ -37,9 +37,9 @@ public class StaffMasterController implements Initializable {
     @FXML private ComboBox<DepartmentMaster> deptCombo;
     @FXML private ComboBox<DesignationMaster> desigCombo;
     @FXML private DatePicker dobPicker, dojPicker;
-    @FXML private DatePicker pfCheck;
-    @FXML private CheckBox activeCheck;
+    @FXML private CheckBox pfCheck, activeCheck;
     @FXML private VBox formPane;
+    @FXML private TabPane tabPane;
     @FXML private Label pageInfo, defaultBanner, warningLabel;
     @FXML private Button prevBtn, nextBtn;
 
@@ -138,6 +138,7 @@ public class StaffMasterController implements Initializable {
         editingId = null;
         clearForm();
         activeCheck.setSelected(true);
+        tabPane.getSelectionModel().selectFirst();
         formPane.setVisible(true);
         formPane.setManaged(true);
     }
@@ -155,7 +156,7 @@ public class StaffMasterController implements Initializable {
         desigCombo.setValue(s.getDesignation());
         dobPicker.setValue(s.getDateOfBirth());
         dojPicker.setValue(s.getDateOfJoining());
-        pfCheck.setValue(null);
+        pfCheck.setSelected(Boolean.TRUE.equals(s.getPfActive()));
         activeCheck.setSelected(Boolean.TRUE.equals(s.getIsActive()));
         String addr = s.getAddress() != null ? s.getAddress() : "";
         String[] parts = addr.split("\n", 2);
@@ -168,6 +169,7 @@ public class StaffMasterController implements Initializable {
         esslField.setText(s.getEsslId());
         staffGroupField.setText(s.getStaffGroup());
         collegeCodeField.setText(s.getCollegeCode());
+        tabPane.getSelectionModel().selectFirst();
         formPane.setVisible(true);
         formPane.setManaged(true);
     }
@@ -209,7 +211,7 @@ public class StaffMasterController implements Initializable {
             s.setTransport("Select".equals(transportCombo.getValue()) ? null : transportCombo.getValue());
             s.setDateOfBirth(dobPicker.getValue());
             s.setDateOfJoining(dojPicker.getValue());
-            s.setPfActive(pfCheck.getValue() != null);
+            s.setPfActive(pfCheck.isSelected());
             s.setIsActive(activeCheck.isSelected());
             String addr1 = address1Field.getText().trim();
             String addr2 = address2Field.getText().trim();
@@ -288,7 +290,7 @@ public class StaffMasterController implements Initializable {
         desigCombo.getSelectionModel().clearSelection();
         dobPicker.setValue(null);
         dojPicker.setValue(null);
-        pfCheck.setValue(null);
+        pfCheck.setSelected(false);
         warningLabel.setText("");
     }
 }

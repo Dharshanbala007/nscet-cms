@@ -45,6 +45,7 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("pettyVoucher", "/fxml/accounts/PettyVoucher.fxml");
         MODULE_FXML_MAP.put("pettyCashDaybook", "/fxml/accounts/PettyCashDaybook.fxml");
         MODULE_FXML_MAP.put("dailyTransaction", "/fxml/accounts/DailyTransaction.fxml");
+        MODULE_FXML_MAP.put("accountsDashboard", "/fxml/accounts/AccountsDashboard.fxml");
         MODULE_FXML_MAP.put("functionExpense", "/fxml/accounts/FunctionExpense.fxml");
     }
 
