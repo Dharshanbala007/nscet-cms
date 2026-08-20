@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.FeeTransactionLogController"
+      styleClass="master-container" spacing="10">
+
+    <!-- Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <Label text="Fee Transaction History" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Export" styleClass="btn-secondary" onAction="#handleExport"/>
+        <Button text="Exit" styleClass="btn-secondary" onAction="#handleExit"/>
+    </HBox>
+
+    <!-- Filters -->
+    <VBox spacing="8" styleClass="form-container">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="From Date:" prefWidth="70"/>
+            <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
+            <Label text="To Date:" prefWidth="70"/>
+            <DatePicker fx:id="toDatePicker" prefWidth="140"/>
+            <Label text="Bank/Account:" prefWidth="90"/>
+            <ComboBox fx:id="bankAccountCombo" prefWidth="140" promptText="All"/>
+            <Label text="Pay Type:" prefWidth="70"/>
+            <ComboBox fx:id="payTypeCombo" prefWidth="120" promptText="All"/>
+            <Button text="Search" styleClass="btn-primary" onAction="#handleSearch"/>
+            <Button text="Reset" styleClass="btn-secondary" onAction="#handleReset"/>
+        </HBox>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="Receipt No:" prefWidth="70"/>
+            <TextField fx:id="receiptNoSearch" prefWidth="160" promptText="Receipt No"/>
+            <Label text="Student Name:" prefWidth="90"/>
+            <TextField fx:id="studentNameSearch" prefWidth="160" promptText="Student Name"/>
+            <Label text="Roll No:" prefWidth="70"/>
+            <TextField fx:id="rollNoSearch" prefWidth="120" promptText="Roll No"/>
+            <Label text="Student Type:" prefWidth="80"/>
+            <ComboBox fx:id="studentTypeCombo" prefWidth="100" promptText="All"/>
+        </HBox>
+    </VBox>
+
+    <!-- Summary Bar -->
+    <HBox spacing="20" alignment="CENTER_LEFT" styleClass="student-info-bar">
+        <padding><Insets top="8" right="15" bottom="8" left="15"/></padding>
+        <Label text="Total Receipts:" styleClass="total-label"/>
+        <Label fx:id="totalReceiptsLabel" text="0" styleClass="total-amount"/>
+        <Region prefWidth="20"/>
+        <Label text="Total Amount:" styleClass="total-label"/>
+        <Label fx:id="totalAmountLabel" text="Rs. 0.00" styleClass="total-amount"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="filterStatus" text="" styleClass="info-text"/>
+    </HBox>
+
+    <!-- Transaction Table -->
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+        <padding><Insets top="0" right="15" bottom="0" left="15"/></padding>
+        <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS" styleClass="data-table" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="50"/>
+                <TableColumn fx:id="colReceiptNo" text="Receipt No" prefWidth="150"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colStudentName" text="Student Name" prefWidth="160"/>
+                <TableColumn fx:id="colRollNo" text="Roll No" prefWidth="100"/>
+                <TableColumn fx:id="colStudentType" text="Type" prefWidth="80"/>
+                <TableColumn fx:id="colAmount" text="Amount (Rs.)" prefWidth="120"/>
+                <TableColumn fx:id="colPaymentMode" text="Payment Mode" prefWidth="110"/>
+                <TableColumn fx:id="colBaseAccount" text="Bank/Account" prefWidth="120"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="80"/>
+                <TableColumn fx:id="colActions" text="Details" prefWidth="70"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Detail Panel (hidden by default) -->
+    <VBox fx:id="detailPanel" visible="false" managed="false" spacing="8" styleClass="form-container">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="Receipt Details" styleClass="form-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Close" styleClass="btn-secondary" onAction="#handleCloseDetail"/>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Label text="Receipt No:" prefWidth="80"/>
+            <Label fx:id="detailReceiptNo" text=""/>
+            <Label text="Date:" prefWidth="40"/>
+            <Label fx:id="detailDate" text=""/>
+            <Label text="Student:" prefWidth="60"/>
+            <Label fx:id="detailStudentName" text=""/>
+            <Label text="Roll No:" prefWidth="60"/>
+            <Label fx:id="detailRollNo" text=""/>
+        </HBox>
+
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Label text="Student Type:" prefWidth="80"/>
+            <Label fx:id="detailStudentType" text=""/>
+            <Label text="Payment Mode:" prefWidth="90"/>
+            <Label fx:id="detailPaymentMode" text=""/>
+            <Label text="Bank/Account:" prefWidth="80"/>
+            <Label fx:id="detailBaseAccount" text=""/>
+            <Label text="Total Amount:" prefWidth="80"/>
+            <Label fx:id="detailTotalAmount" text="" styleClass="total-amount"/>
+        </HBox>
+
+        <Label text="Fee Items Breakdown" styleClass="section-title"/>
+        <TableView fx:id="detailItemsTable" prefHeight="150" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="detailItemName" text="Fee Name" prefWidth="250"/>
+                <TableColumn fx:id="detailItemAmount" text="Amount (Rs.)" prefWidth="150"/>
+                <TableColumn fx:id="detailItemAllocated" text="Allocated To" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Pagination -->
+    <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
+        <padding><Insets top="8" bottom="8"/></padding>
+        <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
+        <Label fx:id="pageInfo" text="Page 1"/>
+        <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+    </HBox>
+</VBox>

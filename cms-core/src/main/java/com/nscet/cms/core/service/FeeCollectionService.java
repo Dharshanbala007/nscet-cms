@@ -71,6 +71,53 @@ public class FeeCollectionService {
         return receiptRepository.countByReceiptDate(date);
     }
 
+    public Page<FeeReceipt> getTransactionLog(LocalDate fromDate, LocalDate toDate,
+                                                  String studentName, String studentType,
+                                                  String bankAccount, String paymentMode,
+                                                  int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        LocalDate from = fromDate != null ? fromDate : LocalDate.of(2000, 1, 1);
+        LocalDate to = toDate != null ? toDate : LocalDate.now();
+        String name = (studentName != null && !studentName.isEmpty()) ? studentName.trim() : null;
+        String type = (studentType != null && !"All".equals(studentType) && !studentType.isEmpty()) ? studentType.trim() : null;
+        String account = (bankAccount != null && !"All".equals(bankAccount) && !bankAccount.isEmpty()) ? bankAccount.trim() : null;
+        String mode = (paymentMode != null && !"All".equals(paymentMode) && !paymentMode.isEmpty()) ? paymentMode.trim() : null;
+
+        return receiptRepository.findFilteredDynamic(from, to, name, type, account, mode, pageable);
+    }
+
+    public BigDecimal getFilteredCollectionAmount(LocalDate fromDate, LocalDate toDate,
+                                                    String studentName, String studentType,
+                                                    String bankAccount, String paymentMode) {
+        LocalDate from = fromDate != null ? fromDate : LocalDate.of(2000, 1, 1);
+        LocalDate to = toDate != null ? toDate : LocalDate.now();
+        String name = (studentName != null && !studentName.isEmpty()) ? studentName.trim() : null;
+        String type = (studentType != null && !"All".equals(studentType) && !studentType.isEmpty()) ? studentType.trim() : null;
+        String account = (bankAccount != null && !"All".equals(bankAccount) && !bankAccount.isEmpty()) ? bankAccount.trim() : null;
+        String mode = (paymentMode != null && !"All".equals(paymentMode) && !paymentMode.isEmpty()) ? paymentMode.trim() : null;
+
+        return receiptRepository.sumFilteredDynamic(from, to, name, type, account, mode);
+    }
+
+    public FeeReceipt getTransactionByReceiptNumber(String receiptNo) {
+        return receiptRepository.findByReceiptNumberWithStudent(receiptNo)
+                .orElseThrow(() -> new ResourceNotFoundException("FeeReceipt", "receiptNumber", receiptNo));
+    }
+
+    public List<FeeReceipt> getTransactionsByStudentRollNo(String rollNo) {
+        return receiptRepository.findByStudentRollNumber(rollNo);
+    }
+
+    public BigDecimal getTotalCollectionAmount() {
+        BigDecimal total = receiptRepository.sumAllAmounts();
+        return total != null ? total : BigDecimal.ZERO;
+    }
+
+    public List<FeeReceipt> getTransactionsByDateRange(LocalDate fromDate, LocalDate toDate) {
+        return receiptRepository.findByDateRangeWithStudentList(fromDate, toDate);
+    }
+
     private String generateReceiptNumber() {
         String prefix = "MIS";
         String dateStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));

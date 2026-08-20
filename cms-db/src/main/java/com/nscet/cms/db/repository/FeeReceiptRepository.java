@@ -38,4 +38,89 @@ public interface FeeReceiptRepository extends JpaRepository<FeeReceipt, Long> {
 
     @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student ORDER BY fr.receiptDate DESC")
     List<FeeReceipt> findTop10WithStudent();
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.receiptDate BETWEEN :fromDate AND :toDate ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findByDateRangeWithStudent(@Param("fromDate") LocalDate fromDate,
+                                                @Param("toDate") LocalDate toDate,
+                                                Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.receiptNumber = :receiptNo")
+    Optional<FeeReceipt> findByReceiptNumberWithStudent(@Param("receiptNo") String receiptNo);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findByStudentNameContaining(@Param("name") String name, Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.student.rollNumber = :rollNo ORDER BY fr.receiptDate DESC")
+    List<FeeReceipt> findByStudentRollNumber(@Param("rollNo") String rollNo);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.studentType = :studentType ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findByStudentType(@Param("studentType") String studentType, Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.baseAccount = :account ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findByBaseAccount(@Param("account") String account, Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.paymentMode = :paymentMode ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findByPaymentMode(@Param("paymentMode") String paymentMode, Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.receiptDate BETWEEN :fromDate AND :toDate " +
+           "AND LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
+           "AND fr.studentType = :studentType " +
+           "AND fr.baseAccount = :account " +
+           "AND fr.paymentMode = :paymentMode " +
+           "ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findFiltered(@Param("fromDate") LocalDate fromDate,
+                                  @Param("toDate") LocalDate toDate,
+                                  @Param("name") String name,
+                                  @Param("studentType") String studentType,
+                                  @Param("account") String account,
+                                  @Param("paymentMode") String paymentMode,
+                                  Pageable pageable);
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.receiptDate BETWEEN :fromDate AND :toDate " +
+           "AND (:name IS NULL OR LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+           "AND (:studentType IS NULL OR fr.studentType = :studentType) " +
+           "AND (:account IS NULL OR fr.baseAccount = :account) " +
+           "AND (:paymentMode IS NULL OR fr.paymentMode = :paymentMode) " +
+           "ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findFilteredDynamic(@Param("fromDate") LocalDate fromDate,
+                                         @Param("toDate") LocalDate toDate,
+                                         @Param("name") String name,
+                                         @Param("studentType") String studentType,
+                                         @Param("account") String account,
+                                         @Param("paymentMode") String paymentMode,
+                                         Pageable pageable);
+
+    @Query("SELECT COALESCE(SUM(fr.totalAmount), 0) FROM FeeReceipt fr WHERE fr.isActive = true " +
+           "AND fr.receiptDate BETWEEN :fromDate AND :toDate " +
+           "AND (:name IS NULL OR LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+           "AND (:studentType IS NULL OR fr.studentType = :studentType) " +
+           "AND (:account IS NULL OR fr.baseAccount = :account) " +
+           "AND (:paymentMode IS NULL OR fr.paymentMode = :paymentMode)")
+    BigDecimal sumFilteredDynamic(@Param("fromDate") LocalDate fromDate,
+                                  @Param("toDate") LocalDate toDate,
+                                  @Param("name") String name,
+                                  @Param("studentType") String studentType,
+                                  @Param("account") String account,
+                                  @Param("paymentMode") String paymentMode);
+
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true ORDER BY fr.receiptDate DESC")
+    Page<FeeReceipt> findAllWithStudent(Pageable pageable);
+
+    @Query("SELECT COALESCE(SUM(fr.totalAmount), 0) FROM FeeReceipt fr WHERE fr.isActive = true")
+    BigDecimal sumAllAmounts();
+
+    @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
+           "AND fr.receiptDate BETWEEN :fromDate AND :toDate ORDER BY fr.receiptDate DESC")
+    List<FeeReceipt> findByDateRangeWithStudentList(@Param("fromDate") LocalDate fromDate,
+                                                     @Param("toDate") LocalDate toDate);
 }

@@ -92,7 +92,7 @@ public class MainShellController implements Initializable {
 
         transactionsMenu.getChildren().clear();
         addMenuItem(transactionsMenu, "Fee Collection", "feeCollection");
-        addMenuItem(transactionsMenu, "Transfer Certificate", "tc");
+        addMenuItem(transactionsMenu, "Fee Transaction History", "feeTransactionLog");
         addMenuItem(transactionsMenu, "Registration Update", "regUpdate");
 
         reportsMenu.getChildren().clear();

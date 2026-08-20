@@ -27,6 +27,7 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("feeCollection", "/fxml/transactions/FeeCollection.fxml");
         MODULE_FXML_MAP.put("tc", "/fxml/transactions/TransferCertificate.fxml");
         MODULE_FXML_MAP.put("regUpdate", "/fxml/transactions/RegistrationUpdate.fxml");
+        MODULE_FXML_MAP.put("feeTransactionLog", "/fxml/transactions/FeeTransactionLog.fxml");
         MODULE_FXML_MAP.put("appReport", "/fxml/reports/ApplicationReport.fxml");
         MODULE_FXML_MAP.put("feesReport", "/fxml/reports/FeesDetailsReport.fxml");
         MODULE_FXML_MAP.put("pendingFees", "/fxml/reports/PendingFeesReport.fxml");
