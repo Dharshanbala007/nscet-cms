@@ -77,8 +77,22 @@ public class FeeCollectionController implements Initializable {
             c.getValue().getAllocatedTo() != null ? c.getValue().getAllocatedTo() : ""));
 
         itemsTable.setItems(items);
-        itemsPane.setVisible(false); itemsPane.setManaged(false);
-        studentNameLabel.setText("--"); rollLabel.setText("--"); deptLabel.setText("--"); semLabel.setText("--");
+        itemsPane.setVisible(true); 
+        itemsPane.setManaged(true);
+
+        try {
+            org.springframework.data.domain.Page<StudentMaster> page = studentService.getAll("", 0, 1, "id", "asc");
+            if (page.hasContent()) {
+                selectedStudent = page.getContent().get(0);
+                studentNameLabel.setText(selectedStudent.getName());
+                rollLabel.setText(selectedStudent.getRollNumber() != null ? selectedStudent.getRollNumber() : "--");
+                deptLabel.setText(selectedStudent.getCommunity() != null ? selectedStudent.getCommunity() : "CSE");
+                semLabel.setText("1");
+                studentSearchField.setText(selectedStudent.getRollNumber());
+            }
+        } catch (Exception e) {
+            System.err.println("[FeeCollectionController] Pre-load student info: " + e.getMessage());
+        }
     }
 
     private void loadFeesFromDB() {

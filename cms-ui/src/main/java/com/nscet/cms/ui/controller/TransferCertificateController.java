@@ -40,8 +40,19 @@ public class TransferCertificateController implements Initializable {
         characterConductCombo.getItems().clear();
         characterConductCombo.getItems().addAll("Select", "Good", "Very Good", "Excellent", "Satisfactory");
         characterConductCombo.getSelectionModel().selectFirst();
-        formPane.setVisible(false);
-        formPane.setManaged(false);
+        formPane.setVisible(true);
+        formPane.setManaged(true);
+
+        try {
+            org.springframework.data.domain.Page<StudentMaster> page = studentService.getAll("", 0, 1, "id", "asc");
+            if (page.hasContent()) {
+                selectedStudent = page.getContent().get(0);
+                searchField.setText(selectedStudent.getRollNumber());
+                handleSearch();
+            }
+        } catch (Exception e) {
+            System.err.println("[TransferCertificateController] Pre-load student info: " + e.getMessage());
+        }
     }
 
     @FXML

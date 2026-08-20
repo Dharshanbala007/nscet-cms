@@ -61,6 +61,7 @@ public class RegistrationUpdateController implements Initializable {
         setupTableColumns();
         table.setItems(tableData);
         table.setEditable(true);
+        handleView();
     }
 
     private void setupCombos() {
