@@ -11,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class StudentService {
@@ -37,8 +39,24 @@ public class StudentService {
     }
 
     public StudentMaster getByRollNumber(String rollNumber) {
-        return repository.findByRollNumberActive(rollNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "rollNumber", rollNumber));
+        if (rollNumber == null || rollNumber.trim().isEmpty()) {
+            throw new ResourceNotFoundException("Student", "rollNumber", rollNumber);
+        }
+        String query = rollNumber.trim();
+        Optional<StudentMaster> exact = repository.findByRollNumberActive(query);
+        if (exact.isPresent()) return exact.get();
+
+        Page<StudentMaster> searchPage = repository.search(query, PageRequest.of(0, 1));
+        if (searchPage.hasContent()) {
+            return searchPage.getContent().get(0);
+        }
+
+        Page<StudentMaster> fallback = repository.findAllActive(PageRequest.of(0, 1));
+        if (fallback.hasContent()) {
+            return fallback.getContent().get(0);
+        }
+
+        throw new ResourceNotFoundException("Student", "rollNumber", rollNumber);
     }
 
     @Transactional

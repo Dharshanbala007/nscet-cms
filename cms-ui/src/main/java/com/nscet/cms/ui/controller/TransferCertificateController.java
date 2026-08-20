@@ -46,33 +46,26 @@ public class TransferCertificateController implements Initializable {
         try {
             org.springframework.data.domain.Page<StudentMaster> page = studentService.getAll("", 0, 1, "id", "asc");
             if (page.hasContent()) {
-                selectedStudent = page.getContent().get(0);
-                searchField.setText(selectedStudent.getRollNumber());
-                handleSearch();
+                StudentMaster s = page.getContent().get(0);
+                searchField.setText(s.getRollNumber() != null ? s.getRollNumber() : "");
+                populateStudentDetails(s);
             }
         } catch (Exception e) {
             System.err.println("[TransferCertificateController] Pre-load student info: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void handleSearch() {
-        String query = searchField.getText() != null ? searchField.getText().trim() : "";
-        if (query.isEmpty()) {
-            showAlert("Search Error", "Please enter a Roll Number to search.", Alert.AlertType.WARNING);
-            return;
-        }
+    private void populateStudentDetails(StudentMaster student) {
+        if (student == null) return;
+        selectedStudent = student;
+        studentNameLabel.setText(selectedStudent.getName());
+        fatherNameLabel.setText(selectedStudent.getFatherName() != null ? selectedStudent.getFatherName() : "N/A");
+        dobLabel.setText(selectedStudent.getDateOfBirth() != null ? selectedStudent.getDateOfBirth().toString() : "N/A");
+        courseLabel.setText(selectedStudent.getAdmissionType() != null ? selectedStudent.getAdmissionType() : "B.E");
+        semLabel.setText("8");
+        admissionNoField.setText(selectedStudent.getAdmissionNo() != null ? selectedStudent.getAdmissionNo() : "N/A");
 
         try {
-            selectedStudent = studentService.getByRollNumber(query);
-            studentNameLabel.setText(selectedStudent.getName());
-            fatherNameLabel.setText(selectedStudent.getFatherName() != null ? selectedStudent.getFatherName() : "N/A");
-            dobLabel.setText(selectedStudent.getDateOfBirth() != null ? selectedStudent.getDateOfBirth().toString() : "N/A");
-            courseLabel.setText(selectedStudent.getAdmissionType() != null ? selectedStudent.getAdmissionType() : "B.E");
-            semLabel.setText("8");
-            admissionNoField.setText(selectedStudent.getAdmissionNo() != null ? selectedStudent.getAdmissionNo() : "N/A");
-
-            // Check if TC already exists for student
             Optional<TransferCertificate> tcOpt = tcService.findByStudent(selectedStudent);
             if (tcOpt.isPresent()) {
                 currentTc = tcOpt.get();
@@ -103,11 +96,24 @@ public class TransferCertificateController implements Initializable {
                 batchField.setText("2022-2026");
                 characterConductCombo.setValue("Good");
             }
-
-            formPane.setVisible(true);
-            formPane.setManaged(true);
         } catch (Exception e) {
-            showAlert("Student Not Found", "No student found with Roll Number: " + query, Alert.AlertType.WARNING);
+            System.err.println("[TransferCertificateController] Error populating TC: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleSearch() {
+        String query = searchField.getText() != null ? searchField.getText().trim() : "";
+        if (query.isEmpty()) {
+            showAlert("Search Error", "Please enter a Roll Number to search.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
+            StudentMaster s = studentService.getByRollNumber(query);
+            populateStudentDetails(s);
+        } catch (Exception e) {
+            showAlert("Student Not Found", "No student found matching: " + query, Alert.AlertType.WARNING);
         }
     }
 
@@ -207,8 +213,8 @@ public class TransferCertificateController implements Initializable {
         courseLabel.setText("--");
         semLabel.setText("--");
 
-        formPane.setVisible(false);
-        formPane.setManaged(false);
+        formPane.setVisible(true);
+        formPane.setManaged(true);
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
