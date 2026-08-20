@@ -10,61 +10,64 @@
 
     <!-- Top Bar -->
     <top>
-        <VBox>
-            <!-- Menu Bar -->
-            <MenuBar>
-                <menus>
-                    <Menu text="Masters">
-                        <items>
-                            <MenuItem text="Bank Master" onAction="#handleBankMaster"/>
-                            <MenuItem text="Department Master" onAction="#handleDepartmentMaster"/>
-                            <MenuItem text="Designation Master" onAction="#handleDesignationMaster"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Staff Master" onAction="#handleStaffMaster"/>
-                        </items>
-                    </Menu>
-                    <Menu text="Transaction">
-                        <items>
-                            <MenuItem text="Pending Bills" onAction="#handlePendingBills"/>
-                            <MenuItem text="Daily Transaction" onAction="#handleDailyTransaction"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Petty Cash" onAction="#handlePettyCash"/>
-                            <MenuItem text="Petty Cash (Suspense)" onAction="#handlePettyCashSuspense"/>
-                            <MenuItem text="Petty Voucher" onAction="#handlePettyVoucher"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Function Expense" onAction="#handleFunctionExpense"/>
-                        </items>
-                    </Menu>
-                    <Menu text="Reports">
-                        <items>
-                            <MenuItem text="Day Book Petty Cash" onAction="#handleDayBookPettyCash"/>
-                            <MenuItem text="Day Book" onAction="#handleDayBook"/>
-                            <MenuItem text="Cash Book" onAction="#handleCashBook"/>
-                            <MenuItem text="Daybook Report" onAction="#handleDaybookReport"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Bank Book" onAction="#handleBankBook"/>
-                            <MenuItem text="Expenditure Summary" onAction="#handleExpenditureSummary"/>
-                            <MenuItem text="Trial Balance" onAction="#handleTrialBalance"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Income and Expenditure Ac" onAction="#handleIncomeExpenditure"/>
-                            <MenuItem text="Profit Loss Ac" onAction="#handleProfitLoss"/>
-                            <MenuItem text="Balance Sheet" onAction="#handleBalanceSheet"/>
-                            <SeparatorMenuItem/>
-                            <MenuItem text="Petty Cash Suspense" onAction="#handlePettyCashSuspenseReport"/>
-                            <MenuItem text="Pending Bill Details" onAction="#handlePendingBillDetails"/>
-                        </items>
-                    </Menu>
-                </menus>
-            </MenuBar>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="0">
+            <padding>
+                <Insets top="0" right="25" bottom="0" left="25"/>
+            </padding>
 
-            <!-- Action Bar -->
-            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="5">
-                <padding><Insets top="5" right="25" bottom="5" left="25"/></padding>
-                <Button text="Find" styleClass="dash-action-btn" onAction="#handleFind"/>
-                <Button text="Exit" styleClass="logout-button" onAction="#handleExit"/>
-            </HBox>
-        </VBox>
+            <Label text="NSCET CMS" styleClass="app-logo"/>
+            <Label text="  |  " styleClass="top-bar-separator"/>
+            <Label text="ACCOUNTS" styleClass="portal-badge"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label fx:id="academicYearLabel" styleClass="year-badge"/>
+
+            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+            <Button text="Find" styleClass="dash-action-btn" onAction="#handleFind" maxWidth="Infinity"/>
+            <Button text="Exit" styleClass="logout-button" onAction="#handleExit"/>
+        </HBox>
     </top>
+
+    <!-- Left Sidebar -->
+    <left>
+        <ScrollPane fitToWidth="true" pannable="true" styleClass="sidebar-scroll" prefWidth="220">
+            <VBox fx:id="sidebar" styleClass="sidebar" spacing="0">
+                <padding>
+                    <Insets top="10" right="0" bottom="10" left="0"/>
+                </padding>
+
+                <!-- Dashboard -->
+                <Button text="Dashboard" styleClass="sidebar-button dashboard-btn"
+                        onAction="#handleDashboard" maxWidth="Infinity"/>
+
+                <Separator styleClass="sidebar-separator"/>
+
+                <!-- Masters -->
+                <ToggleButton fx:id="mastersToggle" text="Masters" styleClass="sidebar-toggle"
+                              onAction="#toggleMasters" maxWidth="Infinity"/>
+                <VBox fx:id="mastersMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+                <!-- Transactions -->
+                <ToggleButton fx:id="transactionsToggle" text="Transactions" styleClass="sidebar-toggle"
+                              onAction="#toggleTransactions" maxWidth="Infinity"/>
+                <VBox fx:id="transactionsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+                <!-- Reports -->
+                <ToggleButton fx:id="reportsToggle" text="Reports" styleClass="sidebar-toggle"
+                              onAction="#toggleReports" maxWidth="Infinity"/>
+                <VBox fx:id="reportsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </left>
 
     <!-- Content Area -->
     <center>
