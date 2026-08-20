@@ -4,8 +4,91 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      styleClass="master-container" spacing="15">
+      fx:controller="com.nscet.cms.ui.controller.FunctionExpenseController"
+      styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-    <Label text="Function Expense" styleClass="module-title"/>
-    <Label text="Coming Soon" styleClass="placeholder-label"/>
+
+    <!-- Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Function &amp; Event Expenses" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search function, dept, status..." styleClass="search-field" prefWidth="250"/>
+        <Button text="Search" styleClass="btn-secondary" onAction="#handleSearch"/>
+        <Button text="+ Add Function Expense" styleClass="btn-primary" onAction="#handleAddNew"/>
+    </HBox>
+
+    <!-- Summary Metrics Cards Bar -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #f8fafc; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Total Budget Allocated" style="-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="totalBudgetLabel" text="₹0.00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        </VBox>
+        <Separator orientation="VERTICAL"/>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Total Expenses Incurred" style="-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="totalExpenseLabel" text="₹0.00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+        </VBox>
+        <Separator orientation="VERTICAL"/>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Net Remaining Balance" style="-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+            <Label fx:id="totalBalanceLabel" text="₹0.00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Data Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="280" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colSlNo" text="S.No" prefWidth="50"/>
+            <TableColumn fx:id="colFunctionName" text="Function / Event Name" prefWidth="220"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="150"/>
+            <TableColumn fx:id="colDate" text="Event Date" prefWidth="110"/>
+            <TableColumn fx:id="colBudget" text="Allocated Budget" prefWidth="130"/>
+            <TableColumn fx:id="colExpense" text="Total Expense" prefWidth="130"/>
+            <TableColumn fx:id="colBalance" text="Balance" prefWidth="120"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="120"/>
+            <TableColumn fx:id="colRemarks" text="Remarks" prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <!-- Add / Edit Form Pane -->
+    <TitledPane fx:id="formPane" text="Function Expense Entry" expanded="true">
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <GridPane hgap="15" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120" prefWidth="130"/>
+                    <ColumnConstraints minWidth="200" prefWidth="220"/>
+                    <ColumnConstraints minWidth="120" prefWidth="130"/>
+                    <ColumnConstraints minWidth="200" prefWidth="220"/>
+                </columnConstraints>
+
+                <Label text="Function Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="functionNameField" promptText="e.g. Graduation Day 2026" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Department:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="deptCombo" promptText="Select Dept" prefWidth="220" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                <Label text="Event Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="datePicker" prefWidth="220" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Allocated Budget:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="budgetField" promptText="₹ 0.00" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Total Expense:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="expenseField" promptText="₹ 0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="statusCombo" prefWidth="220" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                <Label text="Remarks:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="remarksField" promptText="Expense details &amp; notes" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3"/>
+            </GridPane>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Delete Selected" styleClass="btn-sm-danger" onAction="#handleDelete"/>
+                <Button text="Save Function Expense" styleClass="btn-primary" onAction="#handleSave"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
 </VBox>

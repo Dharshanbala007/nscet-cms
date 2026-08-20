@@ -83,6 +83,7 @@ public class PettyCashDaybookController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         datePicker.setValue(LocalDate.now());
         setupTable();
+        handleView();
     }
 
     private void setupTable() {
