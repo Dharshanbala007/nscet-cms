@@ -165,10 +165,10 @@ public class ReceiptReprintController implements Initializable {
                 for (FeeReceiptItem item : currentFeeReceipt.getItems()) {
                     String name = item.getFeesName() != null ? item.getFeesName().getName() : "College Fee";
                     BigDecimal amt = item.getAmount() != null ? item.getAmount() : java.math.BigDecimal.ZERO;
-                    itemsList.add(new ReceiptPrintItemDto(i++, name, amt));
+                    itemsList.add(new ReceiptPrintItemDto(i++, "1", name, amt));
                 }
             } else {
-                itemsList.add(new ReceiptPrintItemDto(1, "Tuition Fee", totalAmt));
+                itemsList.add(new ReceiptPrintItemDto(1, "1", "Tuition Fee", totalAmt));
             }
 
             ReportManager.printReport("FeeReceipt", itemsList, params);
@@ -196,16 +196,19 @@ public class ReceiptReprintController implements Initializable {
 
     public static class ReceiptPrintItemDto {
         private Integer slNo;
+        private String semester;
         private String feeName;
         private java.math.BigDecimal feeAmount;
 
-        public ReceiptPrintItemDto(Integer slNo, String feeName, java.math.BigDecimal feeAmount) {
+        public ReceiptPrintItemDto(Integer slNo, String semester, String feeName, java.math.BigDecimal feeAmount) {
             this.slNo = slNo;
+            this.semester = semester;
             this.feeName = feeName;
             this.feeAmount = feeAmount;
         }
 
         public Integer getSlNo() { return slNo; }
+        public String getSemester() { return semester; }
         public String getFeeName() { return feeName; }
         public java.math.BigDecimal getFeeAmount() { return feeAmount; }
     }

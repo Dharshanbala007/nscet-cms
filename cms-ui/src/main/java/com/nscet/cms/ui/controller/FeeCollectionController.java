@@ -514,10 +514,10 @@ public class FeeCollectionController implements Initializable {
                 for (FeeReceiptItem item : fr.getItems()) {
                     String name = item.getFeesName() != null ? item.getFeesName().getName() : "College Fee";
                     BigDecimal amt = item.getAmount() != null ? item.getAmount() : BigDecimal.ZERO;
-                    itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(i++, name, amt));
+                    itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(i++, "1", name, amt));
                 }
             } else {
-                itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(1, "Tuition Fee", totalAmt));
+                itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(1, "1", "Tuition Fee", totalAmt));
             }
 
             com.nscet.cms.reports.ReportManager.printReport("FeeReceipt", itemsList, params);
