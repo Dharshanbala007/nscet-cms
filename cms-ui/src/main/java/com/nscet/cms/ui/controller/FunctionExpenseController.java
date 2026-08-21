@@ -69,11 +69,10 @@ public class FunctionExpenseController implements Initializable {
         statusCombo.getSelectionModel().selectFirst();
 
         deptCombo.getItems().clear();
-        deptCombo.getItems().addAll("GENERAL", "COMPUTER SCIENCE", "ELECTRONICS", "MECHANICAL", "CIVIL", "PHYSICAL EDUCATION");
         try {
-            List<DepartmentMaster> depts = departmentRepository.findAll();
+            List<DepartmentMaster> depts = departmentRepository.findAllActiveList();
             for (DepartmentMaster d : depts) {
-                if (d.getName() != null && !deptCombo.getItems().contains(d.getName())) {
+                if (d.getName() != null) {
                     deptCombo.getItems().add(d.getName());
                 }
             }

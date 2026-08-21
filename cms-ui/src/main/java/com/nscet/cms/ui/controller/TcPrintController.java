@@ -1,16 +1,24 @@
 package com.nscet.cms.ui.controller;
 
+import com.nscet.cms.db.entity.StudentDetails;
+import com.nscet.cms.db.entity.StudentMaster;
+import com.nscet.cms.db.repository.StudentDetailsRepository;
+import com.nscet.cms.db.repository.StudentMasterRepository;
 import com.nscet.cms.reports.ReportManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -25,6 +33,11 @@ public class TcPrintController implements Initializable {
     @FXML private DatePicker applicationDateField;
     @FXML private TextField characterField;
     @FXML private TextArea tcPreviewArea;
+
+    @Autowired private StudentMasterRepository studentMasterRepository;
+    @Autowired private StudentDetailsRepository studentDetailsRepository;
+
+    private StudentMaster currentStudent = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -42,36 +55,87 @@ public class TcPrintController implements Initializable {
     private void handleSearch() {
         String roll = studentSearchField.getText();
         if (roll == null || roll.trim().isEmpty()) {
-            roll = "2024FMEO13";
+            showAlert("Search Error", "Please enter a Roll Number.", Alert.AlertType.WARNING);
+            return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("===============================================================\n");
-        sb.append("         NADAR SARASWATHI COLLEGE OF ENGG & TECH, THENI        \n");
-        sb.append("                TRANSFER & CONDUCT CERTIFICATE                  \n");
-        sb.append("===============================================================\n");
-        sb.append("TC Serial No      : ").append(serialNoField.getText()).append("\n");
-        sb.append("Academic Year     : ").append(academicYearCombo.getValue()).append("\n");
-        sb.append("Student Roll No   : ").append(roll.toUpperCase()).append("\n");
-        sb.append("Student Name      : SANTHOSH M\n");
-        sb.append("Father's Name     : MUNIYASAMY M\n");
-        sb.append("Date of Birth     : 14/05/2003\n");
-        sb.append("Course & Dept     : B.E. Mechanical Engineering\n");
-        sb.append("Date of Leaving   : ").append(dateLeftField.getValue()).append("\n");
-        sb.append("TC Application Dt : ").append(applicationDateField.getValue()).append("\n");
-        sb.append("TC Issue Date     : ").append(tcDateField.getValue()).append("\n");
-        sb.append("Character & Conduct: ").append(characterField.getText().toUpperCase()).append("\n");
-        sb.append("===============================================================\n");
+        try {
+            Optional<StudentMaster> studentOpt = studentMasterRepository.findByRollNumber(roll.trim());
+            if (studentOpt.isEmpty()) {
+                showAlert("Not Found", "No student found with Roll Number: " + roll, Alert.AlertType.INFORMATION);
+                return;
+            }
 
-        tcPreviewArea.setText(sb.toString());
+            currentStudent = studentOpt.get();
+            String deptName = "N/A";
+            String degree = "B.E.";
+            String semStr = "N/A";
+
+            try {
+                List<StudentDetails> details = studentDetailsRepository.findByStudentIdAndAcademicYear(
+                        currentStudent.getId(), academicYearCombo.getValue());
+                if (details != null && !details.isEmpty()) {
+                    StudentDetails sd = details.get(0);
+                    if (sd.getDepartment() != null) deptName = sd.getDepartment().getName();
+                    if (sd.getDegree() != null) degree = sd.getDegree();
+                    if (sd.getSemester() != null) semStr = romanNumeral(sd.getSemester());
+                }
+            } catch (Exception ignored) {}
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("===============================================================\n");
+            sb.append("         NADAR SARASWATHI COLLEGE OF ENGG & TECH, THENI        \n");
+            sb.append("                TRANSFER & CONDUCT CERTIFICATE                  \n");
+            sb.append("===============================================================\n");
+            sb.append("TC Serial No      : ").append(serialNoField.getText()).append("\n");
+            sb.append("Academic Year     : ").append(academicYearCombo.getValue()).append("\n");
+            sb.append("Student Roll No   : ").append(currentStudent.getRollNumber()).append("\n");
+            sb.append("Student Name      : ").append(currentStudent.getName() != null ? currentStudent.getName() : "N/A").append("\n");
+            sb.append("Father's Name     : ").append(currentStudent.getFatherName() != null ? currentStudent.getFatherName() : "N/A").append("\n");
+            sb.append("Date of Birth     : ").append(currentStudent.getDateOfBirth() != null
+                    ? currentStudent.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A").append("\n");
+            sb.append("Course & Dept     : ").append(degree).append(" ").append(deptName).append("\n");
+            sb.append("Date of Leaving   : ").append(dateLeftField.getValue()).append("\n");
+            sb.append("TC Application Dt : ").append(applicationDateField.getValue()).append("\n");
+            sb.append("TC Issue Date     : ").append(tcDateField.getValue()).append("\n");
+            sb.append("Character & Conduct: ").append(characterField.getText().toUpperCase()).append("\n");
+            sb.append("===============================================================\n");
+
+            tcPreviewArea.setText(sb.toString());
+        } catch (Exception e) {
+            showAlert("Error", "Error searching student: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private String romanNumeral(int sem) {
+        switch (sem) {
+            case 1: return "I";
+            case 2: return "II";
+            case 3: return "III";
+            case 4: return "IV";
+            case 5: return "V";
+            case 6: return "VI";
+            case 7: return "VII";
+            case 8: return "VIII";
+            default: return String.valueOf(sem);
+        }
     }
 
     @FXML
     private void handlePrint() {
         try {
             ReportManager.printReport("TransferCertificate", Collections.emptyList(), new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Transfer & Conduct Certificate print job sent.").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Print failed: " + e.getMessage()).showAndWait();
         }
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

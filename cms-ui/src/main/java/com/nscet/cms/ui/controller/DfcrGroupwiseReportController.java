@@ -52,8 +52,8 @@ public class DfcrGroupwiseReportController implements Initializable {
 
     private void setupTableColumns() {
         feeGroupCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFeeGroup()));
-        totalCollectedCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalCollected().toString()));
-        receiptCountCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getReceiptCount()));
+        totalCollectedCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalCollected() != null ? c.getValue().getTotalCollected().toString() : "0.00"));
+        receiptCountCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getReceiptCount() != null ? c.getValue().getReceiptCount() : 0));
     }
 
     @FXML
@@ -67,8 +67,9 @@ public class DfcrGroupwiseReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("DailyCollectionRegister", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "DFCR Groupwise Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

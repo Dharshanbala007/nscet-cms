@@ -73,7 +73,7 @@ public class DaySettlementController implements Initializable {
     private void handleLoad() {
         try {
             LocalDate date = settlementDate.getValue() != null ? settlementDate.getValue() : LocalDate.now();
-            List<FeeReceipt> receipts = feeReceiptRepository.findAll();
+            List<FeeReceipt> receipts = feeReceiptRepository.findByDateRangeWithStudentList(date, date);
 
             tableData.clear();
             BigDecimal totalCash = BigDecimal.ZERO;
@@ -81,20 +81,18 @@ public class DaySettlementController implements Initializable {
             BigDecimal totalOnline = BigDecimal.ZERO;
 
             for (FeeReceipt fr : receipts) {
-                if (fr.getReceiptDate() != null && fr.getReceiptDate().equals(date)) {
-                    String baseAcc = baseAccountCombo.getValue();
-                    if ("ALL".equals(baseAcc) || baseAcc == null || (fr.getBaseAccount() != null && fr.getBaseAccount().equalsIgnoreCase(baseAcc))) {
-                        tableData.add(fr);
-                        BigDecimal amt = fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO;
-                        String mode = fr.getPaymentMode() != null ? fr.getPaymentMode().toUpperCase() : "CASH";
+                String baseAcc = baseAccountCombo.getValue();
+                if ("ALL".equals(baseAcc) || baseAcc == null || (fr.getBaseAccount() != null && fr.getBaseAccount().equalsIgnoreCase(baseAcc))) {
+                    tableData.add(fr);
+                    BigDecimal amt = fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO;
+                    String mode = fr.getPaymentMode() != null ? fr.getPaymentMode().toUpperCase() : "CASH";
 
-                        if (mode.contains("CASH")) {
-                            totalCash = totalCash.add(amt);
-                        } else if (mode.contains("CHEQUE") || mode.contains("DD")) {
-                            totalCheque = totalCheque.add(amt);
-                        } else {
-                            totalOnline = totalOnline.add(amt);
-                        }
+                    if (mode.contains("CASH")) {
+                        totalCash = totalCash.add(amt);
+                    } else if (mode.contains("CHEQUE") || mode.contains("DD")) {
+                        totalCheque = totalCheque.add(amt);
+                    } else {
+                        totalOnline = totalOnline.add(amt);
                     }
                 }
             }

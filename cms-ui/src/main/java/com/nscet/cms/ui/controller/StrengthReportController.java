@@ -56,14 +56,14 @@ public class StrengthReportController implements Initializable {
         deptCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
         degreeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDegree()));
         yearCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getYear()));
-        semesterCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSemester()));
-        maleCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getMaleCount()));
-        femaleCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getFemaleCount()));
-        totalCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getTotalCount()));
-        ocCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getOcCount()));
-        bcCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBcCount()));
-        mbcCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getMbcCount()));
-        scstCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getScstCount()));
+        semesterCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSemester() != null ? c.getValue().getSemester() : 0));
+        maleCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getMaleCount() != null ? c.getValue().getMaleCount() : 0));
+        femaleCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getFemaleCount() != null ? c.getValue().getFemaleCount() : 0));
+        totalCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getTotalCount() != null ? c.getValue().getTotalCount() : 0));
+        ocCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getOcCount() != null ? c.getValue().getOcCount() : 0));
+        bcCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getBcCount() != null ? c.getValue().getBcCount() : 0));
+        mbcCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getMbcCount() != null ? c.getValue().getMbcCount() : 0));
+        scstCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getScstCount() != null ? c.getValue().getScstCount() : 0));
     }
 
     @FXML
@@ -77,8 +77,9 @@ public class StrengthReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("StrengthReport", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Strength Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

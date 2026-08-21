@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("oldSalaryStructure", "/fxml/payroll/OldSalaryStructure.fxml");
         MODULE_FXML_MAP.put("pfEsiTools", "/fxml/payroll/PfEsiTools.fxml");
 
-        // New Detailed Reports from Screenshots 55-70
+        // Detailed Reports from Screenshots 55-70
         MODULE_FXML_MAP.put("odAdmissionReport", "/fxml/payroll/OdAdmissionReport.fxml");
         MODULE_FXML_MAP.put("clMonthlyView", "/fxml/payroll/ClMonthlyView.fxml");
         MODULE_FXML_MAP.put("deductionSalaryReport", "/fxml/payroll/DeductionSalaryReport.fxml");
@@ -116,6 +117,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load PortalSelection");
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load PortalSelection");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -130,6 +135,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load Login");
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load Login");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -144,6 +153,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load MainShell");
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load MainShell");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -158,6 +171,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load AccountsShell");
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load AccountsShell");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -172,6 +189,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load PayrollShell");
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load PayrollShell");
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -193,6 +214,10 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load module '" + module + "' from " + fxmlPath);
             e.printStackTrace();
+            try (PrintWriter pw = new PrintWriter(new FileWriter("module-error.log", true))) {
+                pw.println("Failed to load module: " + module + " from " + fxmlPath);
+                e.printStackTrace(pw);
+            } catch (Exception ignored) {}
             loadPlaceholder(module, contentArea);
         }
     }

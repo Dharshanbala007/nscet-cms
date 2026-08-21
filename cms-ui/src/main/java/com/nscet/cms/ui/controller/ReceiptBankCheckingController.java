@@ -60,7 +60,7 @@ public class ReceiptBankCheckingController implements Initializable {
         bankNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBankName()));
         accountNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAccountNo()));
         paymentModeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaymentMode()));
-        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount().toString()));
+        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount() != null ? c.getValue().getAmount().toString() : "0.00"));
         statusCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
     }
 
@@ -75,8 +75,9 @@ public class ReceiptBankCheckingController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("DailyCollectionRegister", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Receipt Bank Checking Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

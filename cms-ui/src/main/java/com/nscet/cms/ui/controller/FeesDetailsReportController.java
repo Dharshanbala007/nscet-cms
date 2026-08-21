@@ -62,18 +62,18 @@ public class FeesDetailsReportController implements Initializable {
 
     private void setupTableColumns() {
         branchCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBranch()));
-        semesterCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSemester()));
-        strengthCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStrength()));
-        prePendingCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPrePending().toString()));
-        tuitionFeeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTuitionFee().toString()));
-        otherFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOtherFees().toString()));
-        busFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusFees().toString()));
-        totalAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalAmount().toString()));
-        paidAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount().toString()));
-        pendingAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendingAmount().toString()));
-        colAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColAmt().toString()));
-        karAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKarAmt().toString()));
-        busAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusAmt().toString()));
+        semesterCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSemester() != null ? c.getValue().getSemester() : 0));
+        strengthCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getStrength() != null ? c.getValue().getStrength() : 0));
+        prePendingCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPrePending() != null ? c.getValue().getPrePending().toString() : "0.00"));
+        tuitionFeeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTuitionFee() != null ? c.getValue().getTuitionFee().toString() : "0.00"));
+        otherFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOtherFees() != null ? c.getValue().getOtherFees().toString() : "0.00"));
+        busFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusFees() != null ? c.getValue().getBusFees().toString() : "0.00"));
+        totalAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalAmount() != null ? c.getValue().getTotalAmount().toString() : "0.00"));
+        paidAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount() != null ? c.getValue().getPaidAmount().toString() : "0.00"));
+        pendingAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendingAmount() != null ? c.getValue().getPendingAmount().toString() : "0.00"));
+        colAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColAmt() != null ? c.getValue().getColAmt().toString() : "0.00"));
+        karAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKarAmt() != null ? c.getValue().getKarAmt().toString() : "0.00"));
+        busAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusAmt() != null ? c.getValue().getBusAmt().toString() : "0.00"));
     }
 
     @FXML
@@ -88,8 +88,9 @@ public class FeesDetailsReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("FeeReceipt", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Fees Paid and Pending Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

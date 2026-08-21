@@ -62,7 +62,7 @@ public class ApplicationReportController implements Initializable {
     }
 
     private void setupTableColumns() {
-        slNoCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSlNo()));
+        slNoCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getSlNo() != null ? c.getValue().getSlNo() : 0));
         appNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAppNo()));
         studentNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
         addressCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAddress()));
@@ -88,8 +88,9 @@ public class ApplicationReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("ApplicationReport", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Application Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }
