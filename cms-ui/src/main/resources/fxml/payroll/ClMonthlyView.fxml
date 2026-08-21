@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.ClMonthlyViewController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Casual Leave Monthly View (12 Month Grid)" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Category:"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="130"/>
+        <Label text="Leave Type:"/>
+        <ComboBox fx:id="typeCombo" prefWidth="120"/>
+        <Button text="View Monthly Grid" styleClass="btn-primary" onAction="#handleView"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="160"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="110"/>
+            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="100"/>
+            <TableColumn fx:id="colAllowed" text="CL Allowed" prefWidth="85"/>
+            <TableColumn fx:id="colJan" text="Jan" prefWidth="45"/>
+            <TableColumn fx:id="colFeb" text="Feb" prefWidth="45"/>
+            <TableColumn fx:id="colMar" text="Mar" prefWidth="45"/>
+            <TableColumn fx:id="colApr" text="Apr" prefWidth="45"/>
+            <TableColumn fx:id="colMay" text="May" prefWidth="45"/>
+            <TableColumn fx:id="colJun" text="Jun" prefWidth="45"/>
+            <TableColumn fx:id="colJul" text="Jul" prefWidth="45"/>
+            <TableColumn fx:id="colAug" text="Aug" prefWidth="45"/>
+            <TableColumn fx:id="colSep" text="Sep" prefWidth="45"/>
+            <TableColumn fx:id="colOct" text="Oct" prefWidth="45"/>
+            <TableColumn fx:id="colNov" text="Nov" prefWidth="45"/>
+            <TableColumn fx:id="colDec" text="Dec" prefWidth="45"/>
+            <TableColumn fx:id="colTaken" text="Total Taken" prefWidth="85"/>
+            <TableColumn fx:id="colBalance" text="Balance CL" prefWidth="85"/>
+        </columns>
+    </TableView>
+</VBox>

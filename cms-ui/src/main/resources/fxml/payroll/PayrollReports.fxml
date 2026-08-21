@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.PayrollReportsController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Payroll Acquittance &amp; Tally Report" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Category:"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="130"/>
+        <Label text="Department:"/>
+        <ComboBox fx:id="deptCombo" prefWidth="150"/>
+        <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <!-- Report Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="130"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="140"/>
+            <TableColumn fx:id="colBankAcc" text="Bank Account No" prefWidth="160"/>
+            <TableColumn fx:id="colGross" text="Gross Pay (₹)" prefWidth="120"/>
+            <TableColumn fx:id="colEpf" text="EPF (₹)" prefWidth="90"/>
+            <TableColumn fx:id="colEsi" text="ESI (₹)" prefWidth="90"/>
+            <TableColumn fx:id="colIncomeTax" text="Income Tax" prefWidth="100"/>
+            <TableColumn fx:id="colProfTax" text="Prof. Tax" prefWidth="90"/>
+            <TableColumn fx:id="colNet" text="Net Credit (₹)" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <!-- Totals Bar -->
+    <HBox spacing="25" alignment="CENTER_RIGHT" style="-fx-background-color: #f8fafc; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label fx:id="totalGrossLabel" text="Total Gross: ₹0.00" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e293b;"/>
+        <Label fx:id="totalDeductionLabel" text="Total Deductions: ₹0.00" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #ef4444;"/>
+        <Label fx:id="totalNetCreditLabel" text="Total Net Credit: ₹0.00" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #10b981;"/>
+    </HBox>
+</VBox>

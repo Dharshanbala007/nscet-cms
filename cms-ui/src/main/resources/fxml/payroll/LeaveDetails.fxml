@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.LeaveDetailsController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Staff Detailed Leave Check &amp; Summary" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="130"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="130"/>
+        <Button text="View Leave Details" styleClass="btn-primary" onAction="#handleView"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="90"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="160"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="120"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="95"/>
+            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="100"/>
+            <TableColumn fx:id="colCl" text="CL" prefWidth="50"/>
+            <TableColumn fx:id="colLop" text="LOP" prefWidth="50"/>
+            <TableColumn fx:id="colAb" text="AB" prefWidth="50"/>
+            <TableColumn fx:id="colSpl" text="SPL" prefWidth="50"/>
+            <TableColumn fx:id="colOd" text="OD" prefWidth="50"/>
+            <TableColumn fx:id="colComp" text="Comp" prefWidth="55"/>
+            <TableColumn fx:id="colFdp" text="FDP" prefWidth="50"/>
+            <TableColumn fx:id="colOdAdmis" text="OD Admis" prefWidth="75"/>
+            <TableColumn fx:id="colOdOthers" text="OD Others" prefWidth="75"/>
+            <TableColumn fx:id="colClBalance" text="CL Balance" prefWidth="85"/>
+        </columns>
+    </TableView>
+</VBox>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.OdAdmissionReportController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="OD Admission Duty Report" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="130"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="130"/>
+        <Label text="Department:"/>
+        <ComboBox fx:id="deptCombo" prefWidth="150"/>
+        <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="150"/>
+            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="120"/>
+            <TableColumn fx:id="colOdCount" text="OD Admission Count" prefWidth="140"/>
+            <TableColumn fx:id="colRemarks" text="Remarks / Duty Details" prefWidth="250"/>
+        </columns>
+    </TableView>
+</VBox>

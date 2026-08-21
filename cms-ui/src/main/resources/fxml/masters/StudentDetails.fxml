@@ -5,59 +5,115 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.StudentDetailsController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
+    <!-- Module Header -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Student Details" styleClass="module-title"/>
+        <Label text="Student Master Details &amp; Semester History" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Search by Roll No or Name..." styleClass="search-field" onKeyTyped="#handleSearch"/>
     </HBox>
 
+    <!-- Main Student Table -->
     <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-        <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
         <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-                <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
-                <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
+                <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
+                <TableColumn fx:id="nameCol" text="Name" prefWidth="160"/>
                 <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
-                <TableColumn fx:id="semesterCol" text="Semester" prefWidth="80"/>
+                <TableColumn fx:id="semesterCol" text="Current Sem" prefWidth="90"/>
                 <TableColumn fx:id="admissionTypeCol" text="Admission Type" prefWidth="120"/>
                 <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
             </columns>
         </TableView>
         <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
-            <padding><Insets top="10" bottom="10"/></padding>
+            <padding><Insets top="6" bottom="6"/></padding>
             <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
             <Label fx:id="pageInfo"/>
             <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
         </HBox>
     </VBox>
 
-    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
-        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-        <Label text="Student Details" styleClass="form-title"/>
-        <GridPane hgap="15" vgap="10">
+    <!-- Interactive Semester Details & History Inspector -->
+    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="12" style="-fx-background-color: #ffffff; -fx-padding: 15; -fx-border-color: #1976d2; -fx-border-width: 1.5; -fx-border-radius: 6;">
+
+        <!-- Header with Category Filter -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="Student Semester Details &amp; History Inspector" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #0d47a1;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Filter Detail View:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="viewCategoryCombo" onAction="#handleFilterCategory" prefWidth="250"/>
+        </HBox>
+        <Separator/>
+
+        <!-- Student Summary Cards Bar -->
+        <GridPane hgap="15" vgap="8">
             <columnConstraints>
-                <ColumnConstraints minWidth="100" prefWidth="120"/>
-                <ColumnConstraints minWidth="200" prefWidth="250"/>
-                <ColumnConstraints minWidth="100" prefWidth="120"/>
-                <ColumnConstraints minWidth="200" prefWidth="250"/>
+                <ColumnConstraints minWidth="100" prefWidth="110"/>
+                <ColumnConstraints minWidth="180" prefWidth="220"/>
+                <ColumnConstraints minWidth="120" prefWidth="130"/>
+                <ColumnConstraints minWidth="180" prefWidth="220"/>
             </columnConstraints>
-            <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="rollNoField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-            <TextField fx:id="nameField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-            <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="deptCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Select"/>
-            <Label text="Semester:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="semesterCombo" GridPane.columnIndex="3" GridPane.rowIndex="1" promptText="Select"/>
-            <Label text="Admission Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="admissionTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select"/>
+            <Label text="Roll No:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="rollNoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Name:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="nameField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+            <Label text="Department:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="deptCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="220"/>
+            <Label text="Admission Type:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="admissionTypeCombo" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="220"/>
         </GridPane>
+
+        <!-- Semester Navigation Bar (Sem 1 to Sem 8) -->
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 8 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <Label text="Select Semester:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <HBox spacing="5">
+                <Button fx:id="btnSem1" text="Sem 1" onAction="#handleSem1" styleClass="btn-sm"/>
+                <Button fx:id="btnSem2" text="Sem 2" onAction="#handleSem2" styleClass="btn-sm"/>
+                <Button fx:id="btnSem3" text="Sem 3" onAction="#handleSem3" styleClass="btn-sm"/>
+                <Button fx:id="btnSem4" text="Sem 4" onAction="#handleSem4" styleClass="btn-sm"/>
+                <Button fx:id="btnSem5" text="Sem 5" onAction="#handleSem5" styleClass="btn-sm"/>
+                <Button fx:id="btnSem6" text="Sem 6" onAction="#handleSem6" styleClass="btn-sm"/>
+                <Button fx:id="btnSem7" text="Sem 7" onAction="#handleSem7" styleClass="btn-sm"/>
+                <Button fx:id="btnSem8" text="Sem 8" onAction="#handleSem8" styleClass="btn-sm"/>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="semBacklogLabel" text="PENDING BACKLOG: ₹0.00 (PAID)" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;"/>
+        </HBox>
+
+        <!-- Dynamic Category Preview Area -->
+        <VBox spacing="8" style="-fx-background-color: #f8fafc; -fx-padding: 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label fx:id="semTitleLabel" text="SEMESTER 1 DETAILS (2024-25 ODD - Section A)" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e293b;"/>
+            </HBox>
+
+            <!-- Particulars & Category Details Table -->
+            <TableView fx:id="categoryDetailTable" prefHeight="130" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="col1" text="Particular / Course / Receipt" prefWidth="220"/>
+                    <TableColumn fx:id="col2" text="Details / Credits / Amount" prefWidth="180"/>
+                    <TableColumn fx:id="col3" text="Paid / Grade / Mode" prefWidth="150"/>
+                    <TableColumn fx:id="col4" text="Pending / Status" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <!-- Metrics Summary Cards -->
+            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 6 12; -fx-border-color: #e2e8f0; -fx-border-radius: 4;">
+                <Label text="Tuition:"/>
+                <Label fx:id="lblSemTuition" text="₹25,000.00" style="-fx-font-weight: bold;"/>
+                <Label text="Other Fees:"/>
+                <Label fx:id="lblSemOther" text="₹15,000.00" style="-fx-font-weight: bold;"/>
+                <Label text="Bus Fee:"/>
+                <Label fx:id="lblSemBus" text="₹8,000.00" style="-fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Total Fee Paid:"/>
+                <Label fx:id="lblSemPaid" text="₹48,000.00" style="-fx-font-weight: bold; -fx-text-fill: #2563eb;"/>
+            </HBox>
+        </VBox>
+
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
-            <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
+            <Button text="Close Inspector" styleClass="btn-secondary" onAction="#handleCancel"/>
         </HBox>
     </VBox>
 </VBox>

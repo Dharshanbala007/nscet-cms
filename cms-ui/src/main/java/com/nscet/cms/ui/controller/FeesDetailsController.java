@@ -48,6 +48,13 @@ public class FeesDetailsController implements Initializable {
     @FXML private Button prevBtn;
     @FXML private Button nextBtn;
 
+    @FXML private Label semTitleLabel;
+    @FXML private Label semBacklogLabel;
+    @FXML private Label lblSemTuition;
+    @FXML private Label lblSemOther;
+    @FXML private Label lblSemBus;
+    @FXML private Label lblSemPaid;
+
     @Autowired private FeesDetailsRepository feesDetailsRepository;
     @Autowired private FeesMasterRepository feesMasterRepository;
     @Autowired private DepartmentMasterRepository departmentRepository;
@@ -260,5 +267,31 @@ public class FeesDetailsController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML private void handleSem1() { updateSemPreview(1, "2024-25 ODD", "Section A", 25000, 15000, 8000, 48000, 0); }
+    @FXML private void handleSem2() { updateSemPreview(2, "2024-25 EVEN", "Section A", 25000, 15000, 8000, 48000, 0); }
+    @FXML private void handleSem3() { updateSemPreview(3, "2025-26 ODD", "Section A", 25000, 15000, 8000, 43000, 5000); }
+    @FXML private void handleSem4() { updateSemPreview(4, "2025-26 EVEN", "Section A", 25000, 15000, 8000, 20000, 28000); }
+    @FXML private void handleSem5() { updateSemPreview(5, "2026-27 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem6() { updateSemPreview(6, "2026-27 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem7() { updateSemPreview(7, "2027-28 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem8() { updateSemPreview(8, "2027-28 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
+
+    private void updateSemPreview(int sem, String yearType, String sec, double tuition, double other, double bus, double paid, double backlog) {
+        if (semTitleLabel == null) return;
+        semTitleLabel.setText("SEMESTER " + sem + " PREVIEW (" + yearType + " - " + sec + ")");
+        lblSemTuition.setText(String.format("₹%,.2f", tuition));
+        lblSemOther.setText(String.format("₹%,.2f", other));
+        lblSemBus.setText(String.format("₹%,.2f", bus));
+        lblSemPaid.setText(String.format("₹%,.2f", paid));
+
+        if (backlog > 0) {
+            semBacklogLabel.setText(String.format("PENDING BACKLOG: ₹%,.2f (OVERDUE)", backlog));
+            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #ef4444;");
+        } else {
+            semBacklogLabel.setText("PENDING BACKLOG: ₹0.00 (FULLY PAID)");
+            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;");
+        }
     }
 }

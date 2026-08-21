@@ -43,6 +43,13 @@ public class StudentMasterController implements Initializable {
     @FXML private Button prevBtn, nextBtn;
     @FXML private Button headerAddBtn, headerModifyBtn, headerDeleteBtn, headerCloseBtn;
 
+    @FXML private Label semTitleLabel;
+    @FXML private Label semBacklogLabel;
+    @FXML private Label lblSemTuition;
+    @FXML private Label lblSemOther;
+    @FXML private Label lblSemBus;
+    @FXML private Label lblSemPaid;
+
     @Autowired private StudentService service;
     @Autowired private DepartmentService departmentService;
     @Autowired(required = false) private AuditService auditService;
@@ -118,15 +125,27 @@ public class StudentMasterController implements Initializable {
         setupEditableCombo(communityCombo);
         setupEditableCombo(religionCombo);
 
-        statusDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        table.setItems(tableData); loadData();
+        if (statusDate != null) {
+            statusDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }
+        table.setItems(tableData);
+        loadData();
     }
 
     private void loadData() {
-        Page<StudentMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
-        tableData.clear(); tableData.addAll(page.getContent());
-        pageInfo.setText(String.format("Page %d of %d", currentPage + 1, page.getTotalPages()));
-        prevBtn.setDisable(currentPage == 0); nextBtn.setDisable(currentPage >= page.getTotalPages() - 1);
+        try {
+            Page<StudentMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
+            tableData.clear();
+            tableData.addAll(page.getContent());
+            int totalPages = Math.max(page.getTotalPages(), 1);
+            if (pageInfo != null) {
+                pageInfo.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
+            }
+            if (prevBtn != null) prevBtn.setDisable(currentPage == 0);
+            if (nextBtn != null) nextBtn.setDisable(currentPage >= totalPages - 1);
+        } catch (Exception e) {
+            System.err.println("[StudentMasterController] loadData error: " + e.getMessage());
+        }
     }
 
     @FXML private void handleSearch() { currentPage = 0; loadData(); }
@@ -311,8 +330,32 @@ public class StudentMasterController implements Initializable {
             if (auditService != null) {
                 auditService.log(action, tableName, recordId, null, details, null);
             }
-        } catch (Exception e) {
-            System.err.println("[StudentMaster] Audit log failed: " + e.getMessage());
+        } catch (Exception ignored) {}
+    }
+
+    @FXML private void handleSem1() { updateSemPreview(1, "2024-25 ODD", "Section A", 25000, 15000, 8000, 48000, 0); }
+    @FXML private void handleSem2() { updateSemPreview(2, "2024-25 EVEN", "Section A", 25000, 15000, 8000, 48000, 0); }
+    @FXML private void handleSem3() { updateSemPreview(3, "2025-26 ODD", "Section A", 25000, 15000, 8000, 43000, 5000); }
+    @FXML private void handleSem4() { updateSemPreview(4, "2025-26 EVEN", "Section A", 25000, 15000, 8000, 20000, 28000); }
+    @FXML private void handleSem5() { updateSemPreview(5, "2026-27 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem6() { updateSemPreview(6, "2026-27 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem7() { updateSemPreview(7, "2027-28 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
+    @FXML private void handleSem8() { updateSemPreview(8, "2027-28 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
+
+    private void updateSemPreview(int sem, String yearType, String sec, double tuition, double other, double bus, double paid, double backlog) {
+        if (semTitleLabel == null) return;
+        semTitleLabel.setText("SEMESTER " + sem + " PREVIEW (" + yearType + " - " + sec + ")");
+        lblSemTuition.setText(String.format("₹%,.2f", tuition));
+        lblSemOther.setText(String.format("₹%,.2f", other));
+        lblSemBus.setText(String.format("₹%,.2f", bus));
+        lblSemPaid.setText(String.format("₹%,.2f", paid));
+
+        if (backlog > 0) {
+            semBacklogLabel.setText(String.format("PENDING BACKLOG: ₹%,.2f (OVERDUE)", backlog));
+            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #ef4444;");
+        } else {
+            semBacklogLabel.setText("PENDING BACKLOG: ₹0.00 (FULLY PAID)");
+            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;");
         }
     }
 }

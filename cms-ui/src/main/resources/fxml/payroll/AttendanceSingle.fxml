@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.AttendanceSingleController"
+      styleClass="master-container" spacing="15">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Single Staff Attendance Entry" styleClass="module-title"/>
+    </HBox>
+
+    <TitledPane text="Single Attendance Entry Form" expanded="true">
+        <VBox spacing="15">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <GridPane hgap="15" vgap="12">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="130" prefWidth="140"/>
+                    <ColumnConstraints minWidth="250" prefWidth="280"/>
+                </columnConstraints>
+
+                <Label text="Attendance Date:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <DatePicker fx:id="datePicker" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Staff Member:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="staffCombo" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Session Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="sessionCombo" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Attendance Type:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <ComboBox fx:id="typeCombo" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Remarks / Reason:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="remarksField" promptText="Enter reason or notes..." prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER_RIGHT">
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Save Single Entry" styleClass="btn-primary" onAction="#handleSave"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+</VBox>

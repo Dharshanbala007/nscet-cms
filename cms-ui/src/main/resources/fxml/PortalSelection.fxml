@@ -50,7 +50,7 @@
                 <Label text="Payroll Portal" styleClass="portal-card-title"/>
                 <Label text="Salary processing,\nattendance, deductions\nand payslips" styleClass="portal-card-desc"/>
                 <Region prefHeight="10"/>
-                <Button text="COMING SOON" styleClass="portal-btn-disabled" maxWidth="Infinity" disable="true"/>
+                <Button text="OPEN PAYROLL" styleClass="portal-btn-admin" onAction="#handlePayroll" maxWidth="Infinity"/>
             </VBox>
         </HBox>
 

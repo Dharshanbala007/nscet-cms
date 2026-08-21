@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.SalaryIncrementController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Increment &amp; Revised Salary Details" styleClass="module-title"/>
+    </HBox>
+
+    <!-- Increment Log Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="220" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colEffDate" text="Effective Date" prefWidth="120"/>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
+            <TableColumn fx:id="colOldBasic" text="Old Basic Pay" prefWidth="110"/>
+            <TableColumn fx:id="colNewBasic" text="New Basic Pay" prefWidth="110"/>
+            <TableColumn fx:id="colIncrement" text="Increment (₹)" prefWidth="110"/>
+            <TableColumn fx:id="colNewGross" text="New Gross Pay" prefWidth="120"/>
+            <TableColumn fx:id="colRemarks" text="Remarks" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <!-- Apply Increment Form -->
+    <TitledPane text="Apply Salary Increment / Pay Revision" expanded="true">
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <GridPane hgap="15" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120" prefWidth="130"/>
+                    <ColumnConstraints minWidth="200" prefWidth="210"/>
+                    <ColumnConstraints minWidth="120" prefWidth="130"/>
+                    <ColumnConstraints minWidth="200" prefWidth="210"/>
+                </columnConstraints>
+
+                <Label text="Staff Member:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="staffCombo" prefWidth="210" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Effective Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <DatePicker fx:id="datePicker" prefWidth="210" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                <Label text="Old Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="oldBasicField" editable="false" style="-fx-background-color: #f1f5f9;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="New Basic Pay:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="newBasicField" promptText="Enter revised basic..." GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Old Special Allw:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="oldSplField" editable="false" style="-fx-background-color: #f1f5f9;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="New Special Allw:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="newSplField" promptText="Enter revised special allw..." GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                <Label text="Remarks / Reason:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="remarksField" promptText="Appraisal 2026 / Promotion" prefWidth="210" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+            </GridPane>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Apply Increment" styleClass="btn-primary" onAction="#handleApply"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+</VBox>

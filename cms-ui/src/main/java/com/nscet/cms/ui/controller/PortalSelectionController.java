@@ -36,7 +36,7 @@ public class PortalSelectionController implements Initializable {
     @Autowired
     private UserSession userSession;
 
-    private String targetPortal; // "ADMIN" or "ACCOUNTS"
+    private String targetPortal; // "ADMIN", "ACCOUNTS", or "PAYROLL"
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,6 +60,11 @@ public class PortalSelectionController implements Initializable {
     @FXML
     private void handleAccounts() {
         promptPortalLogin("ACCOUNTS", "accounts");
+    }
+
+    @FXML
+    private void handlePayroll() {
+        promptPortalLogin("PAYROLL", "admin");
     }
 
     private void promptPortalLogin(String portal, String defaultUsername) {
@@ -99,6 +104,9 @@ public class PortalSelectionController implements Initializable {
             } else if ("ACCOUNTS".equalsIgnoreCase(targetPortal)) {
                 System.out.println("[PortalSelection] Accounts portal login successful for user: " + username);
                 NavigationManager.openAccountsShell();
+            } else if ("PAYROLL".equalsIgnoreCase(targetPortal)) {
+                System.out.println("[PortalSelection] Payroll portal login successful for user: " + username);
+                NavigationManager.openPayrollShell();
             }
         } catch (Exception e) {
             String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) 

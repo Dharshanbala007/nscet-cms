@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.SalaryLeaveCheckController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Salary Leave Check &amp; LOP Verification Tool" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Staff Code:"/>
+        <ComboBox fx:id="staffCombo" prefWidth="250"/>
+        <Button text="Verify Leave &amp; LOP" styleClass="btn-primary" onAction="#handleVerify"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
+            <TableColumn fx:id="colClAvail" text="CL Available" prefWidth="110"/>
+            <TableColumn fx:id="colClTaken" text="CL Taken" prefWidth="100"/>
+            <TableColumn fx:id="colLopCount" text="LOP Days" prefWidth="100"/>
+            <TableColumn fx:id="colLopDeduction" text="LOP Deduction (₹)" prefWidth="130"/>
+            <TableColumn fx:id="colStatus" text="Salary Status" prefWidth="130"/>
+        </columns>
+    </TableView>
+</VBox>

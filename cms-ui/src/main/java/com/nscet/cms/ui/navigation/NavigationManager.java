@@ -53,6 +53,27 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("dailyTransaction", "/fxml/accounts/DailyTransaction.fxml");
         MODULE_FXML_MAP.put("accountsDashboard", "/fxml/accounts/AccountsDashboard.fxml");
         MODULE_FXML_MAP.put("functionExpense", "/fxml/accounts/FunctionExpense.fxml");
+
+        // Payroll Modules
+        MODULE_FXML_MAP.put("leaveMaster", "/fxml/payroll/LeaveMaster.fxml");
+        MODULE_FXML_MAP.put("staffSalary", "/fxml/payroll/StaffSalary.fxml");
+        MODULE_FXML_MAP.put("attendanceEntry", "/fxml/payroll/AttendanceEntry.fxml");
+        MODULE_FXML_MAP.put("attendanceSingle", "/fxml/payroll/AttendanceSingle.fxml");
+        MODULE_FXML_MAP.put("salaryIncrement", "/fxml/payroll/SalaryIncrement.fxml");
+        MODULE_FXML_MAP.put("leaveDetails", "/fxml/payroll/LeaveDetails.fxml");
+        MODULE_FXML_MAP.put("payrollCalc", "/fxml/payroll/PayrollCalculation.fxml");
+        MODULE_FXML_MAP.put("payrollReports", "/fxml/payroll/PayrollReports.fxml");
+        MODULE_FXML_MAP.put("payslipPrint", "/fxml/payroll/PayslipPrint.fxml");
+        MODULE_FXML_MAP.put("payrollDashboard", "/fxml/payroll/PayrollDashboard.fxml");
+        MODULE_FXML_MAP.put("monthlyLeaveCredit", "/fxml/payroll/MonthlyLeaveCredit.fxml");
+        MODULE_FXML_MAP.put("salaryLeaveCheck", "/fxml/payroll/SalaryLeaveCheck.fxml");
+        MODULE_FXML_MAP.put("oldSalaryStructure", "/fxml/payroll/OldSalaryStructure.fxml");
+        MODULE_FXML_MAP.put("pfEsiTools", "/fxml/payroll/PfEsiTools.fxml");
+
+        // New Detailed Reports from Screenshots 55-70
+        MODULE_FXML_MAP.put("odAdmissionReport", "/fxml/payroll/OdAdmissionReport.fxml");
+        MODULE_FXML_MAP.put("clMonthlyView", "/fxml/payroll/ClMonthlyView.fxml");
+        MODULE_FXML_MAP.put("deductionSalaryReport", "/fxml/payroll/DeductionSalaryReport.fxml");
     }
 
     private static String currentStylesheet;
@@ -95,10 +116,6 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load PortalSelection");
             e.printStackTrace();
-            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
-                pw.println("Failed to load PortalSelection");
-                e.printStackTrace(pw);
-            } catch (Exception ignored) {}
         }
     }
 
@@ -113,10 +130,6 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load Login");
             e.printStackTrace();
-            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
-                pw.println("Failed to load Login");
-                e.printStackTrace(pw);
-            } catch (Exception ignored) {}
         }
     }
 
@@ -131,10 +144,6 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load MainShell");
             e.printStackTrace();
-            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
-                pw.println("Failed to load MainShell");
-                e.printStackTrace(pw);
-            } catch (Exception ignored) {}
         }
     }
 
@@ -149,10 +158,20 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load AccountsShell");
             e.printStackTrace();
-            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
-                pw.println("Failed to load AccountsShell");
-                e.printStackTrace(pw);
-            } catch (Exception ignored) {}
+        }
+    }
+
+    public static void openPayrollShell() {
+        try {
+            FXMLLoader loader = new FXMLLoader(NavigationManager.class.getResource("/fxml/payroll/PayrollShell.fxml"));
+            loader.setControllerFactory(NscetCmsApp.getContext()::getBean);
+            Parent root = loader.load();
+            switchRoot(root);
+            NscetCmsApp.getPrimaryStage().setMinWidth(1024);
+            NscetCmsApp.getPrimaryStage().setMinHeight(768);
+        } catch (Exception e) {
+            System.err.println("[NavigationManager] Failed to load PayrollShell");
+            e.printStackTrace();
         }
     }
 
@@ -174,10 +193,6 @@ public class NavigationManager {
         } catch (Exception e) {
             System.err.println("[NavigationManager] Failed to load module '" + module + "' from " + fxmlPath);
             e.printStackTrace();
-            try (PrintWriter pw = new PrintWriter(new FileWriter("D:\\javadev\\nscet-cms\\module-error.log"))) {
-                pw.println("Failed to load module: " + module + " from " + fxmlPath);
-                e.printStackTrace(pw);
-            } catch (Exception ignored) {}
             loadPlaceholder(module, contentArea);
         }
     }

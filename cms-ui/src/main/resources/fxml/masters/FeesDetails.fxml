@@ -5,7 +5,7 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.FeesDetailsController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="0">
 
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
         <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
@@ -27,7 +27,7 @@
             </columns>
         </TableView>
         <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
-            <padding><Insets top="10" bottom="10"/></padding>
+            <padding><Insets top="8" bottom="8"/></padding>
             <Button fx:id="prevBtn" text="Previous" onAction="#handlePrevious"/>
             <Label fx:id="pageInfo"/>
             <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
@@ -35,7 +35,7 @@
     </VBox>
 
     <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
-        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
         <Label text="Fee Details" styleClass="form-title"/>
         <GridPane hgap="15" vgap="10">
             <columnConstraints>

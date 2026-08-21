@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.MonthlyLeaveCreditController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Monthly Leave Credit &amp; Deduction Tool" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Month:"/>
+        <ComboBox fx:id="monthCombo" prefWidth="130"/>
+        <Label text="Credit Count:"/>
+        <TextField fx:id="creditCountField" text="1" prefWidth="50"/>
+        <Button text="Run Monthly Credit" styleClass="btn-primary" onAction="#handleRunCredit"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
+            <TableColumn fx:id="colClBefore" text="CL (Before)" prefWidth="110"/>
+            <TableColumn fx:id="colCredited" text="Credited" prefWidth="100"/>
+            <TableColumn fx:id="colClAfter" text="CL (After)" prefWidth="110"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="130"/>
+        </columns>
+    </TableView>
+</VBox>

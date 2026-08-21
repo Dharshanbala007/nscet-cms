@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.StaffSalaryController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Staff Salary Details &amp; Structure" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search code, name, dept..." styleClass="search-field" prefWidth="250"/>
+        <Button text="Search" styleClass="btn-secondary" onAction="#handleSearch"/>
+        <Button text="+ Add Staff Salary" styleClass="btn-primary" onAction="#handleClear"/>
+    </HBox>
+
+    <!-- Data Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="220" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="90"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="130"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="140"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="100"/>
+            <TableColumn fx:id="colBasic" text="Basic Pay" prefWidth="110"/>
+            <TableColumn fx:id="colSpl" text="Special Allw" prefWidth="110"/>
+            <TableColumn fx:id="colHra" text="HRA" prefWidth="90"/>
+            <TableColumn fx:id="colGross" text="Gross Salary" prefWidth="120"/>
+            <TableColumn fx:id="colNet" text="Net Salary" prefWidth="120"/>
+            <TableColumn fx:id="colBank" text="Bank Acc No" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Staff Details Form -->
+    <TitledPane text="Staff Personal &amp; Pay Structure Details" expanded="true">
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <GridPane hgap="15" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints minWidth="180" prefWidth="190"/>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints minWidth="180" prefWidth="190"/>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints minWidth="180" prefWidth="190"/>
+                </columnConstraints>
+
+                <!-- Row 0: Basic Info -->
+                <Label text="Staff Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="codeField" promptText="e.g. NSIOT21" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Staff Name:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <TextField fx:id="nameField" promptText="Full Name" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                <Label text="Category:" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="categoryCombo" prefWidth="190" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+
+                <!-- Row 1: Dept & Desig -->
+                <Label text="Department:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="deptCombo" prefWidth="190" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Designation:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="desigCombo" prefWidth="190" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Bank Name:" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                <TextField fx:id="bankNameField" promptText="e.g. Federal Bank" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+
+                <!-- Row 2: Earnings -->
+                <Label text="Bank Acc No:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="bankAccField" promptText="148201000..." GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Basic Pay:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="basicPayField" promptText="15000.00" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                <Label text="Special Allowance:" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+                <TextField fx:id="splAllowanceField" promptText="21000.00" GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+
+                <!-- Row 3: HRA & Conveyance -->
+                <Label text="HRA:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="hraField" promptText="12000.00" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Washing Allowance:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                <TextField fx:id="washingField" promptText="6000.00" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+                <Label text="Conveyance:" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+                <TextField fx:id="conveyanceField" promptText="0.00" GridPane.columnIndex="5" GridPane.rowIndex="3"/>
+
+                <!-- Row 4: Deductions -->
+                <Label text="EPF Deduction:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="epfField" promptText="1800.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="ESI Deduction:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="esiField" promptText="0.00" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+                <Label text="Income Tax:" GridPane.columnIndex="4" GridPane.rowIndex="4"/>
+                <TextField fx:id="incomeTaxField" promptText="0.00" GridPane.columnIndex="5" GridPane.rowIndex="4"/>
+
+                <!-- Row 5: PT & Club -->
+                <Label text="Professional Tax:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <TextField fx:id="profTaxField" promptText="200.00" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="Staff Club:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                <TextField fx:id="staffClubField" promptText="0.00" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+
+                <Label text="CL Balance:" GridPane.columnIndex="4" GridPane.rowIndex="5"/>
+                <TextField fx:id="clBalanceField" promptText="12" GridPane.columnIndex="5" GridPane.rowIndex="5"/>
+            </GridPane>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+                <Button text="Save Staff Details" styleClass="btn-primary" onAction="#handleSave"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+</VBox>
