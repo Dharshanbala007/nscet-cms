@@ -188,14 +188,17 @@ public class ReportService {
 
     // 4. Application Report
     public List<ApplicationReportDto> getApplicationReport(LocalDate from, LocalDate to) {
+        LocalDate start = from != null ? from : LocalDate.of(1970, 1, 1);
+        LocalDate end = to != null ? to : LocalDate.of(2099, 12, 31);
+        if (start.isAfter(end)) { LocalDate t = start; start = end; end = t; }
+
         List<StudentMaster> students = studentMasterRepository.findAll();
         List<ApplicationReportDto> list = new ArrayList<>();
         int count = 1;
 
         for (StudentMaster s : students) {
             if (s.getDateOfJoining() != null) {
-                if (from != null && s.getDateOfJoining().isBefore(from)) continue;
-                if (to != null && s.getDateOfJoining().isAfter(to)) continue;
+                if (s.getDateOfJoining().isBefore(start) || s.getDateOfJoining().isAfter(end)) continue;
             }
 
             ApplicationReportDto dto = new ApplicationReportDto();
@@ -316,8 +319,12 @@ public class ReportService {
 
     // 7. Receipt Bank Checking
     public List<ReceiptBankCheckingDto> getReceiptBankChecking(LocalDate from, LocalDate to, String accountNo) {
-        List<FeeReceipt> receipts = (from != null && to != null)
-                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+        LocalDate start = from != null ? from : LocalDate.of(1970, 1, 1);
+        LocalDate end = to != null ? to : LocalDate.of(2099, 12, 31);
+        if (start.isAfter(end)) { LocalDate t = start; start = end; end = t; }
+
+        List<FeeReceipt> receipts = (from != null || to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(start, end)
                 : feeReceiptRepository.findAll();
         List<ReceiptBankCheckingDto> list = new ArrayList<>();
 
@@ -342,8 +349,12 @@ public class ReportService {
 
     // 8. Headwise Details
     public List<HeadwiseDetailsDto> getHeadwiseDetails(LocalDate from, LocalDate to, String type, String dept, String semester) {
-        List<FeeReceipt> receipts = (from != null && to != null)
-                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+        LocalDate start = from != null ? from : LocalDate.of(1970, 1, 1);
+        LocalDate end = to != null ? to : LocalDate.of(2099, 12, 31);
+        if (start.isAfter(end)) { LocalDate t = start; start = end; end = t; }
+
+        List<FeeReceipt> receipts = (from != null || to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(start, end)
                 : feeReceiptRepository.findAll();
         List<HeadwiseDetailsDto> list = new ArrayList<>();
 
@@ -425,8 +436,12 @@ public class ReportService {
 
     // 10. DFCR Report
     public List<DfcrReportDto> getDfcrReport(LocalDate from, LocalDate to, String baseAccount, String paymentMode) {
-        List<FeeReceipt> receipts = (from != null && to != null)
-                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+        LocalDate start = from != null ? from : LocalDate.of(1970, 1, 1);
+        LocalDate end = to != null ? to : LocalDate.of(2099, 12, 31);
+        if (start.isAfter(end)) { LocalDate t = start; start = end; end = t; }
+
+        List<FeeReceipt> receipts = (from != null || to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(start, end)
                 : feeReceiptRepository.findAll();
         List<DfcrReportDto> list = new ArrayList<>();
 
@@ -464,8 +479,12 @@ public class ReportService {
 
     // 11. DFCR Groupwise Report
     public List<DfcrGroupwiseDto> getDfcrGroupwiseReport(LocalDate from, LocalDate to) {
-        List<FeeReceipt> receipts = (from != null && to != null)
-                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+        LocalDate start = from != null ? from : LocalDate.of(1970, 1, 1);
+        LocalDate end = to != null ? to : LocalDate.of(2099, 12, 31);
+        if (start.isAfter(end)) { LocalDate t = start; start = end; end = t; }
+
+        List<FeeReceipt> receipts = (from != null || to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(start, end)
                 : feeReceiptRepository.findAll();
 
         Map<String, BigDecimal> groupTotals = new LinkedHashMap<>();

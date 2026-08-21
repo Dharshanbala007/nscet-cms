@@ -77,8 +77,10 @@ public class FeeCollectionService {
                                                   int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        LocalDate from = fromDate != null ? fromDate : LocalDate.of(2000, 1, 1);
-        LocalDate to = toDate != null ? toDate : LocalDate.now();
+        LocalDate from = fromDate != null ? fromDate : LocalDate.of(1970, 1, 1);
+        LocalDate to = toDate != null ? toDate : LocalDate.of(2099, 12, 31);
+        if (from.isAfter(to)) { LocalDate t = from; from = to; to = t; }
+
         String name = (studentName != null && !studentName.isEmpty()) ? studentName.trim() : null;
         String type = (studentType != null && !"All".equals(studentType) && !studentType.isEmpty()) ? studentType.trim() : null;
         String account = (bankAccount != null && !"All".equals(bankAccount) && !bankAccount.isEmpty()) ? bankAccount.trim() : null;
@@ -90,8 +92,9 @@ public class FeeCollectionService {
     public BigDecimal getFilteredCollectionAmount(LocalDate fromDate, LocalDate toDate,
                                                     String studentName, String studentType,
                                                     String bankAccount, String paymentMode) {
-        LocalDate from = fromDate != null ? fromDate : LocalDate.of(2000, 1, 1);
-        LocalDate to = toDate != null ? toDate : LocalDate.now();
+        LocalDate from = fromDate != null ? fromDate : LocalDate.of(1970, 1, 1);
+        LocalDate to = toDate != null ? toDate : LocalDate.of(2099, 12, 31);
+        if (from.isAfter(to)) { LocalDate t = from; from = to; to = t; }
         String name = (studentName != null && !studentName.isEmpty()) ? studentName.trim() : null;
         String type = (studentType != null && !"All".equals(studentType) && !studentType.isEmpty()) ? studentType.trim() : null;
         String account = (bankAccount != null && !"All".equals(bankAccount) && !bankAccount.isEmpty()) ? bankAccount.trim() : null;

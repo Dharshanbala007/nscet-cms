@@ -21,7 +21,7 @@ public interface FeeReceiptRepository extends JpaRepository<FeeReceipt, Long> {
     Page<FeeReceipt> findByStudentIdOrderByReceiptDateDesc(Long studentId, Pageable pageable);
 
     @Query("SELECT fr FROM FeeReceipt fr WHERE fr.isActive = true " +
-           "AND fr.receiptDate BETWEEN :fromDate AND :toDate ORDER BY fr.receiptDate DESC")
+           "AND fr.receiptDate >= :fromDate AND fr.receiptDate <= :toDate ORDER BY fr.receiptDate DESC")
     List<FeeReceipt> findByDateRange(@Param("fromDate") LocalDate fromDate,
                                      @Param("toDate") LocalDate toDate);
 
@@ -85,11 +85,11 @@ public interface FeeReceiptRepository extends JpaRepository<FeeReceipt, Long> {
                                   Pageable pageable);
 
     @Query("SELECT fr FROM FeeReceipt fr LEFT JOIN FETCH fr.student WHERE fr.isActive = true " +
-           "AND fr.receiptDate BETWEEN :fromDate AND :toDate " +
-           "AND (:name IS NULL OR LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-           "AND (:studentType IS NULL OR fr.studentType = :studentType) " +
-           "AND (:account IS NULL OR fr.baseAccount = :account) " +
-           "AND (:paymentMode IS NULL OR fr.paymentMode = :paymentMode) " +
+           "AND fr.receiptDate >= :fromDate AND fr.receiptDate <= :toDate " +
+           "AND (:name IS NULL OR :name = '' OR (fr.student IS NOT NULL AND LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%')))) " +
+           "AND (:studentType IS NULL OR :studentType = '' OR :studentType = 'All' OR fr.studentType = :studentType) " +
+           "AND (:account IS NULL OR :account = '' OR :account = 'All' OR fr.baseAccount = :account) " +
+           "AND (:paymentMode IS NULL OR :paymentMode = '' OR :paymentMode = 'All' OR fr.paymentMode = :paymentMode) " +
            "ORDER BY fr.receiptDate DESC")
     Page<FeeReceipt> findFilteredDynamic(@Param("fromDate") LocalDate fromDate,
                                          @Param("toDate") LocalDate toDate,
@@ -100,11 +100,11 @@ public interface FeeReceiptRepository extends JpaRepository<FeeReceipt, Long> {
                                          Pageable pageable);
 
     @Query("SELECT COALESCE(SUM(fr.totalAmount), 0) FROM FeeReceipt fr WHERE fr.isActive = true " +
-           "AND fr.receiptDate BETWEEN :fromDate AND :toDate " +
-           "AND (:name IS NULL OR LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
-           "AND (:studentType IS NULL OR fr.studentType = :studentType) " +
-           "AND (:account IS NULL OR fr.baseAccount = :account) " +
-           "AND (:paymentMode IS NULL OR fr.paymentMode = :paymentMode)")
+           "AND fr.receiptDate >= :fromDate AND fr.receiptDate <= :toDate " +
+           "AND (:name IS NULL OR :name = '' OR (fr.student IS NOT NULL AND LOWER(fr.student.name) LIKE LOWER(CONCAT('%', :name, '%')))) " +
+           "AND (:studentType IS NULL OR :studentType = '' OR :studentType = 'All' OR fr.studentType = :studentType) " +
+           "AND (:account IS NULL OR :account = '' OR :account = 'All' OR fr.baseAccount = :account) " +
+           "AND (:paymentMode IS NULL OR :paymentMode = '' OR :paymentMode = 'All' OR fr.paymentMode = :paymentMode)")
     BigDecimal sumFilteredDynamic(@Param("fromDate") LocalDate fromDate,
                                   @Param("toDate") LocalDate toDate,
                                   @Param("name") String name,
