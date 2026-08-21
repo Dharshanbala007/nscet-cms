@@ -11,6 +11,7 @@
     <!-- Header Controls -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
         <Label text="Daily Staff Attendance Logging" styleClass="module-title"/>
+        <Label fx:id="statusLabel" text="Status: New Entry" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Label text="Attendance Date:"/>
         <DatePicker fx:id="datePicker" prefWidth="140"/>

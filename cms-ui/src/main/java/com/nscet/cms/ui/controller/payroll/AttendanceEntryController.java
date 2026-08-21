@@ -71,6 +71,8 @@ public class AttendanceEntryController implements Initializable {
         table.setItems(attendanceList);
     }
 
+    @FXML private Label statusLabel;
+
     @FXML
     private void handleLoadStaff() {
         LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
@@ -87,6 +89,7 @@ public class AttendanceEntryController implements Initializable {
 
             if (!uniqueAttendance.isEmpty()) {
                 attendanceList.setAll(uniqueAttendance.values());
+                if (statusLabel != null) statusLabel.setText("Status: Loaded Saved Attendance for " + date);
             } else {
                 List<StaffSalary> staffList = payrollService.getAllStaffSalaries();
                 java.util.Map<String, StaffSalary> uniqueStaff = new java.util.LinkedHashMap<>();
@@ -105,9 +108,10 @@ public class AttendanceEntryController implements Initializable {
                     rec.setDepartment(s.getDepartment());
                     rec.setSessionType(session);
                     rec.setAttendanceType("PRESENT");
-                    rec.setRemarks("On time");
+                    rec.setRemarks("New entry for " + date);
                     attendanceList.add(rec);
                 }
+                if (statusLabel != null) statusLabel.setText("Status: New Attendance Entry for " + date);
             }
         } catch (Exception e) {
             System.err.println("[AttendanceEntryController] Error loading staff: " + e.getMessage());
@@ -116,15 +120,18 @@ public class AttendanceEntryController implements Initializable {
 
     @FXML
     private void handleSaveAll() {
+        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
         try {
             for (AttendanceRecord rec : attendanceList) {
+                rec.setAttendanceDate(date);
                 payrollService.saveAttendance(rec);
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
-            alert.setContentText("Attendance records saved successfully for " + datePicker.getValue() + "!");
+            alert.setContentText("Attendance records saved successfully for " + date + "!");
             alert.showAndWait();
+            handleLoadStaff();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
