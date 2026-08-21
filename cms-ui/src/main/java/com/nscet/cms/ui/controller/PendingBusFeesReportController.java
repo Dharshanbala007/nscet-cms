@@ -69,11 +69,11 @@ public class PendingBusFeesReportController implements Initializable {
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
         quotaCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuota()));
         busStopCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusStopName()));
-        prevPendingCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPreviousPending().toString()));
-        busFeeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusFee().toString()));
-        paidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount().toString()));
-        balanceCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBalanceAmount().toString()));
-        toBePaidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getToBePaid().toString()));
+        prevPendingCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPreviousPending() != null ? c.getValue().getPreviousPending().toString() : "0.00"));
+        busFeeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusFee() != null ? c.getValue().getBusFee().toString() : "0.00"));
+        paidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount() != null ? c.getValue().getPaidAmount().toString() : "0.00"));
+        balanceCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBalanceAmount() != null ? c.getValue().getBalanceAmount().toString() : "0.00"));
+        toBePaidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getToBePaid() != null ? c.getValue().getToBePaid().toString() : "0.00"));
         receiptNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReceiptNo()));
     }
 
@@ -92,8 +92,9 @@ public class PendingBusFeesReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("PendingFeesReport", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Pending Bus Fees Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

@@ -800,3 +800,20 @@
     -fx-border-width: 1 0 0 0;
 }
 
+.sidebar-header-label {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15 4 15;
+}
+
+.summary-bar {
+    -fx-background-color: #e8f4fd;
+    -fx-border-color: #b3d7f2;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 15;
+    -fx-spacing: 10;
+}
+

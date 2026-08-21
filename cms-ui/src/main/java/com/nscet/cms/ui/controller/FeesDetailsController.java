@@ -131,7 +131,7 @@ public class FeesDetailsController implements Initializable {
     private void loadData() {
         try {
             Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").ascending());
-            Page<FeesDetails> page = feesDetailsRepository.findAll(pageable);
+            Page<FeesDetails> page = feesDetailsRepository.findAllActive(pageable);
             tableData.clear();
             tableData.addAll(page.getContent());
             int totalPages = Math.max(page.getTotalPages(), 1);
@@ -245,7 +245,8 @@ public class FeesDetailsController implements Initializable {
         confirm.showAndWait().ifPresent(r -> {
             if (r == ButtonType.OK) {
                 try {
-                    feesDetailsRepository.delete(fd);
+                    fd.setIsActive(false);
+                    feesDetailsRepository.save(fd);
                     loadData();
                 } catch (Exception e) {
                     showAlert("Error", "Cannot delete record: " + e.getMessage(), Alert.AlertType.ERROR);

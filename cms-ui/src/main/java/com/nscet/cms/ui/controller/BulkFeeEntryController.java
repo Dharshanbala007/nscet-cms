@@ -5,6 +5,7 @@ import com.nscet.cms.db.entity.FeesMaster;
 import com.nscet.cms.db.entity.StudentMaster;
 import com.nscet.cms.db.repository.DepartmentMasterRepository;
 import com.nscet.cms.db.repository.FeesMasterRepository;
+import com.nscet.cms.db.repository.StudentDetailsRepository;
 import com.nscet.cms.db.repository.StudentMasterRepository;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,6 +42,7 @@ public class BulkFeeEntryController implements Initializable {
     @Autowired private StudentMasterRepository studentMasterRepository;
     @Autowired private DepartmentMasterRepository departmentRepository;
     @Autowired private FeesMasterRepository feesMasterRepository;
+    @Autowired private StudentDetailsRepository studentDetailsRepository;
 
     private ObservableList<StudentMaster> tableData = FXCollections.observableArrayList();
     private Map<Long, Boolean> selectedMap = new HashMap<>();
@@ -110,8 +112,31 @@ public class BulkFeeEntryController implements Initializable {
 
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber() != null ? c.getValue().getRollNumber() : "N/A"));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName() != null ? c.getValue().getName() : "N/A"));
-        deptCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCommunity() != null ? c.getValue().getCommunity() : "CSE"));
+        deptCol.setCellValueFactory(c -> {
+            String deptName = getDepartmentForStudent(c.getValue());
+            return new SimpleStringProperty(deptName);
+        });
         feeAmountCol.setCellValueFactory(c -> new SimpleStringProperty("\u20B9" + amountField.getText()));
+    }
+
+    private String getDepartmentForStudent(StudentMaster student) {
+        try {
+            var details = studentDetailsRepository.findByStudentIdAndAcademicYear(student.getId(), "2025-26");
+            if (details != null && !details.isEmpty() && details.get(0).getDepartment() != null) {
+                return details.get(0).getDepartment().getName();
+            }
+        } catch (Exception ignored) {}
+        String roll = student.getRollNumber();
+        if (roll != null) {
+            if (roll.contains("CSE")) return "Computer Science";
+            if (roll.contains("ECE")) return "Electronics";
+            if (roll.contains("MECH")) return "Mechanical";
+            if (roll.contains("EEE")) return "EEE";
+            if (roll.contains("CE")) return "Civil";
+            if (roll.contains("IT")) return "Information Technology";
+            if (roll.contains("AI")) return "AI & DS";
+        }
+        return "N/A";
     }
 
     @FXML
@@ -121,13 +146,40 @@ public class BulkFeeEntryController implements Initializable {
             tableData.clear();
             selectedMap.clear();
 
+            DepartmentMaster selectedDept = deptCombo.getValue();
+            String selectedSem = semesterCombo.getValue();
+
             for (StudentMaster s : students) {
+                if (selectedDept != null) {
+                    String studentDept = getDeptCodeForStudent(s);
+                    if (!selectedDept.getCode().equalsIgnoreCase(studentDept)) continue;
+                }
                 tableData.add(s);
                 selectedMap.put(s.getId(), true);
             }
         } catch (Exception e) {
             System.err.println("[BulkFeeEntryController] Error loading students: " + e.getMessage());
         }
+    }
+
+    private String getDeptCodeForStudent(StudentMaster student) {
+        try {
+            var details = studentDetailsRepository.findByStudentIdAndAcademicYear(student.getId(), "2025-26");
+            if (details != null && !details.isEmpty() && details.get(0).getDepartment() != null) {
+                return details.get(0).getDepartment().getCode();
+            }
+        } catch (Exception ignored) {}
+        String roll = student.getRollNumber();
+        if (roll != null) {
+            if (roll.contains("CSE")) return "CSE";
+            if (roll.contains("ECE")) return "ECE";
+            if (roll.contains("MECH")) return "MECH";
+            if (roll.contains("EEE")) return "EEE";
+            if (roll.contains("CE")) return "CE";
+            if (roll.contains("IT")) return "IT";
+            if (roll.contains("AI")) return "AI";
+        }
+        return "N/A";
     }
 
     @FXML

@@ -1,6 +1,7 @@
 package com.nscet.cms.ui.controller;
 
 import com.nscet.cms.db.entity.StudentMaster;
+import com.nscet.cms.db.repository.StudentDetailsRepository;
 import com.nscet.cms.db.repository.StudentMasterRepository;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -38,6 +39,7 @@ public class StudentEnrollmentController implements Initializable {
     @FXML private TableColumn<StudentMaster, String> enrollmentDateCol;
 
     @Autowired private StudentMasterRepository studentMasterRepository;
+    @Autowired private StudentDetailsRepository studentDetailsRepository;
 
     private ObservableList<StudentMaster> tableData = FXCollections.observableArrayList();
     private StudentMaster selectedStudent = null;
@@ -65,9 +67,44 @@ public class StudentEnrollmentController implements Initializable {
         slNoCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(tableData.indexOf(c.getValue()) + 1)));
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber() != null ? c.getValue().getRollNumber() : "N/A"));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName() != null ? c.getValue().getName() : "N/A"));
-        deptCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCommunity() != null ? c.getValue().getCommunity() : "CSE"));
-        semesterCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMedium() != null ? c.getValue().getMedium() : "1"));
-        enrollmentDateCol.setCellValueFactory(c -> new SimpleStringProperty(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        deptCol.setCellValueFactory(c -> new SimpleStringProperty(getDepartmentForStudent(c.getValue())));
+        semesterCol.setCellValueFactory(c -> new SimpleStringProperty(getSemesterForStudent(c.getValue())));
+        enrollmentDateCol.setCellValueFactory(c -> {
+            String doj = c.getValue().getDateOfJoining() != null
+                    ? c.getValue().getDateOfJoining().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    : "";
+            return new SimpleStringProperty(doj);
+        });
+    }
+
+    private String getDepartmentForStudent(StudentMaster student) {
+        try {
+            var details = studentDetailsRepository.findByStudentIdAndAcademicYear(student.getId(), "2025-26");
+            if (details != null && !details.isEmpty() && details.get(0).getDepartment() != null) {
+                return details.get(0).getDepartment().getName();
+            }
+        } catch (Exception ignored) {}
+        String roll = student.getRollNumber();
+        if (roll != null) {
+            if (roll.contains("CSE")) return "Computer Science";
+            if (roll.contains("ECE")) return "Electronics";
+            if (roll.contains("MECH")) return "Mechanical";
+            if (roll.contains("EEE")) return "EEE";
+            if (roll.contains("CE")) return "Civil";
+            if (roll.contains("IT")) return "Information Technology";
+            if (roll.contains("AI")) return "AI & DS";
+        }
+        return "N/A";
+    }
+
+    private String getSemesterForStudent(StudentMaster student) {
+        try {
+            var details = studentDetailsRepository.findByStudentIdAndAcademicYear(student.getId(), "2025-26");
+            if (details != null && !details.isEmpty() && details.get(0).getSemester() != null) {
+                return String.valueOf(details.get(0).getSemester());
+            }
+        } catch (Exception ignored) {}
+        return "N/A";
     }
 
     private void loadEnrollmentHistory() {
@@ -93,7 +130,7 @@ public class StudentEnrollmentController implements Initializable {
             if (studentOpt.isPresent()) {
                 selectedStudent = studentOpt.get();
                 nameLabel.setText(selectedStudent.getName());
-                deptLabel.setText(selectedStudent.getCommunity() != null ? selectedStudent.getCommunity() : "CSE");
+                deptLabel.setText(getDepartmentForStudent(selectedStudent));
             } else {
                 showAlert("Not Found", "No student found with Roll Number: " + rollNo, Alert.AlertType.INFORMATION);
             }

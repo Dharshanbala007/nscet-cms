@@ -68,7 +68,7 @@ public class BusFeesUpdateController implements Initializable {
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber() != null ? c.getValue().getRollNumber() : "N/A"));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName() != null ? c.getValue().getName() : "N/A"));
         routeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusStop() != null ? c.getValue().getBusStop() : "THENI"));
-        currentFeeCol.setCellValueFactory(c -> new SimpleStringProperty("\u20B97,150"));
+        currentFeeCol.setCellValueFactory(c -> new SimpleStringProperty("\u20B9" + (busFeeField.getText() != null ? busFeeField.getText() : "0")));
     }
 
     @FXML
@@ -78,9 +78,19 @@ public class BusFeesUpdateController implements Initializable {
             tableData.clear();
             selectedMap.clear();
 
+            String selectedRoute = routeCombo.getValue();
+
             for (StudentMaster s : students) {
-                tableData.add(s);
-                selectedMap.put(s.getId(), true);
+                if ("ALL".equals(selectedRoute) || selectedRoute == null) {
+                    tableData.add(s);
+                    selectedMap.put(s.getId(), true);
+                } else {
+                    String busStop = s.getBusStop();
+                    if (busStop != null) {
+                        tableData.add(s);
+                        selectedMap.put(s.getId(), true);
+                    }
+                }
             }
         } catch (Exception e) {
             System.err.println("[BusFeesUpdateController] Error loading bus students: " + e.getMessage());

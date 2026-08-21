@@ -83,8 +83,9 @@ public class StudentReceiptDetailsController implements Initializable {
     private void handlePrint() {
         try {
             ReportManager.printReport("FeeReceipt", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Report generated successfully (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Print failed: " + e.getMessage()).showAndWait();
         }
     }
 }

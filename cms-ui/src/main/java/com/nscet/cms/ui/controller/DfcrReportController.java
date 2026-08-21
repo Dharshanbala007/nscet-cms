@@ -67,13 +67,15 @@ public class DfcrReportController implements Initializable {
         deptCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDept()));
         baseAccountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBaseAccount()));
         paymentModeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaymentMode()));
-        totalAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalAmount().toString()));
+        totalAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalAmount() != null ? c.getValue().getTotalAmount().toString() : "0.00"));
     }
 
     @FXML
     private void handleGenerate() {
         dataList.clear();
-        List<DfcrReportDto> results = reportService.getDfcrReport(fromDate.getValue(), toDate.getValue());
+        String account = baseAccountCombo.getValue();
+        String mode = modeCombo.getValue();
+        List<DfcrReportDto> results = reportService.getDfcrReport(fromDate.getValue(), toDate.getValue(), account, mode);
         dataList.addAll(results);
     }
 
@@ -81,8 +83,9 @@ public class DfcrReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("DailyCollectionRegister", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "DFCR Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

@@ -67,14 +67,16 @@ public class HeadwiseDetailsReportController implements Initializable {
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNo()));
         studentNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
         feeHeadCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFeeHead()));
-        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount().toString()));
+        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount() != null ? c.getValue().getAmount().toString() : "0.00"));
     }
 
     @FXML
     private void handleGenerate() {
         dataList.clear();
         String type = paidListRadio.isSelected() ? "PAID" : "PENDING";
-        List<HeadwiseDetailsDto> results = reportService.getHeadwiseDetails(fromDate.getValue(), toDate.getValue(), type);
+        String dept = deptCombo.getValue();
+        String sem = semesterCombo.getValue();
+        List<HeadwiseDetailsDto> results = reportService.getHeadwiseDetails(fromDate.getValue(), toDate.getValue(), type, dept, sem);
         dataList.addAll(results);
     }
 
@@ -82,8 +84,9 @@ public class HeadwiseDetailsReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("FeeReceipt", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Headwise Details Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }

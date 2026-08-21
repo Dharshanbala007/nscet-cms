@@ -55,6 +55,8 @@ public class ReportService {
                 if (!matches) continue;
             }
 
+            String dept = extractDept(s.getRollNumber());
+
             if (fr.getItems() == null || fr.getItems().isEmpty()) {
                 StudentReceiptDetailsDto dto = new StudentReceiptDetailsDto();
                 dto.setReceiptNo(fr.getReceiptNumber());
@@ -62,7 +64,7 @@ public class ReportService {
                 dto.setRollNo(s.getRollNumber());
                 dto.setStudentName(s.getName());
                 dto.setRegNo(s.getRegistrationNo());
-                dto.setDept("CSE");
+                dto.setDept(dept);
                 dto.setFeeName("Tuition Fee");
                 dto.setAmount(fr.getTotalAmount());
                 dto.setSemester(3);
@@ -76,7 +78,7 @@ public class ReportService {
                     dto.setRollNo(s.getRollNumber());
                     dto.setStudentName(s.getName());
                     dto.setRegNo(s.getRegistrationNo());
-                    dto.setDept("CSE");
+                    dto.setDept(dept);
                     dto.setFeeName(item.getFeesName() != null ? item.getFeesName().getName() : "College Fee");
                     dto.setAmount(item.getAmount());
                     dto.setSemester(3);
@@ -94,32 +96,57 @@ public class ReportService {
         List<PendingFeesDto> list = new ArrayList<>();
 
         for (StudentMaster s : students) {
+            String dept = extractDept(s.getRollNumber());
+            if (deptCode != null && !"ALL".equalsIgnoreCase(deptCode) && !dept.equalsIgnoreCase(deptCode)) continue;
+
+            List<FeesDetails> feeStructure = feesDetailsRepository.findByCriteria(semester, dept, null);
+            BigDecimal totalDue = BigDecimal.ZERO;
+            for (FeesDetails fd : feeStructure) {
+                totalDue = totalDue.add(fd.getAmount() != null ? fd.getAmount() : BigDecimal.ZERO);
+            }
+            if (totalDue.compareTo(BigDecimal.ZERO) == 0) {
+                totalDue = new BigDecimal("59800");
+            }
+
+            List<FeeReceipt> receipts = feeReceiptRepository.findByStudentRollNumber(s.getRollNumber());
+            BigDecimal totalPaid = BigDecimal.ZERO;
+            for (FeeReceipt fr : receipts) {
+                totalPaid = totalPaid.add(fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO);
+            }
+
+            BigDecimal balance = totalDue.subtract(totalPaid);
+
             PendingFeesDto dto = new PendingFeesDto();
-            dto.setDept(s.getRollNumber().contains("CSE") ? "CSE" : (s.getRollNumber().contains("ECE") ? "ECE" : "MECH"));
+            dto.setDept(dept);
             dto.setRollNo(s.getRollNumber());
             dto.setStudentName(s.getName());
             dto.setQuota(s.getAdmissionType() != null ? s.getAdmissionType() : "Government");
             dto.setAdmissionType("Fresh");
             dto.setCommunity(s.getCommunity() != null ? s.getCommunity() : "BC");
             dto.setPreviousPending(BigDecimal.ZERO);
-
-            BigDecimal tuition = new BigDecimal("45000");
-            BigDecimal other = new BigDecimal("14800");
-            BigDecimal total = tuition.add(other);
-            BigDecimal paid = s.getRollNumber().endsWith("1") || s.getRollNumber().endsWith("3") ? total : new BigDecimal("25000");
-            BigDecimal balance = total.subtract(paid);
-
-            dto.setTuitionFees(tuition);
-            dto.setOtherFees(other);
+            dto.setTuitionFees(totalDue.multiply(new BigDecimal("0.75")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            dto.setOtherFees(totalDue.multiply(new BigDecimal("0.25")).setScale(2, BigDecimal.ROUND_HALF_UP));
             dto.setScholarship(BigDecimal.ZERO);
             dto.setAnnaUnivReg(new BigDecimal("1500"));
-            dto.setTotal(total);
-            dto.setPaidAmount(paid);
-            dto.setBalanceAmount(balance);
+            dto.setTotal(totalDue);
+            dto.setPaidAmount(totalPaid);
+            dto.setBalanceAmount(balance.max(BigDecimal.ZERO));
             dto.setFineAmount(BigDecimal.ZERO);
             list.add(dto);
         }
         return list;
+    }
+
+    private String extractDept(String rollNumber) {
+        if (rollNumber == null) return "N/A";
+        if (rollNumber.contains("CSE")) return "CSE";
+        if (rollNumber.contains("ECE")) return "ECE";
+        if (rollNumber.contains("MECH")) return "MECH";
+        if (rollNumber.contains("EEE")) return "EEE";
+        if (rollNumber.contains("IT")) return "IT";
+        if (rollNumber.contains("AI")) return "AI";
+        if (rollNumber.contains("CE")) return "CE";
+        return "N/A";
     }
 
     // 3. Pending Bus Fees
@@ -130,18 +157,30 @@ public class ReportService {
 
         List<PendingBusFeesDto> list = new ArrayList<>();
         for (StudentMaster s : students) {
+            String dept = extractDept(s.getRollNumber());
+            if (deptCode != null && !"ALL".equalsIgnoreCase(deptCode) && !dept.equalsIgnoreCase(deptCode)) continue;
+
+            List<FeeReceipt> receipts = feeReceiptRepository.findByStudentRollNumber(s.getRollNumber());
+            BigDecimal totalPaid = BigDecimal.ZERO;
+            for (FeeReceipt fr : receipts) {
+                totalPaid = totalPaid.add(fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO);
+            }
+
+            BigDecimal busFee = new BigDecimal("12000");
+            BigDecimal balance = busFee.subtract(totalPaid).max(BigDecimal.ZERO);
+
             PendingBusFeesDto dto = new PendingBusFeesDto();
-            dto.setDept(s.getRollNumber().contains("CSE") ? "CSE" : "ECE");
+            dto.setDept(dept);
             dto.setRollNo(s.getRollNumber());
             dto.setStudentName(s.getName());
             dto.setQuota(s.getAdmissionType() != null ? s.getAdmissionType() : "Government");
             dto.setBusStopName(s.getBusStop() != null ? s.getBusStop() : "Theni Bus Stand");
             dto.setPreviousPending(BigDecimal.ZERO);
-            dto.setBusFee(new BigDecimal("12000"));
-            dto.setPaidAmount(new BigDecimal("8000"));
-            dto.setBalanceAmount(new BigDecimal("4000"));
-            dto.setToBePaid(new BigDecimal("4000"));
-            dto.setReceiptNo("BUS-2025-091");
+            dto.setBusFee(busFee);
+            dto.setPaidAmount(totalPaid.min(busFee));
+            dto.setBalanceAmount(balance);
+            dto.setToBePaid(balance);
+            dto.setReceiptNo(receipts.isEmpty() ? "" : receipts.get(receipts.size() - 1).getReceiptNumber());
             list.add(dto);
         }
         return list;
@@ -154,19 +193,32 @@ public class ReportService {
         int count = 1;
 
         for (StudentMaster s : students) {
+            if (s.getDateOfJoining() != null) {
+                if (from != null && s.getDateOfJoining().isBefore(from)) continue;
+                if (to != null && s.getDateOfJoining().isAfter(to)) continue;
+            }
+
             ApplicationReportDto dto = new ApplicationReportDto();
             dto.setSlNo(count++);
             dto.setAppNo("FY" + String.format("%03d", count));
             dto.setStudentName(s.getName());
             dto.setAddress(s.getAddress() != null ? s.getAddress() : s.getCity());
-            dto.setHscMark("480");
-            dto.setDoteCutOff("165.5");
+            dto.setHscMark("N/A");
+            dto.setDoteCutOff("N/A");
             dto.setCommunity(s.getCommunity() != null ? s.getCommunity() : "BC");
             dto.setMgGq(s.getAdmissionType() != null ? s.getAdmissionType() : "Counseling");
-            dto.setAmountPaid(new BigDecimal("5000"));
-            dto.setDept(s.getRollNumber().contains("CSE") ? "CSE" : "ECE");
-            dto.setSchoolName("GHSS Theni");
+            dto.setAmountPaid(BigDecimal.ZERO);
+            dto.setDept(extractDept(s.getRollNumber()));
+            dto.setSchoolName("N/A");
             dto.setHostel(s.getHostel() != null ? s.getHostel() : "No");
+
+            List<FeeReceipt> receipts = feeReceiptRepository.findByStudentRollNumber(s.getRollNumber());
+            BigDecimal totalPaid = BigDecimal.ZERO;
+            for (FeeReceipt fr : receipts) {
+                totalPaid = totalPaid.add(fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO);
+            }
+            dto.setAmountPaid(totalPaid);
+
             list.add(dto);
         }
         return list;
@@ -178,23 +230,49 @@ public class ReportService {
         String[] depts = {"CSE", "ECE", "MECH", "CE", "EEE", "IT", "AI"};
 
         for (String d : depts) {
+            if (branch != null && !"ALL".equalsIgnoreCase(branch) && !d.equalsIgnoreCase(branch)) continue;
+
+            List<StudentMaster> deptStudents = studentMasterRepository.findAll().stream()
+                    .filter(s -> d.equalsIgnoreCase(extractDept(s.getRollNumber())))
+                    .collect(Collectors.toList());
+
+            int strength = deptStudents.size();
+            BigDecimal totalFee = BigDecimal.ZERO;
+            BigDecimal totalPaid = BigDecimal.ZERO;
+
+            for (StudentMaster s : deptStudents) {
+                List<FeeReceipt> receipts = feeReceiptRepository.findByStudentRollNumber(s.getRollNumber());
+                for (FeeReceipt fr : receipts) {
+                    totalPaid = totalPaid.add(fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO);
+                }
+                List<FeesDetails> feeStructure = feesDetailsRepository.findByCriteria(null, d, null);
+                for (FeesDetails fd : feeStructure) {
+                    totalFee = totalFee.add(fd.getAmount() != null ? fd.getAmount() : BigDecimal.ZERO);
+                }
+            }
+
+            if (totalFee.compareTo(BigDecimal.ZERO) == 0) {
+                totalFee = new BigDecimal("2392000");
+            }
+            BigDecimal totalPending = totalFee.subtract(totalPaid).max(BigDecimal.ZERO);
+
             FeesDetailsReportDto dto = new FeesDetailsReportDto();
             dto.setBranch(d);
             dto.setSemester(3);
-            dto.setStrength(40);
+            dto.setStrength(strength);
             dto.setPrePending(BigDecimal.ZERO);
-            dto.setTuitionFee(new BigDecimal("1800000"));
-            dto.setOtherFees(new BigDecimal("592000"));
+            dto.setTuitionFee(totalFee.multiply(new BigDecimal("0.75")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            dto.setOtherFees(totalFee.multiply(new BigDecimal("0.25")).setScale(2, BigDecimal.ROUND_HALF_UP));
             dto.setBusFees(new BigDecimal("480000"));
-            dto.setTotalAmount(new BigDecimal("2872000"));
-            dto.setPaidAmount(new BigDecimal("2500000"));
-            dto.setPendingAmount(new BigDecimal("372000"));
-            dto.setColAmt(new BigDecimal("1800000"));
-            dto.setKarAmt(new BigDecimal("500000"));
+            dto.setTotalAmount(totalFee);
+            dto.setPaidAmount(totalPaid);
+            dto.setPendingAmount(totalPending);
+            dto.setColAmt(totalPaid.multiply(new BigDecimal("0.80")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            dto.setKarAmt(totalPaid.multiply(new BigDecimal("0.20")).setScale(2, BigDecimal.ROUND_HALF_UP));
             dto.setBusAmt(new BigDecimal("400000"));
-            dto.setPendTuition(new BigDecimal("100000"));
-            dto.setPendOther(new BigDecimal("92000"));
-            dto.setPendBus(new BigDecimal("180000"));
+            dto.setPendTuition(totalPending.multiply(new BigDecimal("0.75")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            dto.setPendOther(totalPending.multiply(new BigDecimal("0.25")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            dto.setPendBus(new BigDecimal("80000"));
             list.add(dto);
         }
         return list;
@@ -206,15 +284,31 @@ public class ReportService {
         List<ExamFeesReportDto> list = new ArrayList<>();
 
         for (StudentMaster s : students) {
+            String studentDept = extractDept(s.getRollNumber());
+            if (dept != null && !"ALL".equalsIgnoreCase(dept) && !studentDept.equalsIgnoreCase(dept)) continue;
+
+            List<FeeReceipt> receipts = feeReceiptRepository.findByStudentRollNumber(s.getRollNumber());
+            BigDecimal examPaid = BigDecimal.ZERO;
+            for (FeeReceipt fr : receipts) {
+                if (fr.getItems() != null) {
+                    for (var item : fr.getItems()) {
+                        String feeName = item.getFeesName() != null ? item.getFeesName().getName() : "";
+                        if (feeName.toLowerCase().contains("exam")) {
+                            examPaid = examPaid.add(item.getAmount() != null ? item.getAmount() : BigDecimal.ZERO);
+                        }
+                    }
+                }
+            }
+
             ExamFeesReportDto dto = new ExamFeesReportDto();
-            dto.setDept(s.getRollNumber().contains("CSE") ? "CSE" : "ECE");
+            dto.setDept(studentDept);
             dto.setRollNo(s.getRollNumber());
             dto.setStudentName(s.getName());
             dto.setExamName("Anna University End Sem Nov/Dec 2025");
             dto.setAmount(new BigDecimal("1800"));
-            dto.setPaidAmount(new BigDecimal("1800"));
-            dto.setBalanceAmount(BigDecimal.ZERO);
-            dto.setStatus("PAID");
+            dto.setPaidAmount(examPaid);
+            dto.setBalanceAmount(new BigDecimal("1800").subtract(examPaid).max(BigDecimal.ZERO));
+            dto.setStatus(examPaid.compareTo(new BigDecimal("1800")) >= 0 ? "PAID" : "PENDING");
             list.add(dto);
         }
         return list;
@@ -222,10 +316,17 @@ public class ReportService {
 
     // 7. Receipt Bank Checking
     public List<ReceiptBankCheckingDto> getReceiptBankChecking(LocalDate from, LocalDate to, String accountNo) {
-        List<FeeReceipt> receipts = feeReceiptRepository.findAll();
+        List<FeeReceipt> receipts = (from != null && to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+                : feeReceiptRepository.findAll();
         List<ReceiptBankCheckingDto> list = new ArrayList<>();
 
         for (FeeReceipt fr : receipts) {
+            if (accountNo != null && !"ALL".equalsIgnoreCase(accountNo)) {
+                String baseAcc = fr.getBaseAccount() != null ? fr.getBaseAccount() : "";
+                if (!baseAcc.contains(accountNo.split(" ")[0])) continue;
+            }
+
             ReceiptBankCheckingDto dto = new ReceiptBankCheckingDto();
             dto.setReceiptNo(fr.getReceiptNumber());
             dto.setReceiptDate(fr.getReceiptDate());
@@ -240,18 +341,26 @@ public class ReportService {
     }
 
     // 8. Headwise Details
-    public List<HeadwiseDetailsDto> getHeadwiseDetails(LocalDate from, LocalDate to, String type) {
-        List<FeeReceipt> receipts = feeReceiptRepository.findAll();
+    public List<HeadwiseDetailsDto> getHeadwiseDetails(LocalDate from, LocalDate to, String type, String dept, String semester) {
+        List<FeeReceipt> receipts = (from != null && to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+                : feeReceiptRepository.findAll();
         List<HeadwiseDetailsDto> list = new ArrayList<>();
 
         for (FeeReceipt fr : receipts) {
+            String studentDept = fr.getStudent() != null ? extractDept(fr.getStudent().getRollNumber()) : "N/A";
+            if (dept != null && !"ALL".equalsIgnoreCase(dept) && !studentDept.equalsIgnoreCase(dept)) continue;
+            if (semester != null && !"ALL".equalsIgnoreCase(semester)) {
+                // Filter by semester from receipt items if available
+            }
+
             if (fr.getItems() == null || fr.getItems().isEmpty()) {
                 HeadwiseDetailsDto dto = new HeadwiseDetailsDto();
                 dto.setReceiptNo(fr.getReceiptNumber());
                 dto.setReceiptDate(fr.getReceiptDate());
-                dto.setDept("CSE");
-                dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "23CSE001");
-                dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "Arun Kumar S");
+                dto.setDept(studentDept);
+                dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "");
+                dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "");
                 dto.setFeeHead("Tuition Fee");
                 dto.setAmount(fr.getTotalAmount());
                 list.add(dto);
@@ -260,9 +369,9 @@ public class ReportService {
                     HeadwiseDetailsDto dto = new HeadwiseDetailsDto();
                     dto.setReceiptNo(fr.getReceiptNumber());
                     dto.setReceiptDate(fr.getReceiptDate());
-                    dto.setDept("CSE");
-                    dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "23CSE001");
-                    dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "Arun Kumar S");
+                    dto.setDept(studentDept);
+                    dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "");
+                    dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "");
                     dto.setFeeHead(item.getFeesName() != null ? item.getFeesName().getName() : "Tuition Fee");
                     dto.setAmount(item.getAmount());
                     list.add(dto);
@@ -272,41 +381,75 @@ public class ReportService {
         return list;
     }
 
+    public List<HeadwiseDetailsDto> getHeadwiseDetails(LocalDate from, LocalDate to, String type) {
+        return getHeadwiseDetails(from, to, type, null, null);
+    }
+
     // 9. Strength Report
     public List<StrengthReportDto> getStrengthReport(String dept) {
         List<StrengthReportDto> list = new ArrayList<>();
         String[] depts = {"CSE", "ECE", "MECH", "CE", "EEE", "IT", "AI"};
 
+        List<StudentMaster> allStudents = studentMasterRepository.findAll();
+
         for (String d : depts) {
+            if (dept != null && !"ALL".equalsIgnoreCase(dept) && !d.equalsIgnoreCase(dept)) continue;
+
+            List<StudentMaster> deptStudents = allStudents.stream()
+                    .filter(s -> d.equalsIgnoreCase(extractDept(s.getRollNumber())))
+                    .collect(Collectors.toList());
+
+            int male = (int) deptStudents.stream().filter(s -> "Male".equalsIgnoreCase(s.getGender()) || "M".equalsIgnoreCase(s.getGender())).count();
+            int female = deptStudents.size() - male;
+            int oc = (int) deptStudents.stream().filter(s -> "OC".equalsIgnoreCase(s.getCommunity())).count();
+            int bc = (int) deptStudents.stream().filter(s -> "BC".equalsIgnoreCase(s.getCommunity()) || "BCM".equalsIgnoreCase(s.getCommunity())).count();
+            int mbc = (int) deptStudents.stream().filter(s -> "MBC".equalsIgnoreCase(s.getCommunity()) || "DNC".equalsIgnoreCase(s.getCommunity())).count();
+            int scst = deptStudents.size() - oc - bc - mbc;
+
             StrengthReportDto dto = new StrengthReportDto();
             dto.setDepartment(d);
             dto.setDegree("B.E.");
             dto.setYear("II Year");
             dto.setSemester(3);
-            dto.setMaleCount(22);
-            dto.setFemaleCount(18);
-            dto.setTotalCount(40);
-            dto.setOcCount(10);
-            dto.setBcCount(18);
-            dto.setMbcCount(8);
-            dto.setScstCount(4);
+            dto.setMaleCount(male);
+            dto.setFemaleCount(female);
+            dto.setTotalCount(deptStudents.size());
+            dto.setOcCount(oc);
+            dto.setBcCount(bc);
+            dto.setMbcCount(mbc);
+            dto.setScstCount(Math.max(scst, 0));
             list.add(dto);
         }
         return list;
     }
 
     // 10. DFCR Report
-    public List<DfcrReportDto> getDfcrReport(LocalDate from, LocalDate to) {
-        List<FeeReceipt> receipts = feeReceiptRepository.findAll();
+    public List<DfcrReportDto> getDfcrReport(LocalDate from, LocalDate to, String baseAccount, String paymentMode) {
+        List<FeeReceipt> receipts = (from != null && to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+                : feeReceiptRepository.findAll();
         List<DfcrReportDto> list = new ArrayList<>();
 
         for (FeeReceipt fr : receipts) {
+            if (baseAccount != null && !"ALL".equalsIgnoreCase(baseAccount)) {
+                String acc = fr.getBaseAccount() != null ? fr.getBaseAccount() : "";
+                if (!acc.contains(baseAccount.split(" ")[0])) continue;
+            }
+            if (paymentMode != null && !"ALL".equalsIgnoreCase(paymentMode)) {
+                String mode = fr.getPaymentMode() != null ? fr.getPaymentMode().toUpperCase() : "";
+                String filterMode = paymentMode.toUpperCase();
+                if (filterMode.contains("CASH") && !mode.contains("CASH")) continue;
+                if (filterMode.contains("DD") && !mode.contains("DD") && !mode.contains("CHEQUE")) continue;
+                if (filterMode.contains("OLP") && !mode.contains("ONLINE") && !mode.contains("OLP")) continue;
+                if (filterMode.contains("TRANSFER") && !mode.contains("TRANSFER")) continue;
+            }
+
             DfcrReportDto dto = new DfcrReportDto();
             dto.setReceiptNo(fr.getReceiptNumber());
             dto.setReceiptDate(fr.getReceiptDate());
-            dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "23CSE001");
-            dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "Arun Kumar S");
-            dto.setDept("CSE");
+            dto.setRollNo(fr.getStudent() != null ? fr.getStudent().getRollNumber() : "");
+            dto.setStudentName(fr.getStudent() != null ? fr.getStudent().getName() : "");
+            dto.setDept(fr.getStudent() != null ? extractDept(fr.getStudent().getRollNumber()) : "N/A");
             dto.setBaseAccount(fr.getBaseAccount() != null ? fr.getBaseAccount() : "TMB Main");
             dto.setPaymentMode(fr.getPaymentMode() != null ? fr.getPaymentMode() : "CASH");
             dto.setTotalAmount(fr.getTotalAmount());
@@ -315,14 +458,30 @@ public class ReportService {
         return list;
     }
 
+    public List<DfcrReportDto> getDfcrReport(LocalDate from, LocalDate to) {
+        return getDfcrReport(from, to, null, null);
+    }
+
     // 11. DFCR Groupwise Report
     public List<DfcrGroupwiseDto> getDfcrGroupwiseReport(LocalDate from, LocalDate to) {
+        List<FeeReceipt> receipts = (from != null && to != null)
+                ? feeReceiptRepository.findByDateRangeWithStudentList(from, to)
+                : feeReceiptRepository.findAll();
+
+        Map<String, BigDecimal> groupTotals = new LinkedHashMap<>();
+        Map<String, Integer> groupCounts = new LinkedHashMap<>();
+
+        for (FeeReceipt fr : receipts) {
+            String group = fr.getBaseAccount() != null ? fr.getBaseAccount() : "Miscellaneous";
+            BigDecimal amt = fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO;
+            groupTotals.merge(group, amt, BigDecimal::add);
+            groupCounts.merge(group, 1, Integer::sum);
+        }
+
         List<DfcrGroupwiseDto> list = new ArrayList<>();
-        list.add(new DfcrGroupwiseDto("College Fees", new BigDecimal("1250000.00"), 25));
-        list.add(new DfcrGroupwiseDto("Exam Fees", new BigDecimal("180000.00"), 30));
-        list.add(new DfcrGroupwiseDto("Bus Fees", new BigDecimal("340000.00"), 20));
-        list.add(new DfcrGroupwiseDto("Hostel Fees", new BigDecimal("220000.00"), 15));
-        list.add(new DfcrGroupwiseDto("Miscellaneous", new BigDecimal("45000.00"), 10));
+        for (Map.Entry<String, BigDecimal> entry : groupTotals.entrySet()) {
+            list.add(new DfcrGroupwiseDto(entry.getKey(), entry.getValue(), groupCounts.get(entry.getKey())));
+        }
         return list;
     }
 

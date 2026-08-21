@@ -61,9 +61,9 @@ public class ExamFeesReportController implements Initializable {
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNo()));
         studentNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStudentName()));
         examNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getExamName()));
-        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount().toString()));
-        paidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount().toString()));
-        balanceCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBalanceAmount().toString()));
+        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount() != null ? c.getValue().getAmount().toString() : "0.00"));
+        paidCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount() != null ? c.getValue().getPaidAmount().toString() : "0.00"));
+        balanceCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBalanceAmount() != null ? c.getValue().getBalanceAmount().toString() : "0.00"));
         statusCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
     }
 
@@ -78,8 +78,9 @@ public class ExamFeesReportController implements Initializable {
     private void handleExport() {
         try {
             ReportManager.printReport("PendingFeesReport", dataList, new HashMap<>());
-        } catch (Exception e) {
             new Alert(Alert.AlertType.INFORMATION, "Exam Fees Overall Report exported (" + dataList.size() + " records).").showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Export failed: " + e.getMessage()).showAndWait();
         }
     }
 }
