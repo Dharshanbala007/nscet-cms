@@ -30,6 +30,7 @@ public interface StudentMasterRepository extends JpaRepository<StudentMaster, Lo
     @Query("SELECT s FROM StudentMaster s WHERE s.isActive = true " +
            "AND (LOWER(s.rollNumber) LIKE LOWER(CONCAT('%', :search, '%')) " +
            "OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(s.admissionNo) LIKE LOWER(CONCAT('%', :search, '%')))")
+           "OR LOWER(s.admissionNo) LIKE LOWER(CONCAT('%', :search, '%')) " +
+           "OR LOWER(s.registrationNo) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<StudentMaster> search(@Param("search") String search, Pageable pageable);
 }

@@ -8,9 +8,9 @@
             fx:controller="com.nscet.cms.ui.controller.AccountsShellController"
             styleClass="main-shell">
 
-    <!-- Top Bar -->
+    <!-- Top Bar matching Admin & Payroll Header UI -->
     <top>
-        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="0">
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
             <padding>
                 <Insets top="0" right="25" bottom="0" left="25"/>
             </padding>
@@ -21,12 +21,13 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Label fx:id="academicYearLabel" styleClass="year-badge"/>
-
+            <Label fx:id="academicYearLabel" styleClass="year-badge" text="2025-26"/>
             <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
 
-            <Button text="Find" styleClass="dash-action-btn" onAction="#handleFind" maxWidth="Infinity"/>
-            <Button text="Exit" styleClass="logout-button" onAction="#handleExit"/>
+            <Label fx:id="userNameLabel" text="Accounts Administrator" styleClass="user-name-label"/>
+            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+            <Button text="Logout" styleClass="logout-button" onAction="#handleLogout"/>
         </HBox>
     </top>
 
@@ -82,7 +83,7 @@
             <padding>
                 <Insets top="4" right="20" bottom="4" left="20"/>
             </padding>
-            <Label text="NSCET - Accounts" styleClass="footer-text"/>
+            <Label text="Nadar Saraswathi College of Engineering and Technology, Theni - Accounts Portal" styleClass="footer-text"/>
         </HBox>
     </bottom>
 </BorderPane>

@@ -64,7 +64,7 @@ public class PortalSelectionController implements Initializable {
 
     @FXML
     private void handlePayroll() {
-        promptPortalLogin("PAYROLL", "admin");
+        promptPortalLogin("PAYROLL", "payroll");
     }
 
     private void promptPortalLogin(String portal, String defaultUsername) {
@@ -87,6 +87,15 @@ public class PortalSelectionController implements Initializable {
         if (username.isEmpty() || password.isEmpty()) {
             verifyErrorLabel.setText("Please enter username and password");
             verifyErrorLabel.setVisible(true);
+            return;
+        }
+
+        // Special check for Payroll credentials "payroll" / "payroll123"
+        if ("PAYROLL".equalsIgnoreCase(targetPortal) && "payroll".equalsIgnoreCase(username) && "payroll123".equals(password)) {
+            verifyOverlay.setVisible(false);
+            verifyOverlay.setManaged(false);
+            System.out.println("[PortalSelection] Payroll portal login successful for user: payroll");
+            NavigationManager.openPayrollShell();
             return;
         }
 

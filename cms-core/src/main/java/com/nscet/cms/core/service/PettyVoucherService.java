@@ -105,12 +105,18 @@ public class PettyVoucherService {
     }
 
     public String generateNextVoucherNo() {
-        Optional<String> lastVoucherNo = repository.findTopByOrderByVoucherNoDesc();
-        if (lastVoucherNo.isPresent()) {
-            String lastNo = lastVoucherNo.get();
-            String numberPart = lastNo.replaceAll("^PV", "");
-            int nextNumber = Integer.parseInt(numberPart) + 1;
-            return String.format("PV%03d", nextNumber);
+        try {
+            Optional<String> lastVoucherNo = repository.findTopByOrderByVoucherNoDesc();
+            if (lastVoucherNo.isPresent() && lastVoucherNo.get() != null) {
+                String lastNo = lastVoucherNo.get();
+                String numberPart = lastNo.replaceAll("[^0-9]", "");
+                if (!numberPart.isEmpty()) {
+                    int nextNumber = Integer.parseInt(numberPart) + 1;
+                    return String.format("PV%03d", nextNumber);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[PettyVoucherService] Error generating voucher no: " + e.getMessage());
         }
         return "PV001";
     }

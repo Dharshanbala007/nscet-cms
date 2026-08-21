@@ -24,6 +24,7 @@ public class AccountsShellController implements Initializable {
     @FXML private StackPane contentArea;
     @FXML private ImageView bgImage;
     @FXML private Label academicYearLabel;
+    @FXML private Label userNameLabel;
 
     @FXML private ToggleButton mastersToggle;
     @FXML private ToggleButton transactionsToggle;
@@ -44,6 +45,7 @@ public class AccountsShellController implements Initializable {
 
         try {
             academicYearLabel.setText("2025-26");
+            if (userNameLabel != null) userNameLabel.setText("Accounts Administrator");
         } catch (Exception ignored) {}
 
         setupNavigation();
@@ -70,12 +72,6 @@ public class AccountsShellController implements Initializable {
         // Reports
         reportsMenu.getChildren().clear();
         addMenuItem(reportsMenu, "Day Book Petty Cash", "pettyCashDaybook");
-    }
-
-    private void addMenuHeader(VBox menu, String title) {
-        Label label = new Label(title);
-        label.setStyle("-fx-text-fill: #90caf9; -fx-font-weight: bold; -fx-padding: 6 0 2 10; -fx-font-size: 11px;");
-        menu.getChildren().add(label);
     }
 
     private void addMenuItem(VBox menu, String label, String module) {
@@ -110,16 +106,11 @@ public class AccountsShellController implements Initializable {
     }
 
     @FXML
-    private void handleFind() {
-        NavigationManager.loadPlaceholder("Search / Find", contentArea);
-    }
-
-    @FXML
-    private void handleExit() {
+    private void handleLogout() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Exit");
+        confirm.setTitle("Confirm Logout");
         confirm.setHeaderText(null);
-        confirm.setContentText("Are you sure you want to exit the Accounts module?");
+        confirm.setContentText("Are you sure you want to log out of Accounts?");
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             NavigationManager.openPortalSelection();

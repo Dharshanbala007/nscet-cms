@@ -336,12 +336,15 @@ public class FeeCollectionController implements Initializable {
     @FXML
     private void handleStudentSearch() {
         String query = studentSearchField.getText().trim();
+        if (query.isEmpty()) query = studentNameField.getText().trim();
+        if (query.isEmpty()) query = regNoField.getText().trim();
+
         if (query.isEmpty()) return;
         try {
             StudentMaster s = studentService.getByRollNumber(query);
             loadStudentDetails(s);
         } catch (Exception e) {
-            new Alert(Alert.AlertType.WARNING, "Student not found: " + query).showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Student not found for query: " + query).showAndWait();
         }
     }
 
