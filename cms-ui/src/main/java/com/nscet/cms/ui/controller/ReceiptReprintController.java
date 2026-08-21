@@ -40,14 +40,22 @@ public class ReceiptReprintController implements Initializable {
     private void handleSearch() {
         String query = receiptSearchField.getText();
         if (query == null || query.trim().isEmpty()) {
-            showAlert("Search Error", "Please enter a Receipt Number to search.", Alert.AlertType.WARNING);
+            showAlert("Search Error", "Please enter a Receipt Number or Roll Number.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            Optional<FeeReceipt> receiptOpt = feeReceiptRepository.findByReceiptNumber(query.trim());
+            String trimmed = query.trim();
+            Optional<FeeReceipt> receiptOpt = feeReceiptRepository.findByReceiptNumber(trimmed);
             if (receiptOpt.isEmpty()) {
-                showAlert("Not Found", "No receipt found with number: " + query, Alert.AlertType.INFORMATION);
+                List<FeeReceipt> byRoll = feeReceiptRepository.findByStudentRollNumber(trimmed);
+                if (byRoll != null && !byRoll.isEmpty()) {
+                    receiptOpt = Optional.of(byRoll.get(0));
+                }
+            }
+
+            if (receiptOpt.isEmpty()) {
+                showAlert("Not Found", "No receipt found for: " + trimmed, Alert.AlertType.INFORMATION);
                 return;
             }
 

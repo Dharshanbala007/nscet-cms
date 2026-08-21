@@ -30,7 +30,7 @@
         <TextField fx:id="serialNoField" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
         
         <Label text="Search Roll / App No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="studentSearchField" promptText="Enter Roll No..." GridPane.columnIndex="1" GridPane.rowIndex="1" onKeyTyped="#handleSearch"/>
+        <TextField fx:id="studentSearchField" promptText="Enter Roll No / Name..." GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleSearch"/>
         
         <Label text="Character &amp; Conduct:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
         <TextField fx:id="characterField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>

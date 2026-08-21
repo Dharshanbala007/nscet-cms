@@ -55,14 +55,22 @@ public class TcPrintController implements Initializable {
     private void handleSearch() {
         String roll = studentSearchField.getText();
         if (roll == null || roll.trim().isEmpty()) {
-            showAlert("Search Error", "Please enter a Roll Number.", Alert.AlertType.WARNING);
+            showAlert("Search Error", "Please enter a Roll Number or Name.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            Optional<StudentMaster> studentOpt = studentMasterRepository.findByRollNumber(roll.trim());
+            String query = roll.trim();
+            Optional<StudentMaster> studentOpt = studentMasterRepository.findByRollNumber(query);
             if (studentOpt.isEmpty()) {
-                showAlert("Not Found", "No student found with Roll Number: " + roll, Alert.AlertType.INFORMATION);
+                var page = studentMasterRepository.search(query, org.springframework.data.domain.PageRequest.of(0, 1));
+                if (page.hasContent()) {
+                    studentOpt = Optional.of(page.getContent().get(0));
+                }
+            }
+
+            if (studentOpt.isEmpty()) {
+                showAlert("Not Found", "No student found matching: " + query, Alert.AlertType.INFORMATION);
                 return;
             }
 

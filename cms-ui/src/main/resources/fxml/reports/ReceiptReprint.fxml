@@ -27,7 +27,7 @@
             <Label text="Receipt Date:"/>
             <DatePicker fx:id="receiptDate" prefWidth="130"/>
             <Label text="Search / Receipt No:"/>
-            <TextField fx:id="receiptSearchField" promptText="Enter Receipt No / Roll No..." prefWidth="200" onKeyTyped="#handleSearch"/>
+            <TextField fx:id="receiptSearchField" promptText="Enter Receipt No / Roll No..." prefWidth="200" onAction="#handleSearch"/>
             <Button text="Search &amp; Preview" styleClass="btn-secondary" onAction="#handleSearch"/>
         </HBox>
     </VBox>
