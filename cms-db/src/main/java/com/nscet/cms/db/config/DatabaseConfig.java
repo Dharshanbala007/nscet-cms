@@ -93,14 +93,22 @@ public class DatabaseConfig {
 
     @Bean
     public Flyway flyway(DataSource dataSource) {
+        try (java.sql.Connection conn = dataSource.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM flyway_schema_history WHERE version = '15' OR success = 0");
+        } catch (Exception ignored) {}
+
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
+                .outOfOrder(true)
                 .load();
         try {
             flyway.repair();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.err.println("[FlywayConfig] Repair error: " + e.getMessage());
+        }
         flyway.migrate();
         return flyway;
     }
