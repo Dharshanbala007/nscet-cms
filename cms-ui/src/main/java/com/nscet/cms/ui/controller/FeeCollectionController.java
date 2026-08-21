@@ -468,6 +468,9 @@ public class FeeCollectionController implements Initializable {
             success.setContentText("Receipt Number: " + saved.getReceiptNumber() + "\nTotal Amount: ₹" + saved.getTotalAmount());
             success.showAndWait();
 
+            // Auto-trigger print preview for the newly generated receipt
+            printReceipt(saved);
+
             // Refresh student details & pending particulars immediately!
             loadStudentDetails(selectedStudent);
             items.clear();
@@ -480,6 +483,63 @@ public class FeeCollectionController implements Initializable {
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Save error: " + e.getMessage()).showAndWait();
         }
+    }
+
+    private void printReceipt(FeeReceipt fr) {
+        if (fr == null) return;
+        try {
+            StudentMaster s = fr.getStudent();
+            Map<String, Object> params = new HashMap<>();
+            params.put("COLLEGE_NAME", "Nadar Saraswathi College of Engineering and Technology");
+            params.put("COLLEGE_LOCATION", "Vadapudupatti, Annanji (P.O), Theni - 625 531");
+            params.put("ACADEMIC_YEAR", "2025-26");
+            params.put("RECEIPT_NO", fr.getReceiptNumber());
+            params.put("RECEIPT_DATE", fr.getReceiptDate() != null
+                    ? fr.getReceiptDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
+            params.put("STUDENT_NAME", s != null ? s.getName() : "N/A");
+            params.put("ROLL_NO", s != null ? s.getRollNumber() : "N/A");
+            params.put("REG_NO", s != null && s.getRegistrationNo() != null ? s.getRegistrationNo() : "");
+            params.put("DEPARTMENT", s != null ? (s.getRollNumber().contains("CSE") ? "Computer Science" : "Engineering") : "N/A");
+            params.put("SEMESTER", "3");
+            params.put("PAYMENT_MODE", fr.getPaymentMode() != null ? fr.getPaymentMode() : "CASH");
+            params.put("BANK_ACCOUNT", fr.getBaseAccount() != null ? fr.getBaseAccount() : "TMB Main");
+            BigDecimal totalAmt = fr.getTotalAmount() != null ? fr.getTotalAmount() : BigDecimal.ZERO;
+            params.put("TOTAL_AMOUNT", String.format("%.2f", totalAmt));
+            params.put("AMOUNT_IN_WORDS", numberToWords(totalAmt));
+            params.put("REMARKS", fr.getPaymentMode() != null ? fr.getPaymentMode() : "-");
+
+            List<com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto> itemsList = new ArrayList<>();
+            if (fr.getItems() != null && !fr.getItems().isEmpty()) {
+                int i = 1;
+                for (FeeReceiptItem item : fr.getItems()) {
+                    String name = item.getFeesName() != null ? item.getFeesName().getName() : "College Fee";
+                    BigDecimal amt = item.getAmount() != null ? item.getAmount() : BigDecimal.ZERO;
+                    itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(i++, name, amt));
+                }
+            } else {
+                itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(1, "Tuition Fee", totalAmt));
+            }
+
+            com.nscet.cms.reports.ReportManager.printReport("FeeReceipt", itemsList, params);
+        } catch (Exception e) {
+            System.err.println("[FeeCollectionController] Receipt print error: " + e.getMessage());
+        }
+    }
+
+    private String numberToWords(BigDecimal num) {
+        if (num == null || num.compareTo(BigDecimal.ZERO) == 0) return "Zero Rupees Only";
+        long wholePart = num.longValue();
+        StringBuilder sb = new StringBuilder();
+        if (wholePart >= 10000000) { sb.append(wholePart / 10000000).append(" Crore "); wholePart %= 10000000; }
+        if (wholePart >= 100000) { sb.append(wholePart / 100000).append(" Lakh "); wholePart %= 100000; }
+        if (wholePart >= 1000) { sb.append(wholePart / 1000).append(" Thousand "); wholePart %= 1000; }
+        if (wholePart >= 100) { sb.append(wholePart / 100).append(" Hundred "); wholePart %= 100; }
+        String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+        String[] tens = {"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+        if (wholePart >= 20) { sb.append(tens[(int)(wholePart/10)]).append(" "); wholePart %= 10; }
+        if (wholePart > 0) { sb.append(ones[(int)wholePart]).append(" "); }
+        return sb.toString().trim() + " Rupees Only";
     }
 
     @FXML

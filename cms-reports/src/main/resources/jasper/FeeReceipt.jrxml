@@ -6,106 +6,153 @@
               name="FeeReceipt" pageWidth="595" pageHeight="842" columnWidth="515"
               leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40">
 
+    <!-- Parameters -->
     <parameter name="COLLEGE_NAME" class="java.lang.String"/>
     <parameter name="COLLEGE_LOCATION" class="java.lang.String"/>
     <parameter name="ACADEMIC_YEAR" class="java.lang.String"/>
+    <parameter name="RECEIPT_NO" class="java.lang.String"/>
+    <parameter name="RECEIPT_DATE" class="java.lang.String"/>
+    <parameter name="STUDENT_NAME" class="java.lang.String"/>
+    <parameter name="ROLL_NO" class="java.lang.String"/>
+    <parameter name="REG_NO" class="java.lang.String"/>
+    <parameter name="DEPARTMENT" class="java.lang.String"/>
+    <parameter name="SEMESTER" class="java.lang.String"/>
+    <parameter name="ADMISSION_TYPE" class="java.lang.String"/>
+    <parameter name="BUS_ROUTE" class="java.lang.String"/>
+    <parameter name="BUS_STOP" class="java.lang.String"/>
+    <parameter name="BANK_ACCOUNT" class="java.lang.String"/>
+    <parameter name="PAYMENT_MODE" class="java.lang.String"/>
+    <parameter name="REMARKS" class="java.lang.String"/>
+    <parameter name="TOTAL_AMOUNT" class="java.lang.String"/>
+    <parameter name="AMOUNT_IN_WORDS" class="java.lang.String"/>
+    <parameter name="PENDING_FEES" class="java.lang.String"/>
 
-    <field name="receiptNumber" class="java.lang.String"/>
-    <field name="receiptDate" class="java.time.LocalDate"/>
-    <field name="studentName" class="java.lang.String"/>
-    <field name="rollNumber" class="java.lang.String"/>
-    <field name="department" class="java.lang.String"/>
-    <field name="semester" class="java.lang.Integer"/>
-    <field name="paymentMode" class="java.lang.String"/>
-    <field name="baseAccount" class="java.lang.String"/>
-    <field name="totalAmount" class="java.math.BigDecimal"/>
+    <!-- Fields for Fee Particulars Data -->
+    <field name="slNo" class="java.lang.Integer"/>
     <field name="feeName" class="java.lang.String"/>
     <field name="feeAmount" class="java.math.BigDecimal"/>
 
+    <!-- Title / Header -->
     <title>
-        <band height="120">
-            <staticText>
-                <reportElement x="0" y="0" width="515" height="30"/>
+        <band height="185">
+            <!-- College Header -->
+            <textField>
+                <reportElement x="0" y="0" width="515" height="24"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="18" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Nadar Saraswathi College of Engineering and Technology]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="0" y="30" width="515" height="20"/>
-                <textElement textAlignment="Center">
-                    <font size="12"/>
-                </textElement>
-                <text><![CDATA[Theni]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="0" y="60" width="515" height="25"/>
-                <textElement textAlignment="Center">
                     <font size="14" isBold="true"/>
                 </textElement>
-                <text><![CDATA[FEE RECEIPT]]></text>
+                <textFieldExpression><![CDATA[$P{COLLEGE_NAME} != null ? $P{COLLEGE_NAME} : "Nadar Saraswathi College of Engineering and Technology"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="24" width="515" height="15"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{COLLEGE_LOCATION} != null ? $P{COLLEGE_LOCATION} : "Vadapudupatti, Annanji (P.O), Theni - 625 531"]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="42" width="515" height="1"/>
+            </line>
+            
+            <staticText>
+                <reportElement x="0" y="45" width="515" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FEE PAYMENT RECEIPT]]></text>
             </staticText>
             <line>
-                <reportElement x="0" y="90" width="515" height="1"/>
+                <reportElement x="0" y="68" width="515" height="1"/>
             </line>
-            <staticText>
-                <reportElement x="0" y="95" width="100" height="20"/>
-                <textElement><font size="10" isBold="true"/></textElement>
-                <text><![CDATA[Receipt No:]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="100" y="95" width="150" height="20"/>
-                <textElement><font size="10"/></textElement>
-                <textFieldExpression><![CDATA[$F{receiptNumber}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement x="300" y="95" width="80" height="20"/>
-                <textElement><font size="10" isBold="true"/></textElement>
-                <text><![CDATA[Date:]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="380" y="95" width="135" height="20"/>
-                <textElement><font size="10"/></textElement>
-                <textFieldExpression><![CDATA[$F{receiptDate}]]></textFieldExpression>
-            </textField>
+
+            <!-- Metadata Row 1 -->
+            <staticText><reportElement x="0" y="75" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Receipt No:]]></text></staticText>
+            <textField><reportElement x="80" y="75" width="160" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{RECEIPT_NO} != null ? $P{RECEIPT_NO} : "N/A"]]></textFieldExpression></textField>
+            <staticText><reportElement x="280" y="75" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Receipt Date:]]></text></staticText>
+            <textField><reportElement x="360" y="75" width="155" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{RECEIPT_DATE} != null ? $P{RECEIPT_DATE} : "N/A"]]></textFieldExpression></textField>
+
+            <!-- Metadata Row 2 -->
+            <staticText><reportElement x="0" y="92" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Student Name:]]></text></staticText>
+            <textField><reportElement x="80" y="92" width="160" height="15"/><textElement><font size="9" isBold="true"/></textElement><textFieldExpression><![CDATA[$P{STUDENT_NAME} != null ? $P{STUDENT_NAME} : "N/A"]]></textFieldExpression></textField>
+            <staticText><reportElement x="280" y="92" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Roll / Reg No:]]></text></staticText>
+            <textField><reportElement x="360" y="92" width="155" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[($P{ROLL_NO} != null ? $P{ROLL_NO} : "") + ($P{REG_NO} != null ? " / " + $P{REG_NO} : "")]]></textFieldExpression></textField>
+
+            <!-- Metadata Row 3 -->
+            <staticText><reportElement x="0" y="109" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Department:]]></text></staticText>
+            <textField><reportElement x="80" y="109" width="160" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{DEPARTMENT} != null ? $P{DEPARTMENT} : "N/A"]]></textFieldExpression></textField>
+            <staticText><reportElement x="280" y="109" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Sem / Year:]]></text></staticText>
+            <textField><reportElement x="360" y="109" width="155" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[($P{SEMESTER} != null ? "Sem " + $P{SEMESTER} : "") + ($P{ACADEMIC_YEAR} != null ? " (" + $P{ACADEMIC_YEAR} + ")" : "")]]></textFieldExpression></textField>
+
+            <!-- Metadata Row 4 -->
+            <staticText><reportElement x="0" y="126" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Payment Mode:]]></text></staticText>
+            <textField><reportElement x="80" y="126" width="160" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{PAYMENT_MODE} != null ? $P{PAYMENT_MODE} : "CASH"]]></textFieldExpression></textField>
+            <staticText><reportElement x="280" y="126" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Bank A/C:]]></text></staticText>
+            <textField><reportElement x="360" y="126" width="155" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{BANK_ACCOUNT} != null ? $P{BANK_ACCOUNT} : "TMB Main"]]></textFieldExpression></textField>
+
+            <!-- Metadata Row 5 -->
+            <staticText><reportElement x="0" y="143" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Bus Route/Stop:]]></text></staticText>
+            <textField><reportElement x="80" y="143" width="160" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[($P{BUS_ROUTE} != null ? $P{BUS_ROUTE} : "-") + " / " + ($P{BUS_STOP} != null ? $P{BUS_STOP} : "-")]]></textFieldExpression></textField>
+            <staticText><reportElement x="280" y="143" width="80" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Remarks:]]></text></staticText>
+            <textField><reportElement x="360" y="143" width="155" height="15"/><textElement><font size="9"/></textElement><textFieldExpression><![CDATA[$P{REMARKS} != null ? $P{REMARKS} : "-"]]></textFieldExpression></textField>
+
+            <!-- Particulars Table Header -->
+            <line><reportElement x="0" y="163" width="515" height="1"/></line>
+            <staticText><reportElement x="5" y="165" width="40" height="16"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[S.No]]></text></staticText>
+            <staticText><reportElement x="50" y="165" width="340" height="16"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Particulars / Fee Head]]></text></staticText>
+            <staticText><reportElement x="400" y="165" width="110" height="16"/><textElement textAlignment="Right"><font size="9" isBold="true"/></textElement><text><![CDATA[Amount (₹)]]></text></staticText>
+            <line><reportElement x="0" y="183" width="515" height="1"/></line>
         </band>
     </title>
 
+    <!-- Detail Band (Fee Items Table) -->
     <detail>
-        <band height="20">
+        <band height="18">
             <textField>
-                <reportElement x="100" y="0" width="200" height="15"/>
-                <textElement><font size="10"/></textElement>
-                <textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+                <reportElement x="5" y="2" width="40" height="14"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{slNo} != null ? $F{slNo} : "1"]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="310" y="0" width="100" height="15"/>
-                <textElement><font size="10"/></textElement>
-                <textFieldExpression><![CDATA[$F{rollNumber}]]></textFieldExpression>
+                <reportElement x="50" y="2" width="340" height="14"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{feeName} != null ? $F{feeName} : "Tuition Fee"]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="420" y="0" width="95" height="15"/>
-                <textElement><font size="10"/></textElement>
-                <textFieldExpression><![CDATA[$F{feeAmount}]]></textFieldExpression>
+            <textField pattern="₹ #,##0.00">
+                <reportElement x="400" y="2" width="110" height="14"/>
+                <textElement textAlignment="Right"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{feeAmount} != null ? $F{feeAmount} : new java.math.BigDecimal("0.00")]]></textFieldExpression>
             </textField>
         </band>
     </detail>
 
+    <!-- Summary / Footer -->
     <summary>
-        <band height="60">
-            <line>
-                <reportElement x="0" y="0" width="515" height="1"/>
-            </line>
-            <staticText>
-                <reportElement x="300" y="5" width="115" height="20"/>
-                <textElement><font size="12" isBold="true"/></textElement>
-                <text><![CDATA[Total Amount:]]></text>
-            </staticText>
+        <band height="100">
+            <line><reportElement x="0" y="5" width="515" height="1"/></line>
+
+            <staticText><reportElement x="250" y="10" width="140" height="18"/><textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement><text><![CDATA[TOTAL AMOUNT PAID:]]></text></staticText>
             <textField>
-                <reportElement x="420" y="5" width="95" height="20"/>
-                <textElement><font size="12" isBold="true"/></textElement>
-                <textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
+                <reportElement x="395" y="10" width="115" height="18"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="11" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_AMOUNT} != null ? "₹ " + $P{TOTAL_AMOUNT} : "₹ 0.00"]]></textFieldExpression>
             </textField>
+
+            <staticText><reportElement x="5" y="32" width="100" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Amount in Words:]]></text></staticText>
+            <textField>
+                <reportElement x="105" y="32" width="405" height="15"/>
+                <textElement><font size="9" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{AMOUNT_IN_WORDS} != null ? $P{AMOUNT_IN_WORDS} : "Rupees Only"]]></textFieldExpression>
+            </textField>
+
+            <staticText><reportElement x="5" y="50" width="100" height="15"/><textElement><font size="9" isBold="true"/></textElement><text><![CDATA[Pending Fees:]]></text></staticText>
+            <textField>
+                <reportElement x="105" y="50" width="150" height="15"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{PENDING_FEES} != null ? "₹ " + $P{PENDING_FEES} : "₹ 0.00"]]></textFieldExpression>
+            </textField>
+
+            <staticText><reportElement x="10" y="80" width="150" height="15"/><textElement textAlignment="Center"><font size="9"/></textElement><text><![CDATA[Student / Parent Signature]]></text></staticText>
+            <staticText><reportElement x="350" y="80" width="150" height="15"/><textElement textAlignment="Center"><font size="9" isBold="true"/></textElement><text><![CDATA[Cashier / Accounts Sign]]></text></staticText>
         </band>
     </summary>
 </jasperReport>

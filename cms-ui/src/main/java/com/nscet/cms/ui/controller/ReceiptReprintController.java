@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -109,11 +110,14 @@ public class ReceiptReprintController implements Initializable {
             sb.append("              Thank you for your payment!               \n");
             sb.append("===============================================================\n");
 
+            currentFeeReceipt = fr;
             receiptPreviewArea.setText(sb.toString());
         } catch (Exception e) {
             showAlert("Error", "Error searching receipt: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+    private FeeReceipt currentFeeReceipt;
 
     private String extractDept(String rollNumber) {
         if (rollNumber == null) return "N/A";
@@ -129,12 +133,81 @@ public class ReceiptReprintController implements Initializable {
 
     @FXML
     private void handlePrint() {
+        if (currentFeeReceipt == null) {
+            new Alert(Alert.AlertType.WARNING, "Search and load a receipt first before printing.").showAndWait();
+            return;
+        }
+
         try {
-            ReportManager.printReport("FeeReceipt", Collections.emptyList(), new HashMap<>());
-            new Alert(Alert.AlertType.INFORMATION, "Receipt print job sent to printer.").showAndWait();
+            StudentMaster s = currentFeeReceipt.getStudent();
+            Map<String, Object> params = new HashMap<>();
+            params.put("COLLEGE_NAME", "Nadar Saraswathi College of Engineering and Technology");
+            params.put("COLLEGE_LOCATION", "Vadapudupatti, Annanji (P.O), Theni - 625 531");
+            params.put("ACADEMIC_YEAR", "2025-26");
+            params.put("RECEIPT_NO", currentFeeReceipt.getReceiptNumber());
+            params.put("RECEIPT_DATE", currentFeeReceipt.getReceiptDate() != null
+                    ? currentFeeReceipt.getReceiptDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
+            params.put("STUDENT_NAME", s != null ? s.getName() : "N/A");
+            params.put("ROLL_NO", s != null ? s.getRollNumber() : "N/A");
+            params.put("REG_NO", s != null && s.getRegistrationNo() != null ? s.getRegistrationNo() : "");
+            params.put("DEPARTMENT", s != null ? extractDept(s.getRollNumber()) : "N/A");
+            params.put("SEMESTER", "3");
+            params.put("PAYMENT_MODE", currentFeeReceipt.getPaymentMode() != null ? currentFeeReceipt.getPaymentMode() : "CASH");
+            params.put("BANK_ACCOUNT", currentFeeReceipt.getBaseAccount() != null ? currentFeeReceipt.getBaseAccount() : "TMB Main");
+            BigDecimal totalAmt = currentFeeReceipt.getTotalAmount() != null ? currentFeeReceipt.getTotalAmount() : java.math.BigDecimal.ZERO;
+            params.put("TOTAL_AMOUNT", String.format("%.2f", totalAmt));
+            params.put("AMOUNT_IN_WORDS", numberToWords(totalAmt));
+            params.put("REMARKS", currentFeeReceipt.getPaymentMode() != null ? currentFeeReceipt.getPaymentMode() : "-");
+
+            List<ReceiptPrintItemDto> itemsList = new ArrayList<>();
+            if (currentFeeReceipt.getItems() != null && !currentFeeReceipt.getItems().isEmpty()) {
+                int i = 1;
+                for (FeeReceiptItem item : currentFeeReceipt.getItems()) {
+                    String name = item.getFeesName() != null ? item.getFeesName().getName() : "College Fee";
+                    BigDecimal amt = item.getAmount() != null ? item.getAmount() : java.math.BigDecimal.ZERO;
+                    itemsList.add(new ReceiptPrintItemDto(i++, name, amt));
+                }
+            } else {
+                itemsList.add(new ReceiptPrintItemDto(1, "Tuition Fee", totalAmt));
+            }
+
+            ReportManager.printReport("FeeReceipt", itemsList, params);
+            new Alert(Alert.AlertType.INFORMATION, "Receipt print job sent for Receipt No: " + currentFeeReceipt.getReceiptNumber()).showAndWait();
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Print failed: " + e.getMessage()).showAndWait();
         }
+    }
+
+    private String numberToWords(java.math.BigDecimal num) {
+        if (num == null || num.compareTo(java.math.BigDecimal.ZERO) == 0) return "Zero Rupees Only";
+        long wholePart = num.longValue();
+        StringBuilder sb = new StringBuilder();
+        if (wholePart >= 10000000) { sb.append(wholePart / 10000000).append(" Crore "); wholePart %= 10000000; }
+        if (wholePart >= 100000) { sb.append(wholePart / 100000).append(" Lakh "); wholePart %= 100000; }
+        if (wholePart >= 1000) { sb.append(wholePart / 1000).append(" Thousand "); wholePart %= 1000; }
+        if (wholePart >= 100) { sb.append(wholePart / 100).append(" Hundred "); wholePart %= 100; }
+        String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+        String[] tens = {"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+        if (wholePart >= 20) { sb.append(tens[(int)(wholePart/10)]).append(" "); wholePart %= 10; }
+        if (wholePart > 0) { sb.append(ones[(int)wholePart]).append(" "); }
+        return sb.toString().trim() + " Rupees Only";
+    }
+
+    public static class ReceiptPrintItemDto {
+        private Integer slNo;
+        private String feeName;
+        private java.math.BigDecimal feeAmount;
+
+        public ReceiptPrintItemDto(Integer slNo, String feeName, java.math.BigDecimal feeAmount) {
+            this.slNo = slNo;
+            this.feeName = feeName;
+            this.feeAmount = feeAmount;
+        }
+
+        public Integer getSlNo() { return slNo; }
+        public String getFeeName() { return feeName; }
+        public java.math.BigDecimal getFeeAmount() { return feeAmount; }
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
