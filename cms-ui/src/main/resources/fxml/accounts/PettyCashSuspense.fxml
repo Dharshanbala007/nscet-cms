@@ -8,6 +8,10 @@
       styleClass="master-container" spacing="15">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
+    <fx:define>
+        <ToggleGroup fx:id="sourceGroup"/>
+    </fx:define>
+
     <Label text="Petty Cash (Suspense Amount)" styleClass="module-title"/>
 
     <VBox spacing="10" styleClass="form-container">
