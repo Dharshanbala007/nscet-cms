@@ -36,6 +36,13 @@ public class LeaveDetailsController implements Initializable {
         fromDate.setValue(LocalDate.now().withDayOfMonth(1));
         toDate.setValue(LocalDate.now());
 
+        fromDate.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleView();
+        });
+        toDate.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleView();
+        });
+
         setupTable();
         handleView();
     }
@@ -44,7 +51,7 @@ public class LeaveDetailsController implements Initializable {
         colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
         colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colCategory.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCategory()));
+        colCategory.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCategory() != null ? c.getValue().getCategory() : "Teaching"));
         colDoj.setCellValueFactory(c -> new SimpleStringProperty("01/08/2023"));
 
         colCl.setCellValueFactory(c -> {
@@ -69,7 +76,13 @@ public class LeaveDetailsController implements Initializable {
     private void handleView() {
         try {
             List<StaffSalary> list = payrollService.getAllStaffSalaries();
-            staffList.setAll(list);
+            java.util.Map<String, StaffSalary> uniqueMap = new java.util.LinkedHashMap<>();
+            for (StaffSalary s : list) {
+                if (s.getStaffCode() != null && !uniqueMap.containsKey(s.getStaffCode())) {
+                    uniqueMap.put(s.getStaffCode(), s);
+                }
+            }
+            staffList.setAll(uniqueMap.values());
         } catch (Exception e) {
             System.err.println("[LeaveDetailsController] Error loading leave details: " + e.getMessage());
         }

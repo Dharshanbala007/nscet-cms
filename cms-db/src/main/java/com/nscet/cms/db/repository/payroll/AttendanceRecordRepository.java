@@ -17,4 +17,7 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
     @Query("SELECT a FROM AttendanceRecord a WHERE a.isActive = true AND a.staffCode = :staffCode ORDER BY a.attendanceDate DESC")
     List<AttendanceRecord> findByStaffCode(@Param("staffCode") String staffCode);
+
+    @Query("SELECT a FROM AttendanceRecord a WHERE a.isActive = true AND a.attendanceDate >= :startDate AND a.attendanceDate <= :endDate ORDER BY a.attendanceDate DESC")
+    List<AttendanceRecord> findByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

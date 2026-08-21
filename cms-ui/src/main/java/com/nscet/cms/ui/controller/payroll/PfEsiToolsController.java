@@ -30,8 +30,12 @@ public class PfEsiToolsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        monthCombo.getItems().setAll("Jul-2026", "Jun-2026", "May-2026");
+        monthCombo.getItems().setAll("Jul-2026", "Jun-2026", "May-2026", "Apr-2026", "Mar-2026");
         monthCombo.getSelectionModel().selectFirst();
+
+        monthCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleGenerate();
+        });
 
         setupTable();
         handleGenerate();
@@ -53,7 +57,13 @@ public class PfEsiToolsController implements Initializable {
     private void handleGenerate() {
         try {
             List<StaffSalary> list = payrollService.getAllStaffSalaries();
-            staffList.setAll(list);
+            java.util.Map<String, StaffSalary> uniqueMap = new java.util.LinkedHashMap<>();
+            for (StaffSalary s : list) {
+                if (s.getStaffCode() != null && !uniqueMap.containsKey(s.getStaffCode())) {
+                    uniqueMap.put(s.getStaffCode(), s);
+                }
+            }
+            staffList.setAll(uniqueMap.values());
         } catch (Exception e) {
             System.err.println("[PfEsiToolsController] Error: " + e.getMessage());
         }

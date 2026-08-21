@@ -38,6 +38,10 @@ public class PayrollCalculationController implements Initializable {
         payPeriodCombo.getItems().setAll("Jul-2026", "Jun-2026", "May-2026", "Apr-2026", "Mar-2026");
         payPeriodCombo.getSelectionModel().selectFirst();
 
+        payPeriodCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleCalculate();
+        });
+
         setupTable();
         handleCalculate();
     }
@@ -69,10 +73,7 @@ public class PayrollCalculationController implements Initializable {
         }
 
         try {
-            List<MonthlyPayrollRun> list = payrollService.getMonthlyRun(period);
-            if (list.isEmpty()) {
-                list = payrollService.calculateMonthlyRun(period, days);
-            }
+            List<MonthlyPayrollRun> list = payrollService.calculateMonthlyRun(period, days);
             runList.setAll(list);
 
             BigDecimal totalNet = BigDecimal.ZERO;

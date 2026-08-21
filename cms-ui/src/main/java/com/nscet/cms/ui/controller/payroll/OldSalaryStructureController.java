@@ -33,6 +33,10 @@ public class OldSalaryStructureController implements Initializable {
         yearCombo.getItems().setAll("2025-26", "2024-25", "2023-24");
         yearCombo.getSelectionModel().selectFirst();
 
+        yearCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleLoad();
+        });
+
         setupTable();
         handleLoad();
     }
@@ -65,7 +69,13 @@ public class OldSalaryStructureController implements Initializable {
     private void handleLoad() {
         try {
             List<StaffSalary> all = payrollService.getAllStaffSalaries();
-            list.setAll(all);
+            java.util.Map<String, StaffSalary> uniqueMap = new java.util.LinkedHashMap<>();
+            for (StaffSalary s : all) {
+                if (s.getStaffCode() != null && !uniqueMap.containsKey(s.getStaffCode())) {
+                    uniqueMap.put(s.getStaffCode(), s);
+                }
+            }
+            list.setAll(uniqueMap.values());
         } catch (Exception e) {
             System.err.println("[OldSalaryStructureController] Error: " + e.getMessage());
         }

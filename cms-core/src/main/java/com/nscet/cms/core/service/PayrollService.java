@@ -94,6 +94,13 @@ public class PayrollService {
         return attendanceRepo.findByAttendanceDate(date);
     }
 
+    public List<AttendanceRecord> getAttendanceBetween(LocalDate start, LocalDate end) {
+        LocalDate from = start != null ? start : LocalDate.of(1970, 1, 1);
+        LocalDate to = end != null ? end : LocalDate.of(2099, 12, 31);
+        if (from.isAfter(to)) { LocalDate t = from; from = to; to = t; }
+        return attendanceRepo.findByDateRange(from, to);
+    }
+
     @Transactional
     public AttendanceRecord saveAttendance(AttendanceRecord rec) {
         if (rec.getIsActive() == null) rec.setIsActive(true);

@@ -70,13 +70,15 @@ public class PayrollShellController implements Initializable {
     }
 
     private void setupUserInfo() {
-        if (userSession != null && userSession.getCurrentUser() != null) {
-            userNameLabel.setText(userSession.getCurrentUser().getFullName());
-            portalLabel.setText("PAYROLL");
-            academicYearLabel.setText(userSession.getCurrentAcademicYear() != null ? userSession.getCurrentAcademicYear() : "2025-26");
-        } else {
-            portalLabel.setText("PAYROLL");
-            academicYearLabel.setText("2025-26");
+        portalLabel.setText("PAYROLL");
+        academicYearLabel.setText("2025-26");
+        if (userNameLabel != null) {
+            if (userSession != null && userSession.getCurrentUser() != null 
+                    && !"Accounts Portal User".equals(userSession.getCurrentUser().getFullName())) {
+                userNameLabel.setText(userSession.getCurrentUser().getFullName());
+            } else {
+                userNameLabel.setText("Payroll Administrator");
+            }
         }
     }
 

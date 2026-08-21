@@ -45,6 +45,10 @@ public class AttendanceEntryController implements Initializable {
         sessionCombo.getItems().setAll("FULL_DAY", "FORENOON", "AFTERNOON");
         sessionCombo.getSelectionModel().selectFirst();
 
+        datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) handleLoadStaff();
+        });
+
         setupTable();
         handleLoadStaff();
     }
@@ -54,7 +58,7 @@ public class AttendanceEntryController implements Initializable {
         colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
         colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRemarks() != null ? "Active Staff" : "Staff"));
+        colDesig.setCellValueFactory(c -> new SimpleStringProperty("Active Staff"));
 
         colStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAttendanceType()));
         colStatus.setCellFactory(ComboBoxTableCell.forTableColumn("PRESENT", "LOP", "CL", "OD", "LATE"));
@@ -74,12 +78,26 @@ public class AttendanceEntryController implements Initializable {
 
         try {
             List<AttendanceRecord> existing = payrollService.getAttendanceByDate(date);
-            if (!existing.isEmpty()) {
-                attendanceList.setAll(existing);
+            java.util.Map<String, AttendanceRecord> uniqueAttendance = new java.util.LinkedHashMap<>();
+            for (AttendanceRecord r : existing) {
+                if (r.getStaffCode() != null && !uniqueAttendance.containsKey(r.getStaffCode())) {
+                    uniqueAttendance.put(r.getStaffCode(), r);
+                }
+            }
+
+            if (!uniqueAttendance.isEmpty()) {
+                attendanceList.setAll(uniqueAttendance.values());
             } else {
                 List<StaffSalary> staffList = payrollService.getAllStaffSalaries();
-                attendanceList.clear();
+                java.util.Map<String, StaffSalary> uniqueStaff = new java.util.LinkedHashMap<>();
                 for (StaffSalary s : staffList) {
+                    if (s.getStaffCode() != null && !uniqueStaff.containsKey(s.getStaffCode())) {
+                        uniqueStaff.put(s.getStaffCode(), s);
+                    }
+                }
+
+                attendanceList.clear();
+                for (StaffSalary s : uniqueStaff.values()) {
                     AttendanceRecord rec = new AttendanceRecord();
                     rec.setAttendanceDate(date);
                     rec.setStaffCode(s.getStaffCode());
