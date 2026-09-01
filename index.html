@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSCET College Management System - Official Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --primary-accent: #2563eb;
+            --accent-gold: #d97706;
+            --secondary: #0284c7;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Top Notification Bar */
+        .top-banner {
+            background: linear-gradient(90deg, #1e3a8a 0%, #0284c7 100%);
+            color: white;
+            text-align: center;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: #1e3a8a;
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+        }
+
+        .btn-github {
+            background-color: var(--primary-dark);
+            color: white !important;
+            padding: 8px 18px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-github:hover {
+            background-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0f172a 100%);
+            color: white;
+            padding: 80px 25px 90px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #38bdf8;
+        }
+
+        .hero h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 35px;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-accent);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Tech Stack Badges */
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 45px;
+            flex-wrap: wrap;
+        }
+
+        .tech-pill {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        /* Section Container */
+        .section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 80px 25px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Module Grid */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
+        }
+
+        .card-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .icon-admin { background: #dbeafe; color: #1d4ed8; }
+        .icon-accounts { background: #dcfce7; color: #15803d; }
+        .icon-payroll { background: #fef3c7; color: #b45309; }
+        .icon-reports { background: #f3e8ff; color: #7e22ce; }
+
+        .card h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li i {
+            color: #10b981;
+            font-size: 0.85rem;
+        }
+
+        /* Quick Start Terminal Box */
+        .terminal-box {
+            background: #0f172a;
+            color: #f8fafc;
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: var(--shadow-lg);
+            font-family: 'Courier New', Courier, monospace;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #334155;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .cmd-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1e293b;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #38bdf8;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: #94a3b8;
+            padding: 40px 25px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-banner">
+        <i class="fa-solid fa-graduation-cap"></i> Official Management System Portal - Nadar Saraswathi College of Engineering &amp; Technology, Theni
+    </div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <div class="brand-logo">N</div>
+                <div class="brand-text">
+                    <h1>NSCET CMS</h1>
+                    <p>College Management System v1.0</p>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#modules">Modules</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#quickstart">Run App</a></li>
+                <li>
+                    <a href="https://github.com/Dharshanbala007/nscet-cms" target="_blank" class="btn-github">
+                        <i class="fa-brands fa-github"></i> GitHub Repository
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero" id="overview">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fa-solid fa-shield-halved"></i> Enterprise Desktop ERP
+            </div>
+            <h2>NSCET College Management System</h2>
+            <p>A comprehensive Java 17 &amp; Spring Framework desktop application tailored for Nadar Saraswathi College of Engineering &amp; Technology, Theni. Built for high-volume fee processing, TC print template management, staff payroll, and accounts administration.</p>
+            <div class="hero-actions">
+                <a href="#quickstart" class="btn-primary"><i class="fa-solid fa-play"></i> Run Application</a>
+                <a href="https://github.com/Dharshanbala007/nscet-cms" target="_blank" class="btn-secondary"><i class="fa-brands fa-github"></i> View Source Code</a>
+            </div>
+            <div class="tech-stack">
+                <span class="tech-pill"><i class="fa-brands fa-java"></i> Java 17</span>
+                <span class="tech-pill"><i class="fa-solid fa-leaf"></i> Spring Boot 3.2</span>
+                <span class="tech-pill"><i class="fa-solid fa-desktop"></i> JavaFX 17</span>
+                <span class="tech-pill"><i class="fa-solid fa-database"></i> MySQL 8.0</span>
+                <span class="tech-pill"><i class="fa-solid fa-file-pdf"></i> JasperReports</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="section" id="modules">
+        <div class="section-header">
+            <h3>Integrated Core Portals &amp; Tools</h3>
+            <p>Complete multi-role management suite for Administration, Accounts, and Staff Payroll.</p>
+        </div>
+        <div class="module-grid">
+
+            <!-- Admin Portal Card -->
+            <div class="card">
+                <div class="card-icon icon-admin">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h4>Admin Portal</h4>
+                <p>Complete administrative master controls, student CRUD, fee collections, and Transfer Certificate printing.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Student Master (4-Tab Personal, Family, Address, Edu)</li>
+                    <li><i class="fa-solid fa-check"></i> Fee Collection with auto-allocation algorithm</li>
+                    <li><i class="fa-solid fa-check"></i> Transfer Certificate (TC) generation &amp; batch print</li>
+                    <li><i class="fa-solid fa-check"></i> Student Enrollment criteria transfer tool</li>
+                </ul>
+            </div>
+
+            <!-- Reports & Tools Card -->
+            <div class="card">
+                <div class="card-icon icon-reports">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
+                <h4>Reports &amp; Tools Suite</h4>
+                <p>Extensive reporting modules with single/batch print capabilities and export options.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Fees Pending Details &amp; 2-Column Intimation Letters</li>
+                    <li><i class="fa-solid fa-check"></i> Daily Fees Collection Register (DFCR Detailed/Summary)</li>
+                    <li><i class="fa-solid fa-check"></i> Bulk Fees Entry with dual-list student transfer</li>
+                    <li><i class="fa-solid fa-check"></i> Bus Fees Update schedule &amp; Parents Meeting letters</li>
+                </ul>
+            </div>
+
+            <!-- Accounts Portal Card -->
+            <div class="card">
+                <div class="card-icon icon-accounts">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <h4>Accounts Portal</h4>
+                <p>Petty cash management, suspense vouchers, function expenses, and pending bills.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Petty Cash Voucher &amp; Suspense entry processing</li>
+                    <li><i class="fa-solid fa-check"></i> Function Expense master &amp; Day Settlement tool</li>
+                    <li><i class="fa-solid fa-check"></i> Account Group &amp; Function master ledgers</li>
+                    <li><i class="fa-solid fa-check"></i> Daily Transaction Daybook &amp; Financial Reports</li>
+                </ul>
+            </div>
+
+            <!-- Payroll Portal Card -->
+            <div class="card">
+                <div class="card-icon icon-payroll">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <h4>Staff Payroll Portal</h4>
+                <p>Comprehensive staff attendance, salary calculation, leave credits, and PF/ESI management.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Attendance Entry &amp; Monthly Leave Credit automation</li>
+                    <li><i class="fa-solid fa-check"></i> Staff Salary structure &amp; Payslip generation</li>
+                    <li><i class="fa-solid fa-check"></i> LOP, Resignation, Termination &amp; Transfer tracking</li>
+                    <li><i class="fa-solid fa-check"></i> PF &amp; ESI compliance calculation tools</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Quick Start Guide -->
+    <section class="section" id="quickstart" style="background-color: white; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 60px;">
+        <div class="section-header">
+            <h3>How to Run the Application</h3>
+            <p>Clone the repository and run using Apache Maven on Java 17.</p>
+        </div>
+        <div class="terminal-box">
+            <div class="terminal-header">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+                <span style="font-size: 0.85rem; color: #94a3b8; margin-left: 10px;">PowerShell / Command Prompt</span>
+            </div>
+            <p style="color: #94a3b8; margin-bottom: 8px;"># 1. Clone repository</p>
+            <div class="cmd-line">
+                <span>git clone https://github.com/Dharshanbala007/nscet-cms.git</span>
+            </div>
+            <p style="color: #94a3b8; margin-top: 15px; margin-bottom: 8px;"># 2. Launch NSCET CMS Application</p>
+            <div class="cmd-line">
+                <span>mvn javafx:run -pl cms-ui</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Nadar Saraswathi College of Engineering &amp; Technology (NSCET)</strong></p>
+        <p>Vadapudupatti, Annanji (P.O), Theni - 625 531, Tamil Nadu, India.</p>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">Developed for NSCET College Administration. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
