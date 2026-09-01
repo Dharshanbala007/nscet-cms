@@ -5,56 +5,91 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.StudentEnrollmentController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
 
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Student Enrollment" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
+    <!-- Title Header matching media_1788255275064.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Student Enrollment" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Enrollment Details" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <GridPane hgap="15" vgap="10">
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="100" prefWidth="120"/>
-                        <ColumnConstraints minWidth="200" prefWidth="250"/>
-                        <ColumnConstraints minWidth="100" prefWidth="120"/>
-                        <ColumnConstraints minWidth="200" prefWidth="250"/>
-                    </columnConstraints>
-                    <Label text="Roll No:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <TextField fx:id="rollNoField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                    <Button text="Search" GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#handleSearch"/>
-                    <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <Label fx:id="nameLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                    <Label text="Department:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <Label fx:id="deptLabel" text="--" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                    <Label text="Semester:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <ComboBox fx:id="semesterCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select"/>
-                    <Label text="Academic Year:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                    <ComboBox fx:id="academicYearCombo" GridPane.columnIndex="3" GridPane.rowIndex="2" promptText="Select"/>
-                </GridPane>
-                <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="Enroll" styleClass="btn-primary" onAction="#handleEnroll"/>
-                    <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
+    <!-- Top Enrollment Filter & Configuration Bar matching media_1788255275064.png -->
+    <VBox spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <!-- Row 1: Radio Buttons and Source From Date -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <fx:define>
+                <ToggleGroup fx:id="enrollmentTypeGroup"/>
+            </fx:define>
+            <RadioButton fx:id="studentDetailsRadio" text="Student Details" selected="true" toggleGroup="$enrollmentTypeGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <RadioButton fx:id="feesDetailsRadio" text="Fees Details" toggleGroup="$enrollmentTypeGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+
+            <Label text="From Date:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="sourceFromDatePicker" prefWidth="130"/>
+        </HBox>
+
+        <!-- Row 2: Source Criteria (Left) -> To -> Target Criteria (Right) -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <!-- Left Source Box -->
+            <VBox spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Acadamic Year:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="sourceYearCombo" prefWidth="110" promptText="Select"/>
+
+                    <Label text="Sem Type:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="sourceSemTypeCombo" prefWidth="90" promptText="Select"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Dept:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="sourceDeptCombo" prefWidth="110" promptText="Select"/>
+
+                    <Label text="Semester:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="sourceSemesterCombo" prefWidth="90" promptText="Select"/>
                 </HBox>
             </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="enrollmentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="60"/>
-                    <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
-                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
-                    <TableColumn fx:id="semesterCol" text="Semester" prefWidth="80"/>
-                    <TableColumn fx:id="enrollmentDateCol" text="Enrollment Date" prefWidth="120"/>
-                </columns>
-            </TableView>
-        </VBox>
+
+            <!-- Middle Separator Label -->
+            <Label text="To" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #0284c7;"/>
+
+            <!-- Right Target Box -->
+            <VBox spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="From Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <DatePicker fx:id="targetFromDatePicker" prefWidth="125"/>
+
+                    <Label text="To Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <DatePicker fx:id="targetToDatePicker" prefWidth="125"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Acadamic Year:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="targetYearCombo" prefWidth="110" promptText="Select"/>
+
+                    <Label text="Sem Type:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="targetSemTypeCombo" prefWidth="90" promptText="Select"/>
+                </HBox>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Action Buttons -->
+            <VBox spacing="8" alignment="CENTER_RIGHT">
+                <Button text="View" styleClass="btn-primary" prefWidth="80" onAction="#handleView"/>
+                <Button text="Save" styleClass="btn-secondary" prefWidth="80" onAction="#handleSave"/>
+            </VBox>
+        </HBox>
     </VBox>
+
+    <!-- Main Data Table matching media_1788255275064.png -->
+    <TableView fx:id="enrollmentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="55"/>
+            <TableColumn fx:id="admNoCol" text="Admission No" prefWidth="110"/>
+            <TableColumn fx:id="nameCol" text="Student Name" prefWidth="170"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
+            <TableColumn fx:id="deptCol" text="Dept" prefWidth="65"/>
+            <TableColumn fx:id="academicYearCol" text="Academic Year" prefWidth="100"/>
+            <TableColumn fx:id="semesterCol" text="Semester" prefWidth="75"/>
+            <TableColumn fx:id="statusCol" text="Enrollment Status" prefWidth="120"/>
+        </columns>
+    </TableView>
 </VBox>

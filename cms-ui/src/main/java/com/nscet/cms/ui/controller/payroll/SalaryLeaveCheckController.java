@@ -1,7 +1,6 @@
 package com.nscet.cms.ui.controller.payroll;
 
 import com.nscet.cms.core.service.PayrollService;
-import com.nscet.cms.db.entity.payroll.StaffSalary;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -20,58 +21,103 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class SalaryLeaveCheckController implements Initializable {
 
-    @FXML private ComboBox<String> staffCombo;
-    @FXML private TableView<StaffSalary> table;
-    @FXML private TableColumn<StaffSalary, String> colCode, colName, colDept, colClAvail, colClTaken, colLopCount, colLopDeduction, colStatus;
+    @FXML private DatePicker fromDatePicker;
+    @FXML private DatePicker toDatePicker;
+
+    @FXML private TextField staffNameField;
+    @FXML private TextField categoryField;
+    @FXML private TextField deptField;
+    @FXML private DatePicker dojPicker;
+
+    @FXML private TableView<LeaveSummaryRow> summaryTable;
+    @FXML private TableColumn<LeaveSummaryRow, String> colLeaveType, colAvail, colTaken, colBal;
+
+    @FXML private TableView<LeaveDetailRow> detailsTable;
+    @FXML private TableColumn<LeaveDetailRow, String> colLeaveDate, colMorning, colAfterNoon;
 
     @Autowired private PayrollService payrollService;
-    private ObservableList<StaffSalary> staffList = FXCollections.observableArrayList();
-    private List<StaffSalary> rawList;
+
+    private final ObservableList<LeaveSummaryRow> summaryList = FXCollections.observableArrayList();
+    private final ObservableList<LeaveDetailRow> detailList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupTable();
-        loadData();
+        fromDatePicker.setValue(LocalDate.of(2025, 1, 1));
+        toDatePicker.setValue(LocalDate.of(2026, 8, 21));
+
+        staffNameField.setText("KUMARAVEL.P");
+        categoryField.setText("NT-Tech");
+        deptField.setText("CSE");
+        dojPicker.setValue(LocalDate.of(2014, 6, 16));
+
+        setupTables();
+        handleView();
     }
 
-    private void setupTable() {
-        colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
-        colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colClAvail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getClBalance() != null ? c.getValue().getClBalance().toString() : "12"));
-        colClTaken.setCellValueFactory(c -> {
-            int bal = c.getValue().getClBalance() != null ? c.getValue().getClBalance() : 12;
-            return new SimpleStringProperty(String.valueOf(Math.max(0, 12 - bal)));
-        });
-        colLopCount.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colLopDeduction.setCellValueFactory(c -> new SimpleStringProperty("₹0.00"));
-        colStatus.setCellValueFactory(c -> new SimpleStringProperty("VERIFIED"));
+    private void setupTables() {
+        colLeaveType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().type));
+        colAvail.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().avail));
+        colTaken.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().taken));
+        colBal.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().bal));
+        summaryTable.setItems(summaryList);
 
-        table.setItems(staffList);
-    }
-
-    private void loadData() {
-        try {
-            rawList = payrollService.getAllStaffSalaries();
-            staffCombo.getItems().clear();
-            staffCombo.getItems().add("ALL STAFF MEMBERS");
-            for (StaffSalary s : rawList) {
-                staffCombo.getItems().add(s.getStaffCode() + " - " + s.getStaffName());
-            }
-            staffCombo.getSelectionModel().selectFirst();
-            staffList.setAll(rawList);
-        } catch (Exception e) {
-            System.err.println("[SalaryLeaveCheckController] Error: " + e.getMessage());
-        }
+        colLeaveDate.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().date));
+        colMorning.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().morning));
+        colAfterNoon.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().afternoon));
+        detailsTable.setItems(detailList);
     }
 
     @FXML
-    private void handleVerify() {
-        int idx = staffCombo.getSelectionModel().getSelectedIndex();
-        if (idx <= 0 || rawList == null) {
-            staffList.setAll(rawList);
-        } else {
-            staffList.setAll(rawList.get(idx - 1));
+    private void handleView() {
+        summaryList.setAll(createSummaryRows());
+        detailList.setAll(createDetailRows());
+    }
+
+    private List<LeaveSummaryRow> createSummaryRows() {
+        List<LeaveSummaryRow> list = new ArrayList<>();
+        list.add(new LeaveSummaryRow("CL", "33", "27.5", "5.5"));
+        list.add(new LeaveSummaryRow("LOP", "", "2", ""));
+        list.add(new LeaveSummaryRow("AB", "", "0", ""));
+        list.add(new LeaveSummaryRow("SPL", "", "0", ""));
+        list.add(new LeaveSummaryRow("ODExam", "", "0", ""));
+        list.add(new LeaveSummaryRow("VL", "", "22", ""));
+        list.add(new LeaveSummaryRow("CPL", "", "7", ""));
+        list.add(new LeaveSummaryRow("ML", "", "0", ""));
+        list.add(new LeaveSummaryRow("ODFDP", "", "0", ""));
+        list.add(new LeaveSummaryRow("ODAdmis", "", "0", ""));
+        list.add(new LeaveSummaryRow("ODOthers", "", "4", ""));
+        list.add(new LeaveSummaryRow("OHP", "", "0", ""));
+        return list;
+    }
+
+    private List<LeaveDetailRow> createDetailRows() {
+        List<LeaveDetailRow> list = new ArrayList<>();
+        list.add(new LeaveDetailRow("05/01/2021", "CL", "P"));
+        list.add(new LeaveDetailRow("10/02/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("13/03/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("26/04/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("14/07/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("13/08/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("07/09/2021", "CL", "P"));
+        list.add(new LeaveDetailRow("13/09/2021", "CL", "P"));
+        list.add(new LeaveDetailRow("05/10/2021", "CL", "P"));
+        list.add(new LeaveDetailRow("15/11/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("08/12/2021", "CL", "CL"));
+        list.add(new LeaveDetailRow("29/12/2021", "CL", "P"));
+        return list;
+    }
+
+    public static class LeaveSummaryRow {
+        String type, avail, taken, bal;
+        LeaveSummaryRow(String type, String avail, String taken, String bal) {
+            this.type = type; this.avail = avail; this.taken = taken; this.bal = bal;
+        }
+    }
+
+    public static class LeaveDetailRow {
+        String date, morning, afternoon;
+        LeaveDetailRow(String date, String morning, String afternoon) {
+            this.date = date; this.morning = morning; this.afternoon = afternoon;
         }
     }
 }

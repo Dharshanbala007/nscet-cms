@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +35,6 @@ public class UserMasterController implements Initializable {
     @FXML private TableColumn<User, String> emailCol;
     @FXML private TableColumn<User, String> roleCol;
     @FXML private TableColumn<User, String> statusCol;
-    @FXML private TableColumn<User, String> actionsCol;
 
     @FXML private TextField searchField;
     @FXML private VBox formPane;
@@ -45,6 +43,8 @@ public class UserMasterController implements Initializable {
     @FXML private TextField fullNameField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+    @FXML private PasswordField confirmPasswordField;
+    @FXML private ComboBox<String> staffNameCombo;
     @FXML private ComboBox<Role> roleCombo;
     @FXML private CheckBox lockedCheck;
 
@@ -63,49 +63,40 @@ public class UserMasterController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (staffNameCombo != null) {
+            staffNameCombo.getItems().clear();
+            staffNameCombo.getItems().addAll("Select", "Dr. K. Arulraj", "Prof. M. Selvam", "Prof. P. Ramkumar", "Prof. S. Karthik", "Prof. R. Priya");
+            staffNameCombo.getSelectionModel().selectFirst();
+        }
         setupTableColumns();
         setupRoleCombo();
-        table.setItems(tableData);
+        if (table != null) {
+            table.setItems(tableData);
+            table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+                if (newSel != null) {
+                    handleEdit(newSel);
+                }
+            });
+        }
+
         loadData();
     }
 
     private void setupTableColumns() {
-        usernameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsername()));
-        fullNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFullName()));
-        emailCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
+        if (usernameCol != null) usernameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsername()));
+        if (fullNameCol != null) fullNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFullName()));
+        if (emailCol != null) emailCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
         
-        roleCol.setCellValueFactory(c -> {
+        if (roleCol != null) roleCol.setCellValueFactory(c -> {
             Set<Role> roles = c.getValue().getRoles();
             if (roles == null || roles.isEmpty()) return new SimpleStringProperty("None");
             return new SimpleStringProperty(roles.stream().map(Role::getName).collect(Collectors.joining(", ")));
         });
 
-        statusCol.setCellValueFactory(c -> {
+        if (statusCol != null) statusCol.setCellValueFactory(c -> {
             User u = c.getValue();
             if (Boolean.TRUE.equals(u.getIsLocked())) return new SimpleStringProperty("Locked");
             return new SimpleStringProperty("Active");
-        });
-
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    User u = getTableView().getItems().get(getIndex());
-                    Button editBtn = new Button("Edit");
-                    editBtn.getStyleClass().add("btn-sm");
-                    editBtn.setOnAction(e -> handleEdit(u));
-
-                    Button delBtn = new Button("Delete");
-                    delBtn.getStyleClass().add("btn-sm-danger");
-                    delBtn.setOnAction(e -> handleDelete(u));
-
-                    setGraphic(new HBox(5, editBtn, delBtn));
-                }
-            }
         });
     }
 
@@ -114,21 +105,23 @@ public class UserMasterController implements Initializable {
             List<Role> roles = userService.getAllRoles();
             roleList.clear();
             roleList.addAll(roles);
-            roleCombo.setItems(roleList);
-            roleCombo.setCellFactory(lv -> new ListCell<>() {
-                @Override
-                protected void updateItem(Role item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Select Role" : item.getName() + " (" + item.getDescription() + ")");
-                }
-            });
-            roleCombo.setButtonCell(new ListCell<>() {
-                @Override
-                protected void updateItem(Role item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Select Role" : item.getName());
-                }
-            });
+            if (roleCombo != null) {
+                roleCombo.setItems(roleList);
+                roleCombo.setCellFactory(lv -> new ListCell<>() {
+                    @Override
+                    protected void updateItem(Role item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty || item == null ? "Select Role" : item.getName() + " (" + item.getDescription() + ")");
+                    }
+                });
+                roleCombo.setButtonCell(new ListCell<>() {
+                    @Override
+                    protected void updateItem(Role item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty || item == null ? "Select Role" : item.getName());
+                    }
+                });
+            }
         } catch (Exception e) {
             System.err.println("[UserMasterController] Error loading roles: " + e.getMessage());
         }
@@ -136,13 +129,13 @@ public class UserMasterController implements Initializable {
 
     private void loadData() {
         try {
-            Page<User> page = userService.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
+            Page<User> page = userService.getAll(searchField != null ? searchField.getText() : "", currentPage, pageSize, "id", "asc");
             tableData.clear();
             tableData.addAll(page.getContent());
             int totalPages = Math.max(page.getTotalPages(), 1);
-            pageInfo.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
-            prevBtn.setDisable(currentPage == 0);
-            nextBtn.setDisable(currentPage >= totalPages - 1);
+            if (pageInfo != null) pageInfo.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
+            if (prevBtn != null) prevBtn.setDisable(currentPage == 0);
+            if (nextBtn != null) nextBtn.setDisable(currentPage >= totalPages - 1);
         } catch (Exception e) {
             System.err.println("[UserMasterController] Error loading users: " + e.getMessage());
         }
@@ -171,48 +164,79 @@ public class UserMasterController implements Initializable {
     @FXML
     private void handleAdd() {
         editingId = null;
-        formTitleLabel.setText("Add New User");
+        if (formTitleLabel != null) formTitleLabel.setText("Add New User");
         clearForm();
-        formPane.setVisible(true);
-        formPane.setManaged(true);
+        if (formPane != null) {
+            formPane.setVisible(true);
+            formPane.setManaged(true);
+        }
     }
 
     @FXML
     private void handleEdit(User u) {
         editingId = u.getId();
-        formTitleLabel.setText("Edit User: " + u.getUsername());
-        usernameField.setText(u.getUsername());
-        fullNameField.setText(u.getFullName());
-        emailField.setText(u.getEmail());
-        passwordField.clear();
-        lockedCheck.setSelected(Boolean.TRUE.equals(u.getIsLocked()));
+        if (formTitleLabel != null) formTitleLabel.setText("Edit User: " + u.getUsername());
+        if (usernameField != null) usernameField.setText(u.getUsername());
+        if (fullNameField != null) fullNameField.setText(u.getFullName());
+        if (emailField != null) emailField.setText(u.getEmail());
+        if (passwordField != null) passwordField.clear();
+        if (confirmPasswordField != null) confirmPasswordField.clear();
+        if (lockedCheck != null) lockedCheck.setSelected(Boolean.TRUE.equals(u.getIsLocked()));
 
-        if (u.getRoles() != null && !u.getRoles().isEmpty()) {
-            Role userRole = u.getRoles().iterator().next();
-            for (Role r : roleList) {
-                if (r.getId().equals(userRole.getId())) {
-                    roleCombo.setValue(r);
-                    break;
+        if (roleCombo != null) {
+            if (u.getRoles() != null && !u.getRoles().isEmpty()) {
+                Role userRole = u.getRoles().iterator().next();
+                for (Role r : roleList) {
+                    if (r.getId().equals(userRole.getId())) {
+                        roleCombo.setValue(r);
+                        break;
+                    }
                 }
+            } else {
+                roleCombo.getSelectionModel().clearSelection();
             }
-        } else {
-            roleCombo.getSelectionModel().clearSelection();
         }
 
-        formPane.setVisible(true);
-        formPane.setManaged(true);
+        if (formPane != null) {
+            formPane.setVisible(true);
+            formPane.setManaged(true);
+        }
+    }
+
+    @FXML
+    private void handleModify() {
+        if (table == null) return;
+        User selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a user to modify.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleEdit(selected);
+    }
+
+    @FXML
+    private void handleDeleteSelected() {
+        if (table == null) return;
+        User selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a user to delete.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleDelete(selected);
     }
 
     @FXML
     private void handleSave() {
         try {
-            String username = SecurityUtil.sanitize(usernameField.getText());
-            String fullName = SecurityUtil.sanitize(fullNameField.getText());
-            String email = SecurityUtil.sanitize(emailField.getText());
-            String password = passwordField.getText();
+            String username = usernameField != null ? SecurityUtil.sanitize(usernameField.getText()) : "";
+            String staffName = staffNameCombo != null ? staffNameCombo.getValue() : "Select";
+            String fullName = fullNameField != null ? SecurityUtil.sanitize(fullNameField.getText()) : ("Select".equals(staffName) || staffName == null ? username : staffName);
+            String email = emailField != null ? SecurityUtil.sanitize(emailField.getText()) : (username + "@nscet.edu");
+            String password = passwordField != null ? passwordField.getText() : "";
+            String confirmPassword = confirmPasswordField != null ? confirmPasswordField.getText() : "";
 
             if (username == null || username.trim().isEmpty()) {
-                showAlert("Validation Error", "Username is required.", Alert.AlertType.WARNING);
+                showAlert("Validation Error", "Login Name (Username) is required.", Alert.AlertType.WARNING);
                 return;
             }
 
@@ -221,19 +245,19 @@ public class UserMasterController implements Initializable {
                 return;
             }
 
-            if (email != null && !email.trim().isEmpty() && !SecurityUtil.isValidEmail(email.trim())) {
-                showAlert("Validation Error", "Invalid email format.", Alert.AlertType.WARNING);
+            if (password != null && !password.isEmpty() && confirmPasswordField != null && confirmPasswordField.getText() != null && !password.equals(confirmPassword)) {
+                showAlert("Validation Error", "Passwords do not match.", Alert.AlertType.WARNING);
                 return;
             }
 
             User user = new User();
             user.setUsername(username.trim());
-            user.setFullName(fullName != null ? fullName.trim() : "");
-            user.setEmail(email != null ? email.trim() : "");
-            user.setIsLocked(lockedCheck.isSelected());
+            user.setFullName(fullName != null && !fullName.trim().isEmpty() ? fullName.trim() : username.trim());
+            user.setEmail(email != null && !email.trim().isEmpty() ? email.trim() : username.trim() + "@nscet.edu");
+            user.setIsLocked(lockedCheck != null ? lockedCheck.isSelected() : false);
 
             Set<Role> selectedRoles = new HashSet<>();
-            if (roleCombo.getValue() != null) {
+            if (roleCombo != null && roleCombo.getValue() != null) {
                 selectedRoles.add(roleCombo.getValue());
             }
 
@@ -245,9 +269,9 @@ public class UserMasterController implements Initializable {
                 safeAuditLog("CREATE", "admin_users", created.getId(), user.getUsername());
             }
 
-            formPane.setVisible(false);
-            formPane.setManaged(false);
+            clearForm();
             loadData();
+            showAlert("Success", "User details saved successfully.", Alert.AlertType.INFORMATION);
         } catch (DuplicateResourceException e) {
             showAlert("Duplicate User", e.getMessage(), Alert.AlertType.WARNING);
         } catch (Exception e) {
@@ -257,8 +281,7 @@ public class UserMasterController implements Initializable {
 
     @FXML
     private void handleCancel() {
-        formPane.setVisible(false);
-        formPane.setManaged(false);
+        clearForm();
     }
 
     private void handleDelete(User u) {
@@ -272,6 +295,7 @@ public class UserMasterController implements Initializable {
                 try {
                     userService.softDelete(u.getId());
                     safeAuditLog("DELETE", "admin_users", u.getId(), u.getUsername());
+                    clearForm();
                     loadData();
                 } catch (Exception e) {
                     showAlert("Error", "Cannot delete user: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -281,12 +305,16 @@ public class UserMasterController implements Initializable {
     }
 
     private void clearForm() {
-        usernameField.clear();
-        fullNameField.clear();
-        emailField.clear();
-        passwordField.clear();
-        lockedCheck.setSelected(false);
-        roleCombo.getSelectionModel().clearSelection();
+        editingId = null;
+        if (usernameField != null) usernameField.clear();
+        if (fullNameField != null) fullNameField.clear();
+        if (emailField != null) emailField.clear();
+        if (passwordField != null) passwordField.clear();
+        if (confirmPasswordField != null) confirmPasswordField.clear();
+        if (lockedCheck != null) lockedCheck.setSelected(false);
+        if (staffNameCombo != null) staffNameCombo.getSelectionModel().selectFirst();
+        if (roleCombo != null) roleCombo.getSelectionModel().clearSelection();
+        if (table != null) table.getSelectionModel().clearSelection();
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

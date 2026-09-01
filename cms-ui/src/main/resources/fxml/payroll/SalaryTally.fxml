@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.SalaryTallyController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Salary Tally Statement" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDatePicker" prefWidth="130"/>
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDatePicker" prefWidth="130"/>
+        <Label text="Category:"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="130"/>
+        <Button text="View" styleClass="btn-primary" onAction="#handleView"/>
+        <Button text="Print Tally" styleClass="btn-secondary" onAction="#handlePrint"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="55"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="110"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="120"/>
+            <TableColumn fx:id="colGross" text="Gross Amount" prefWidth="130"/>
+            <TableColumn fx:id="colEpf" text="Total EPF" prefWidth="110"/>
+            <TableColumn fx:id="colEsi" text="Total ESI" prefWidth="110"/>
+            <TableColumn fx:id="colLop" text="LOP Deductions" prefWidth="130"/>
+            <TableColumn fx:id="colNet" text="Net Pay Total" prefWidth="140"/>
+        </columns>
+    </TableView>
+
+    <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding: 8 0 0 0;">
+        <Label text="Total Net Salary:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+        <TextField fx:id="totalField" editable="false" prefWidth="170" style="-fx-font-weight: bold; -fx-background-color: #f8fafc;"/>
+    </HBox>
+</VBox>

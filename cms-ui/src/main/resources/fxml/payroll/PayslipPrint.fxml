@@ -2,141 +2,149 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.payroll.PayslipPrintController"
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header Controls -->
+    <!-- Control Bar -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Monthly Staff Payslip Printing" styleClass="module-title"/>
+        <Label text="Payslip Print" styleClass="module-title" minWidth="120"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Select Staff:"/>
-        <ComboBox fx:id="staffCombo" prefWidth="250"/>
-        <Label text="Pay Month:"/>
-        <ComboBox fx:id="monthCombo" prefWidth="130"/>
-        <Button text="Generate Payslip" styleClass="btn-primary" onAction="#handleGenerate"/>
-        <Button text="Print Payslip" styleClass="btn-secondary" onAction="#handlePrint"/>
+        <Label text="Employee Name:" minWidth="110"/>
+        <ComboBox fx:id="staffCombo" prefWidth="240" minWidth="200"/>
+        <Label text="Month:" minWidth="55"/>
+        <ComboBox fx:id="monthCombo" prefWidth="120" minWidth="100"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleGenerate"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
     </HBox>
 
-    <!-- Payslip View Card (Matching Screenshot 38) -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-        <VBox alignment="TOP_CENTER" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-border-color: #1976d2; -fx-border-width: 2; -fx-border-radius: 8;">
-            <!-- College Header -->
-            <VBox alignment="CENTER" spacing="4">
-                <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING AND TECHNOLOGY" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0d47a1;"/>
-                <Label text="Vadapudupatti, Annanji (PO), Theni - 625 531, Tamil Nadu" style="-fx-font-size: 12px; -fx-text-fill: #555555;"/>
-                <Label fx:id="payslipMonthTitle" text="PAYSLIP FOR THE MONTH OF JUL-2026" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1976d2; -fx-padding: 5 0 10 0;"/>
-            </VBox>
-            <Separator/>
+    <!-- Payslip View Card matching media_1787897990032.png -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0;">
+        <VBox alignment="TOP_CENTER" spacing="12" style="-fx-background-color: #ffffff; -fx-padding: 25; -fx-border-color: #334155; -fx-border-width: 1;">
+            
+            <!-- Header Banner / Title -->
+            <HBox alignment="CENTER" spacing="15">
+                <VBox alignment="CENTER" spacing="2">
+                    <Label text="Nadar Saraswathi College of Engineering and Technology, Vadapudupatti." style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                    <HBox alignment="CENTER" spacing="5">
+                        <Label text="Payslip for the Month of " style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblMonthTitle" text="Jul-26" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    </HBox>
+                </VBox>
+            </HBox>
 
-            <!-- Staff Details -->
-            <GridPane hgap="20" vgap="8">
+            <Separator style="-fx-background-color: #000000;"/>
+
+            <!-- Employee Info Header Grid -->
+            <GridPane hgap="25" vgap="8" alignment="CENTER">
                 <columnConstraints>
                     <ColumnConstraints minWidth="120" prefWidth="130"/>
-                    <ColumnConstraints minWidth="200" prefWidth="220"/>
+                    <ColumnConstraints minWidth="200" prefWidth="240"/>
                     <ColumnConstraints minWidth="120" prefWidth="130"/>
-                    <ColumnConstraints minWidth="200" prefWidth="220"/>
+                    <ColumnConstraints minWidth="200" prefWidth="240"/>
                 </columnConstraints>
 
                 <Label text="Employee Name:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <Label fx:id="lblEmpName" text="VIGNESH L S" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label fx:id="lblEmpName" text="DR.B.RADHAKRISHNAN" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                <Label text="Staff Code:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                <Label fx:id="lblEmpCode" text="NSIOT21" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                <Label text="UAN No:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <Label fx:id="lblUanNo" text="100498744032" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
                 <Label text="Designation:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <Label fx:id="lblDesig" text="Assistant Professor" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="lblDesig" text="H.O.D - MECH" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                <Label text="Department:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                <Label fx:id="lblDept" text="COMPUTER SCIENCE" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label text="Date of Joining:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label fx:id="lblDoj" text="1-Mar-2021" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                <Label text="Bank Name:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <Label fx:id="lblBankName" text="Federal Bank" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-                <Label text="Bank Acc No:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                <Label fx:id="lblBankAcc" text="14820100045028" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                <Label text="Bank Acc.No:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <Label fx:id="lblBankAcc" text="14620100099406" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
             </GridPane>
-            <Separator/>
 
-            <!-- Earnings vs Deductions Table -->
-            <GridPane hgap="20" vgap="8">
+            <Separator style="-fx-background-color: #000000;"/>
+
+            <!-- Earnings & Deductions Details Grid -->
+            <GridPane hgap="40" vgap="6" alignment="CENTER">
                 <columnConstraints>
-                    <ColumnConstraints minWidth="160" prefWidth="180"/>
-                    <ColumnConstraints minWidth="120" prefWidth="130"/>
-                    <ColumnConstraints minWidth="160" prefWidth="180"/>
-                    <ColumnConstraints minWidth="120" prefWidth="130"/>
+                    <ColumnConstraints minWidth="130" prefWidth="140"/>
+                    <ColumnConstraints minWidth="100" prefWidth="110" alignment="CENTER_RIGHT"/>
+                    <ColumnConstraints minWidth="130" prefWidth="140"/>
+                    <ColumnConstraints minWidth="40" prefWidth="50" alignment="CENTER"/>
+                    <ColumnConstraints minWidth="100" prefWidth="110" alignment="CENTER_RIGHT"/>
                 </columnConstraints>
 
-                <!-- Headers -->
-                <Label text="EARNINGS" style="-fx-font-weight: bold; -fx-text-fill: #2563eb;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <Label text="AMOUNT (₹)" style="-fx-font-weight: bold; -fx-text-fill: #2563eb;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <Label text="DEDUCTIONS" style="-fx-font-weight: bold; -fx-text-fill: #ef4444;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                <Label text="AMOUNT (₹)" style="-fx-font-weight: bold; -fx-text-fill: #ef4444;" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                <!-- Row 1: Basic & EPF -->
+                <Label text="Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="lblBasic" text="15000.00" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                <!-- Row 1 -->
-                <Label text="Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <Label fx:id="lblBasic" text="15,000.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label text="EPF Deduction:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                <Label fx:id="lblEpf" text="1,800.00" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label text="EPF:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <Label fx:id="lblEpf" text="1800.00" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
 
-                <!-- Row 2 -->
-                <Label text="Special Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <Label fx:id="lblSpl" text="21,000.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <Label text="ESI Deduction:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                <Label fx:id="lblEsi" text="0.00" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                <!-- Row 2: Spl Allowance & ESI -->
+                <Label text="Spl.Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="lblSpl" text="21000.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                <!-- Row 3 -->
-                <Label text="HRA Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <Label fx:id="lblHra" text="12,000.00" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="ESI:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label fx:id="lblEsi" text="0.00" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+
+                <!-- Row 3: HRA & LOP -->
+                <Label text="HRA:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="lblHra" text="12000.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Loss of Pay:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <Label fx:id="lblLopDays" text="0" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                <Label fx:id="lblLopAmt" text="0.00" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+
+                <!-- Row 4: Conveyance & IT -->
+                <Label text="Conveyance:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Label fx:id="lblConveyance" text="6000.00" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
                 <Label text="Income Tax:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-                <Label fx:id="lblIT" text="0.00" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                <Label fx:id="lblIncomeTax" text="0.00" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
 
-                <!-- Row 4 -->
-                <Label text="Washing Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                <Label fx:id="lblWashing" text="6,000.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <Label text="Professional Tax:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-                <Label fx:id="lblPT" text="200.00" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                <!-- Row 5: Wash Allowance & Staff Club -->
+                <Label text="Wash.Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Label fx:id="lblWashing" text="6000.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                <!-- Row 5 -->
-                <Label text="Conveyance:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                <Label fx:id="lblConveyance" text="6,000.00" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <Label text="Staff Club / Others:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-                <Label fx:id="lblOthers" text="0.00" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+                <Label text="Staff Club:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <Label text="Rs." GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                <Label fx:id="lblStaffClub" text="200.00" GridPane.columnIndex="4" GridPane.rowIndex="4"/>
+
+                <!-- Row 6: Professional Tax -->
+                <Label text="Professional Tax:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                <Label text="Rs." GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+                <Label fx:id="lblProfTax" text="0.00" GridPane.columnIndex="4" GridPane.rowIndex="5"/>
+
+                <!-- Row 7: Others -->
+                <Label text="Others :" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                <Label text="Rs." GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+                <Label fx:id="lblOthers" text="0.00" GridPane.columnIndex="4" GridPane.rowIndex="6"/>
+
+                <!-- Row 8: Gross Pay & Total Deductions -->
+                <Label text="Gross Pay:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <Label fx:id="lblGrossPay" text="60000.00" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                <Label text="Deduction Total:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                <Label fx:id="lblTotalDeduction" text="2000.00" style="-fx-font-weight: bold;" GridPane.columnIndex="4" GridPane.rowIndex="7"/>
             </GridPane>
-            <Separator/>
 
-            <!-- Totals & Net Pay -->
-            <HBox spacing="30" alignment="CENTER_LEFT" style="-fx-background-color: #f1f5f9; -fx-padding: 12;">
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="GROSS EARNINGS:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                    <Label fx:id="lblGrossPay" text="₹60,000.00" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #2563eb;"/>
-                </VBox>
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="TOTAL DEDUCTIONS:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                    <Label fx:id="lblTotalDeduction" text="₹2,000.00" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #ef4444;"/>
-                </VBox>
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="NET PAYABLE SALARY:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                    <Label fx:id="lblNetPay" text="₹58,000.00" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #10b981;"/>
-                </VBox>
-            </HBox>
+            <!-- Net Pay & Words Summary Box -->
+            <VBox alignment="CENTER_RIGHT" spacing="6" style="-fx-padding: 15 20 5 20;">
+                <HBox alignment="CENTER_RIGHT" spacing="40">
+                    <Label text="Net Pay:" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label fx:id="lblNetPay" text="58000.00" style="-fx-font-weight: bold; -fx-font-size: 15px;"/>
+                </HBox>
 
-            <!-- Signature Line -->
-            <HBox spacing="50" alignment="BOTTOM_RIGHT" style="-fx-padding: 30 0 10 0;">
-                <VBox alignment="CENTER" spacing="4">
-                    <Label text="_______________________"/>
-                    <Label text="Employee Signature" style="-fx-font-size: 11px;"/>
-                </VBox>
+                <Label fx:id="lblInWords" text="Rupees - Fifty-Eight Thousand Only" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
 
-                <Region HBox.hgrow="ALWAYS"/>
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                    <Label text="Signature" style="-fx-font-weight: bold;"/>
+                </HBox>
+            </VBox>
 
-                <VBox alignment="CENTER" spacing="4">
-                    <Label text="_______________________"/>
-                    <Label text="Principal / Authorized Signatory" style="-fx-font-size: 11px;"/>
-                </VBox>
-            </HBox>
         </VBox>
     </ScrollPane>
 </VBox>

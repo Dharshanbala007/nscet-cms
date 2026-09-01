@@ -8,28 +8,62 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header Controls -->
+    <!-- Window Title -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Daily Staff Attendance Logging" styleClass="module-title"/>
-        <Label fx:id="statusLabel" text="Status: New Entry" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Attendance Date:"/>
-        <DatePicker fx:id="datePicker" prefWidth="140"/>
-        <Label text="Session:"/>
-        <ComboBox fx:id="sessionCombo" prefWidth="130"/>
-        <Button text="Load Staff" styleClass="btn-secondary" onAction="#handleLoadStaff"/>
-        <Button text="Save Attendance" styleClass="btn-primary" onAction="#handleSaveAll"/>
+        <Label text="Attendance" styleClass="module-title"/>
     </HBox>
 
-    <!-- Attendance Table -->
-    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
-        <columns>
-            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="200"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="150"/>
-            <TableColumn fx:id="colDesig" text="Designation" prefWidth="160"/>
-            <TableColumn fx:id="colStatus" text="Attendance Status" prefWidth="160"/>
-            <TableColumn fx:id="colRemarks" text="Remarks / Notes" prefWidth="250"/>
-        </columns>
-    </TableView>
+    <TitledPane text="Attendance Entry" expanded="true">
+        <VBox spacing="10">
+            <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+            <!-- Row 1: Mode & Date -->
+            <HBox alignment="CENTER_LEFT" spacing="25">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <RadioButton fx:id="manualRadio" text="Manual"/>
+                    <RadioButton fx:id="deviceRadio" text="Device" selected="true"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Label text="Date:"/>
+                    <DatePicker fx:id="datePicker" prefWidth="140"/>
+                </HBox>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Row 2: Session, Category, View, All -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <RadioButton fx:id="foreNoonRadio" text="Fore Noon" selected="true"/>
+                <RadioButton fx:id="afterNoonRadio" text="After Noon"/>
+
+                <Separator orientation="VERTICAL" prefHeight="20"/>
+
+                <Label text="Category:"/>
+                <ComboBox fx:id="categoryCombo" prefWidth="150" promptText="Select"/>
+
+                <Button text="View" styleClass="btn-primary" minWidth="80" onAction="#handleView"/>
+
+                <CheckBox fx:id="allCheck" text="All"/>
+            </HBox>
+
+            <!-- Attendance Table -->
+            <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="380" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="colCode" text="Staff Code" prefWidth="120"/>
+                    <TableColumn fx:id="colName" text="Staff Name" prefWidth="240"/>
+                    <TableColumn fx:id="colDesig" text="Designation" prefWidth="220"/>
+                    <TableColumn fx:id="colAttendance" text="Attendance" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <!-- Bottom Action Buttons -->
+            <HBox spacing="15" alignment="CENTER" style="-fx-padding: 8 0 0 0;">
+                <Button text="Save" minWidth="90" styleClass="btn-primary" onAction="#handleSaveAll"/>
+                <Button text="Close" minWidth="90" styleClass="btn-secondary" onAction="#handleClose"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
 </VBox>

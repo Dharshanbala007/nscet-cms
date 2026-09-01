@@ -2,6 +2,7 @@ package com.nscet.cms.ui.controller;
 
 import com.nscet.cms.core.service.PettyCashSuspenseService;
 import com.nscet.cms.db.entity.PettyCashSuspense;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,6 +29,7 @@ public class PettyCashSuspenseController implements Initializable {
     @FXML private TextField voucherNoField;
     @FXML private DatePicker datePicker;
     @FXML private TextField staffNameField;
+    @FXML private TextField staffCodeField;
     @FXML private TextField deptField;
     @FXML private TextField designationField;
     @FXML private TextField amountField;
@@ -38,6 +40,7 @@ public class PettyCashSuspenseController implements Initializable {
     @FXML private TableColumn<PettyCashSuspense, Long> colSlNo;
     @FXML private TableColumn<PettyCashSuspense, String> colVNo;
     @FXML private TableColumn<PettyCashSuspense, String> colDate;
+    @FXML private TableColumn<PettyCashSuspense, String> colStaffCode;
     @FXML private TableColumn<PettyCashSuspense, String> colStaff;
     @FXML private TableColumn<PettyCashSuspense, String> colDept;
     @FXML private TableColumn<PettyCashSuspense, BigDecimal> colAmount;
@@ -51,42 +54,52 @@ public class PettyCashSuspenseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        datePicker.setValue(LocalDate.now());
-        voucherNoField.setText(service.generateNextVoucherNo());
+        if (datePicker != null) datePicker.setValue(LocalDate.now());
+        if (voucherNoField != null) voucherNoField.setText(service.generateNextVoucherNo());
         setupTable();
 
-        amountField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                BigDecimal amt = new BigDecimal(newVal);
-                amountWordsField.setText(numberToWords(amt));
-            } catch (Exception e) {
-                amountWordsField.clear();
-            }
-        });
+        if (amountField != null) {
+            amountField.textProperty().addListener((obs, oldVal, newVal) -> {
+                try {
+                    BigDecimal amt = new BigDecimal(newVal);
+                    if (amountWordsField != null) amountWordsField.setText(numberToWords(amt));
+                } catch (Exception e) {
+                    if (amountWordsField != null) amountWordsField.clear();
+                }
+            });
+        }
 
         loadTableData();
     }
 
     private void setupTable() {
-        colSlNo.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colVNo.setCellValueFactory(new PropertyValueFactory<>("voucherNo"));
-        colDate.setCellValueFactory(cellData -> {
-            LocalDate d = cellData.getValue().getVoucherDate();
-            return javafx.beans.binding.Bindings.createStringBinding(() ->
-                    d != null ? d.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "");
-        });
-        colStaff.setCellValueFactory(new PropertyValueFactory<>("staffName"));
-        colDept.setCellValueFactory(new PropertyValueFactory<>("department"));
-        colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        colPurpose.setCellValueFactory(new PropertyValueFactory<>("purpose"));
-        dataTable.setItems(dataList);
-
-        dataTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                selectedRecord = newVal;
-                fillForm(newVal);
-            }
-        });
+        if (colSlNo != null) colSlNo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        if (colVNo != null) colVNo.setCellValueFactory(new PropertyValueFactory<>("voucherNo"));
+        if (colDate != null) {
+            colDate.setCellValueFactory(cellData -> {
+                LocalDate d = cellData.getValue().getVoucherDate();
+                return javafx.beans.binding.Bindings.createStringBinding(() ->
+                        d != null ? d.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : "");
+            });
+        }
+        if (colStaffCode != null) {
+            colStaffCode.setCellValueFactory(cellData -> 
+                new SimpleStringProperty(cellData.getValue().getStaffCode() != null ? cellData.getValue().getStaffCode() : ""));
+        }
+        if (colStaff != null) colStaff.setCellValueFactory(new PropertyValueFactory<>("staffName"));
+        if (colDept != null) colDept.setCellValueFactory(new PropertyValueFactory<>("department"));
+        if (colAmount != null) colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        if (colPurpose != null) colPurpose.setCellValueFactory(new PropertyValueFactory<>("purpose"));
+        
+        if (dataTable != null) {
+            dataTable.setItems(dataList);
+            dataTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    selectedRecord = newVal;
+                    fillForm(newVal);
+                }
+            });
+        }
     }
 
     private void loadTableData() {
@@ -94,48 +107,53 @@ public class PettyCashSuspenseController implements Initializable {
     }
 
     private void fillForm(PettyCashSuspense rec) {
-        voucherNoField.setText(rec.getVoucherNo());
-        datePicker.setValue(rec.getVoucherDate());
-        collegeRadio.setSelected("College".equals(rec.getCollegeOrHostel()));
-        hostelRadio.setSelected("Hostel".equals(rec.getCollegeOrHostel()));
-        staffNameField.setText(rec.getStaffName());
-        deptField.setText(rec.getDepartment());
-        designationField.setText(rec.getDesignation());
-        amountField.setText(rec.getAmount() != null ? rec.getAmount().toString() : "");
-        amountWordsField.setText(rec.getAmountInWords());
-        purposeField.setText(rec.getPurpose());
+        if (voucherNoField != null) voucherNoField.setText(rec.getVoucherNo());
+        if (datePicker != null) datePicker.setValue(rec.getVoucherDate());
+        if (collegeRadio != null) collegeRadio.setSelected("College".equals(rec.getCollegeOrHostel()));
+        if (hostelRadio != null) hostelRadio.setSelected("Hostel".equals(rec.getCollegeOrHostel()));
+        if (staffNameField != null) staffNameField.setText(rec.getStaffName());
+        if (staffCodeField != null) staffCodeField.setText(rec.getStaffCode() != null ? rec.getStaffCode() : "");
+        if (deptField != null) deptField.setText(rec.getDepartment());
+        if (designationField != null) designationField.setText(rec.getDesignation());
+        if (amountField != null) amountField.setText(rec.getAmount() != null ? rec.getAmount().toString() : "");
+        if (amountWordsField != null) amountWordsField.setText(rec.getAmountInWords());
+        if (purposeField != null) purposeField.setText(rec.getPurpose());
     }
 
     private void clearForm() {
         selectedRecord = null;
-        voucherNoField.setText(service.generateNextVoucherNo());
-        datePicker.setValue(LocalDate.now());
-        collegeRadio.setSelected(true);
-        staffNameField.clear();
-        deptField.clear();
-        designationField.clear();
-        amountField.clear();
-        amountWordsField.clear();
-        purposeField.clear();
-        dataTable.getSelectionModel().clearSelection();
+        if (voucherNoField != null) voucherNoField.setText(service.generateNextVoucherNo());
+        if (datePicker != null) datePicker.setValue(LocalDate.now());
+        if (collegeRadio != null) collegeRadio.setSelected(true);
+        if (staffNameField != null) staffNameField.clear();
+        if (staffCodeField != null) staffCodeField.clear();
+        if (deptField != null) deptField.clear();
+        if (designationField != null) designationField.clear();
+        if (amountField != null) amountField.clear();
+        if (amountWordsField != null) amountWordsField.clear();
+        if (purposeField != null) purposeField.clear();
+        if (dataTable != null) dataTable.getSelectionModel().clearSelection();
     }
 
     @FXML
     private void handleAdd() {
         clearForm();
+        if (staffNameField != null) staffNameField.requestFocus();
     }
 
     @FXML
     private void handleModify() {
         if (selectedRecord == null) {
-            showAlert(Alert.AlertType.WARNING, "Please select a record to modify");
+            showAlert(Alert.AlertType.WARNING, "Please select a record from the table to modify");
+            return;
         }
+        if (staffNameField != null) staffNameField.requestFocus();
     }
 
     @FXML
     private void handleDelete() {
         if (selectedRecord == null) {
-            showAlert(Alert.AlertType.WARNING, "Please select a record to delete");
+            showAlert(Alert.AlertType.WARNING, "Please select a record from the table to delete");
             return;
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -156,11 +174,11 @@ public class PettyCashSuspenseController implements Initializable {
 
     @FXML
     private void handleSave() {
-        if (datePicker.getValue() == null) {
+        if (datePicker != null && datePicker.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Please select a date");
             return;
         }
-        String amountText = amountField.getText().trim();
+        String amountText = amountField != null ? amountField.getText().trim() : "";
         if (amountText.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Please enter an amount");
             return;
@@ -179,18 +197,19 @@ public class PettyCashSuspenseController implements Initializable {
             entity = selectedRecord;
         } else {
             entity = new PettyCashSuspense();
-            entity.setVoucherNo(voucherNoField.getText());
+            if (voucherNoField != null) entity.setVoucherNo(voucherNoField.getText());
             entity.setIsActive(true);
         }
 
-        entity.setVoucherDate(datePicker.getValue());
-        entity.setCollegeOrHostel(hostelRadio.isSelected() ? "Hostel" : "College");
-        entity.setStaffName(staffNameField.getText().trim());
-        entity.setDepartment(deptField.getText().trim());
-        entity.setDesignation(designationField.getText().trim());
+        if (datePicker != null) entity.setVoucherDate(datePicker.getValue());
+        entity.setCollegeOrHostel((hostelRadio != null && hostelRadio.isSelected()) ? "Hostel" : "College");
+        if (staffNameField != null) entity.setStaffName(staffNameField.getText().trim());
+        if (staffCodeField != null) entity.setStaffCode(staffCodeField.getText().trim());
+        if (deptField != null) entity.setDepartment(deptField.getText().trim());
+        if (designationField != null) entity.setDesignation(designationField.getText().trim());
         entity.setAmount(amount);
-        entity.setAmountInWords(amountWordsField.getText());
-        entity.setPurpose(purposeField.getText().trim());
+        if (amountWordsField != null) entity.setAmountInWords(amountWordsField.getText());
+        if (purposeField != null) entity.setPurpose(purposeField.getText().trim());
 
         service.create(entity);
         showAlert(Alert.AlertType.INFORMATION, "Record saved successfully");
@@ -200,13 +219,7 @@ public class PettyCashSuspenseController implements Initializable {
 
     @FXML
     private void handleClose() {
-        StackPane contentArea = com.nscet.cms.ui.navigation.NavigationManager.getActiveContentArea();
-        if (contentArea != null) {
-            Label placeholder = new Label("Select a module from the menu");
-            placeholder.getStyleClass().add("placeholder-label");
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(placeholder);
-        }
+        clearForm();
     }
 
     private void showAlert(Alert.AlertType type, String message) {

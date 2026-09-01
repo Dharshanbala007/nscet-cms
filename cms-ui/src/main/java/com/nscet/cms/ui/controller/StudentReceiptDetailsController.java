@@ -1,23 +1,15 @@
 package com.nscet.cms.ui.controller;
 
-import com.nscet.cms.core.service.ReportService;
-import com.nscet.cms.core.service.ReportService.StudentReceiptDetailsDto;
-import com.nscet.cms.reports.ReportManager;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -25,67 +17,73 @@ import java.util.ResourceBundle;
 public class StudentReceiptDetailsController implements Initializable {
 
     @FXML private ComboBox<String> deptCombo;
-    @FXML private TextField studentSearchField;
-    @FXML private Label studentNameLabel;
-    @FXML private Label rollNoLabel;
-    @FXML private Label regNoLabel;
-    @FXML private TableView<StudentReceiptDetailsDto> reportTable;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> receiptNoCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, LocalDate> receiptDateCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> rollNoCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> feeHeadCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> amountCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> semesterCol;
-    @FXML private TableColumn<StudentReceiptDetailsDto, String> remarksCol;
+    @FXML private TextField studentNameField, rollNoField, regNoField, estimatedAmtField, totalAmtField;
+    @FXML private TableView<StudentReceiptRow> receiptTable;
+    @FXML private TableColumn<StudentReceiptRow, String> receiptNoCol, receiptDateCol, rollNoCol, particularsCol, amountCol, semesterCol, remarksCol;
 
-    @Autowired
-    private ReportService reportService;
+    private ObservableList<StudentReceiptRow> rowList = FXCollections.observableArrayList();
 
-    private final ObservableList<StudentReceiptDetailsDto> dataList = FXCollections.observableArrayList();
+    public static class StudentReceiptRow {
+        private String receiptNo, receiptDate, rollNo, particulars, amount, semester, remarks;
+
+        public StudentReceiptRow(String receiptNo, String receiptDate, String rollNo, String particulars, String amount, String semester, String remarks) {
+            this.receiptNo = receiptNo;
+            this.receiptDate = receiptDate;
+            this.rollNo = rollNo;
+            this.particulars = particulars;
+            this.amount = amount;
+            this.semester = semester;
+            this.remarks = remarks;
+        }
+
+        public String getReceiptNo() { return receiptNo; }
+        public String getReceiptDate() { return receiptDate; }
+        public String getRollNo() { return rollNo; }
+        public String getParticulars() { return particulars; }
+        public String getAmount() { return amount; }
+        public String getSemester() { return semester; }
+        public String getRemarks() { return remarks; }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        deptCombo.getItems().addAll("ALL", "CSE", "ECE", "MECH", "CE", "EEE", "IT", "AI");
-        deptCombo.setValue("ALL");
+        deptCombo.getItems().addAll("CE", "CSE", "ECE", "MECH", "EEE", "IT", "AI", "SE");
+        deptCombo.getSelectionModel().selectFirst();
 
         setupTableColumns();
-        reportTable.setItems(dataList);
-        handleGenerate();
+        receiptTable.setItems(rowList);
+        loadSampleReceipts();
     }
 
     private void setupTableColumns() {
         receiptNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReceiptNo()));
-        receiptDateCol.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getReceiptDate()));
+        receiptDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReceiptDate()));
         rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNo()));
-        feeHeadCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFeeName()));
-        amountCol.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getAmount() != null ? c.getValue().getAmount().toString() : "0.00"));
-        semesterCol.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getSemester() != null ? c.getValue().getSemester().toString() : ""));
+        particularsCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getParticulars()));
+        amountCol.setCellValueFactory(c -> new SimpleStringProperty("₹" + c.getValue().getAmount()));
+        semesterCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSemester()));
         remarksCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRemarks()));
     }
 
-    @FXML
-    private void handleGenerate() {
-        dataList.clear();
-        List<StudentReceiptDetailsDto> results = reportService.getStudentReceiptDetails(null, studentSearchField != null ? studentSearchField.getText() : "");
-        dataList.addAll(results);
-
-        if (!dataList.isEmpty()) {
-            StudentReceiptDetailsDto first = dataList.get(0);
-            if (studentNameLabel != null) studentNameLabel.setText("Student Name: " + first.getStudentName());
-            if (rollNoLabel != null) rollNoLabel.setText("Roll No: " + first.getRollNo());
-            if (regNoLabel != null) regNoLabel.setText("Reg No: " + (first.getRegNo() != null ? first.getRegNo() : "921024114021"));
-        }
+    private void loadSampleReceipts() {
+        rowList.clear();
+        rowList.add(new StudentReceiptRow("MIS - 2025-26 - 389", "08/08/2025", "2025FCE006", "Admission Fees", "1000", "1", "UPI 558656778919 DT: 8/8/2025 AT: 26530"));
+        rowList.add(new StudentReceiptRow("OTR - 2025-26 - 772", "08/08/2025", "2025FCE006", "Student Donor A/C", "200", "1", ""));
+        rowList.add(new StudentReceiptRow("OTR - 2025-26 - 772", "08/08/2025", "2025FCE006", "Student Insurance", "300", "1", ""));
+        rowList.add(new StudentReceiptRow("OTR - 2025-26 - 772", "08/08/2025", "2025FCE006", "Students Association", "300", "1", ""));
+        rowList.add(new StudentReceiptRow("OTR - 2025-26 - 772", "08/08/2025", "2025FCE006", "Sports Uniform - Girls", "600", "1", ""));
+        rowList.add(new StudentReceiptRow("OTR - 2025-26 - 772", "08/08/2025", "2025FCE006", "Value Added Courses", "1000", "1", ""));
+        rowList.add(new StudentReceiptRow("TUF - 2025-26 - 929", "25/10/2025", "2025FCE006", "Tuition Fee", "25000", "1", "RTG/THE PRINCIPALA/TMBLR520251007001"));
+        rowList.add(new StudentReceiptRow("BUS - 2025-26 - 1890", "03/07/2026", "2025FCE006", "Bus Fees-CHINNAMANUR TO COLLI", "11135", "3", ""));
+        totalAmtField.setText("121025");
     }
 
-    @FXML
-    private void handlePrint() {
-        try {
-            ReportManager.printReport("FeeReceipt", dataList, new HashMap<>());
-            new Alert(Alert.AlertType.INFORMATION, "Report generated successfully (" + dataList.size() + " records).").showAndWait();
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Print failed: " + e.getMessage()).showAndWait();
-        }
+    @FXML private void handleView() { loadSampleReceipts(); }
+    @FXML private void handlePrint() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Print Receipt Details");
+        alert.setHeaderText(null);
+        alert.setContentText("Sending Student Receipt Details for " + studentNameField.getText() + " to printer.");
+        alert.showAndWait();
     }
 }

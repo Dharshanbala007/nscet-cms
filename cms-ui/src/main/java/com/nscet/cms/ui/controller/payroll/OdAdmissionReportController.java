@@ -25,44 +25,71 @@ public class OdAdmissionReportController implements Initializable {
     @FXML private ComboBox<String> deptCombo;
 
     @FXML private TableView<StaffSalary> table;
-    @FXML private TableColumn<StaffSalary, String> colCode, colName, colDept, colDesig, colDoj, colOdCount, colRemarks;
+    @FXML private TableColumn<StaffSalary, String> colSlNo, colCode, colName, colDept, colDesig, colOdCount;
 
     @Autowired private PayrollService payrollService;
-    private ObservableList<StaffSalary> reportData = FXCollections.observableArrayList();
+    private ObservableList<StaffSalary> odList = FXCollections.observableArrayList();
+    private List<StaffSalary> allStaff;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fromDate.setValue(LocalDate.now().withDayOfMonth(1));
-        toDate.setValue(LocalDate.now());
+        fromDate.setValue(LocalDate.of(2026, 6, 1));
+        toDate.setValue(LocalDate.of(2026, 7, 31));
 
-        deptCombo.getItems().setAll("ALL", "COMPUTER SCIENCE", "ELECTRONICS", "MECHANICAL", "CIVIL", "ADMIN");
-        deptCombo.getSelectionModel().selectFirst();
+        deptCombo.setItems(FXCollections.observableArrayList("Select", "CE", "MECH", "ECE", "CSE", "EEE", "S&H", "ADMIN"));
+        deptCombo.setValue("CSE");
 
         setupTable();
-        handleGenerate();
+        loadData();
     }
 
     private void setupTable() {
+        colSlNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(odList.indexOf(c.getValue()) + 1)));
         colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDesignation()));
-        colDoj.setCellValueFactory(c -> new SimpleStringProperty("01/08/2023"));
-        colOdCount.setCellValueFactory(c -> new SimpleStringProperty("2"));
-        colRemarks.setCellValueFactory(c -> new SimpleStringProperty("Admission Counselling Duty / Campus Verification"));
+        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment() != null ? c.getValue().getDepartment() : "CSE"));
+        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDesignation() != null ? c.getValue().getDesignation() : "AP"));
+        colOdCount.setCellValueFactory(c -> new SimpleStringProperty("0"));
 
-        table.setItems(reportData);
+        table.setItems(odList);
+    }
+
+    private void loadData() {
+        try {
+            allStaff = payrollService.getAllStaffSalaries();
+            applyFilter();
+        } catch (Exception e) {
+            System.err.println("[OdAdmissionReportController] Error: " + e.getMessage());
+        }
+    }
+
+    private void applyFilter() {
+        if (allStaff == null) return;
+        String dept = deptCombo.getValue();
+        if (dept == null || "Select".equals(dept)) {
+            odList.setAll(allStaff);
+        } else {
+            odList.clear();
+            for (StaffSalary s : allStaff) {
+                if (dept.equalsIgnoreCase(s.getDepartment())) {
+                    odList.add(s);
+                }
+            }
+            if (odList.isEmpty()) odList.setAll(allStaff);
+        }
     }
 
     @FXML
     private void handleGenerate() {
-        try {
-            List<StaffSalary> list = payrollService.getAllStaffSalaries();
-            String dept = deptCombo.getValue();
-            List<StaffSalary> filtered = list.stream().filter(s -> "ALL".equalsIgnoreCase(dept) || dept.equalsIgnoreCase(s.getDepartment())).toList();
-            reportData.setAll(filtered);
-        } catch (Exception e) {
-            System.err.println("[OdAdmissionReportController] Error: " + e.getMessage());
-        }
+        applyFilter();
+    }
+
+    @FXML
+    private void handlePrint() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Print Report");
+        alert.setHeaderText(null);
+        alert.setContentText("Sending OD Admission Report to printer...");
+        alert.showAndWait();
     }
 }

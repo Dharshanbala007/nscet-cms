@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.accounts.AccountGroupController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Action Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Account Group Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Find Table" styleClass="btn-primary" style="-fx-font-weight: bold;" onAction="#handleFind"/>
+        <Button text="Export CSV" styleClass="btn-secondary" onAction="#handleExportCsv"/>
+        <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExportPdf"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Account Group Entry Card (Left) -->
+        <TitledPane text="Account Group Entry" expanded="true" prefWidth="460" collapsible="false">
+            <VBox spacing="15">
+                <padding><Insets top="15" right="12" bottom="15" left="12"/></padding>
+
+                <GridPane hgap="10" vgap="12">
+                    <Label text="Account Group:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="groupNameField" promptText="Enter Account Group Name" GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>
+
+                    <Label text="Parent Group:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="parentGroupCombo" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </GridPane>
+
+                <Region prefHeight="10"/>
+
+                <!-- Buttons: Add, Modify, Delete, Save, Cancel, Close -->
+                <HBox spacing="5" alignment="CENTER">
+                    <Button text="Add" styleClass="btn-action-add" onAction="#handleAdd"/>
+                    <Button text="Modify" styleClass="btn-action-mod" onAction="#handleModify"/>
+                    <Button text="Delete" styleClass="btn-action-del" onAction="#handleDelete"/>
+                    <Button text="Save" styleClass="btn-action-save" onAction="#handleSave"/>
+                    <Button text="Cancel" styleClass="btn-action-cancel" onAction="#handleClear"/>
+                    <Button text="Close" styleClass="btn-action-close" onAction="#handleClose"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+        <!-- Find Table Container (Hidden by default for security, shown on Find) -->
+        <TitledPane fx:id="tableContainer" visible="false" managed="false" text="Find - Account Groups" expanded="true" HBox.hgrow="ALWAYS" collapsible="false">
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 6 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+                    <Label text="Account Group Results" styleClass="form-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="✖ Close Table" styleClass="btn-danger" style="-fx-font-weight: bold;" onAction="#handleCloseTable"/>
+                </HBox>
+                
+                <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colParentGroup" text="Parent Group" prefWidth="200"/>
+                        <TableColumn fx:id="colGroupName" text="Group Name" prefWidth="280"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </TitledPane>
+    </HBox>
+</VBox>

@@ -5,42 +5,61 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.PendingFeesReportController"
-      styleClass="master-container" spacing="10">
-    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-    
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <Label text="Fees Pending Details" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
+
+    <!-- Module Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Fees Pending Details" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
     </HBox>
 
-    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
-        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
-        <Label text="Year:"/>
-        <ComboBox fx:id="academicYearCombo" prefWidth="100"/>
-        <Label text="Term:"/>
-        <ComboBox fx:id="termCombo" prefWidth="80"/>
-        <Label text="Dept:"/>
-        <ComboBox fx:id="deptCombo" prefWidth="100"/>
-        <Label text="Semester:"/>
-        <ComboBox fx:id="semesterCombo" prefWidth="70"/>
-        <Button text="Generate" styleClass="btn-primary" onAction="#handleGenerate"/>
-    </HBox>
+    <!-- Top Filter Bar - Structured for Complete Visibility Without Truncation -->
+    <VBox spacing="8" style="-fx-background-color: #ffffff; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
+            <Label text="Academic Year:" minWidth="95" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="academicYearCombo" prefWidth="100" minWidth="90" promptText="2025-26"/>
 
+            <ComboBox fx:id="termCombo" prefWidth="75" minWidth="70" promptText="Odd"/>
+
+            <Label text="Dept:" minWidth="38" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="deptCombo" prefWidth="85" minWidth="80" promptText="CSE"/>
+
+            <Label text="Semester:" minWidth="60" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="semesterCombo" prefWidth="65" minWidth="60" promptText="3"/>
+
+            <Label text="Period:" minWidth="45" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="fromDatePicker" prefWidth="120" minWidth="110"/>
+
+            <Label text="To:" minWidth="22" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="toDatePicker" prefWidth="120" minWidth="110"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Action Buttons - Explicit minWidth to prevent JavaFX text truncation (...) -->
+            <Button text="View" styleClass="btn-primary" prefWidth="80" minWidth="75" onAction="#handleGenerate"/>
+            <Button text="Save" styleClass="btn-secondary" prefWidth="80" minWidth="75" onAction="#handleSave"/>
+            <Button text="Print" styleClass="btn-secondary" prefWidth="80" minWidth="75" onAction="#handleExport"/>
+            <Button text="Fees Letter" styleClass="btn-secondary" prefWidth="105" minWidth="100" onAction="#handleFeesLetter"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table View -->
     <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="deptCol" text="Dept" prefWidth="70"/>
-            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
-            <TableColumn fx:id="nameCol" text="Student Name" prefWidth="160"/>
-            <TableColumn fx:id="quotaCol" text="Quota" prefWidth="120"/>
-            <TableColumn fx:id="admissionTypeCol" text="Type" prefWidth="80"/>
-            <TableColumn fx:id="communityCol" text="Comm" prefWidth="70"/>
-            <TableColumn fx:id="prevPendingCol" text="Prev Pending" prefWidth="100"/>
-            <TableColumn fx:id="tuitionFeesCol" text="Tuition Fees" prefWidth="100"/>
-            <TableColumn fx:id="otherFeesCol" text="Other Fees" prefWidth="100"/>
-            <TableColumn fx:id="totalCol" text="Total" prefWidth="100"/>
-            <TableColumn fx:id="paidCol" text="Paid Amt" prefWidth="100"/>
-            <TableColumn fx:id="balanceCol" text="Balance" prefWidth="100"/>
+            <TableColumn fx:id="deptCol" text="Dept" prefWidth="65"/>
+            <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="100"/>
+            <TableColumn fx:id="nameCol" text="Student Name" prefWidth="140"/>
+            <TableColumn fx:id="quotaCol" text="Quota" prefWidth="110"/>
+            <TableColumn fx:id="admissionTypeCol" text="Admission Type" prefWidth="100"/>
+            <TableColumn fx:id="communityCol" text="Community" prefWidth="75"/>
+            <TableColumn fx:id="prevPendingCol" text="Previous Pending" prefWidth="110"/>
+            <TableColumn fx:id="tuitionFeesCol" text="Tuition Fees" prefWidth="95"/>
+            <TableColumn fx:id="otherFeesCol" text="Other Fees" prefWidth="85"/>
+            <TableColumn fx:id="scholarshipCol" text="Schalorship Amount" prefWidth="130"/>
+            <TableColumn fx:id="annaUnivRegCol" text="Anna Univ.Reg" prefWidth="100"/>
+            <TableColumn fx:id="totalCol" text="Total" prefWidth="90"/>
+            <TableColumn fx:id="paidCol" text="Paid Amount" prefWidth="90"/>
+            <TableColumn fx:id="balanceCol" text="Balance Amount" prefWidth="110"/>
+            <TableColumn fx:id="fineAmtCol" text="Fine Amount" prefWidth="90"/>
         </columns>
     </TableView>
 </VBox>

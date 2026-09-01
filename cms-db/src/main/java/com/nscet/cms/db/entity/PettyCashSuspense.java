@@ -25,6 +25,9 @@ public class PettyCashSuspense extends BaseEntity {
     @Column(name = "staff_name", length = 100)
     private String staffName;
 
+    @Column(name = "staff_code", length = 30)
+    private String staffCode;
+
     @Column(name = "department", length = 100)
     private String department;
 

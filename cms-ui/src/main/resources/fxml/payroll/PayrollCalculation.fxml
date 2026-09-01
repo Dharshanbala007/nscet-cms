@@ -8,37 +8,58 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header & Controls -->
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Monthly Payroll Calculation Engine" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Pay Period:"/>
-        <ComboBox fx:id="payPeriodCombo" prefWidth="130"/>
-        <Label text="Working Days:"/>
-        <TextField fx:id="workingDaysField" text="30" prefWidth="60"/>
-        <Button text="Run Payroll Engine" styleClass="btn-primary" onAction="#handleCalculate"/>
-    </HBox>
+    <!-- Header Controls Container (Structured in 2 Clean Rows) -->
+    <VBox spacing="10" styleClass="form-container" style="-fx-background-color: #ffffff; -fx-padding: 12; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6;">
+        <!-- Row 1: Title & Main Filters -->
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="Payroll Calculation" styleClass="module-title" minWidth="150"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="From Date:" minWidth="75"/>
+            <DatePicker fx:id="fromDatePicker" prefWidth="130" minWidth="120"/>
+            <Label text="To Date:" minWidth="65"/>
+            <DatePicker fx:id="toDatePicker" prefWidth="130" minWidth="120"/>
+            <Label text="Category:" minWidth="65"/>
+            <ComboBox fx:id="categoryCombo" prefWidth="140" minWidth="130"/>
+        </HBox>
 
-    <!-- Summary Metrics -->
-    <HBox spacing="15" alignment="CENTER_LEFT">
-        <Label fx:id="periodSummaryLabel" text="Selected Period: Jul-2026" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e293b;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="totalNetLabel" text="Total Net Salary: ₹0.00" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;"/>
-    </HBox>
+        <Separator/>
+
+        <!-- Row 2: Percentage Options & Action Buttons -->
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <CheckBox fx:id="profTaxCheck" text="Professional Tax" minWidth="120"/>
+            <Label text="Teaching %:" minWidth="80"/>
+            <TextField fx:id="teachingPctField" text="100" prefWidth="55" minWidth="50"/>
+            <Label text="Non - Teaching %:" minWidth="110"/>
+            <TextField fx:id="nonTeachingPctField" text="100" prefWidth="55" minWidth="50"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+            <Button text="Save" styleClass="btn-secondary" minWidth="75" onAction="#handleSave"/>
+            <ComboBox fx:id="selectCombo" promptText="Select" prefWidth="130" minWidth="120" onAction="#handleFilterCategory"/>
+            <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+        </HBox>
+    </VBox>
 
     <!-- Calculation Results Table -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="90"/>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="130"/>
-            <TableColumn fx:id="colWorkingDays" text="Working Days" prefWidth="95"/>
-            <TableColumn fx:id="colPaidDays" text="Paid Days" prefWidth="85"/>
+            <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="55"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="170"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="130"/>
+            <TableColumn fx:id="colDoj" text="DOJ" prefWidth="95"/>
+            <TableColumn fx:id="colBasic" text="Basic Pay" prefWidth="95"/>
+            <TableColumn fx:id="colHra" text="HRA" prefWidth="85"/>
+            <TableColumn fx:id="colSpl" text="SPL Allow." prefWidth="95"/>
+            <TableColumn fx:id="colWashing" text="Washing Allowance" prefWidth="120"/>
+            <TableColumn fx:id="colConveyance" text="Conveyance" prefWidth="100"/>
+            <TableColumn fx:id="colDeduLop" text="Dedu.LOP" prefWidth="90"/>
+            <TableColumn fx:id="colGross60" text="Gross (60/70)Rs." prefWidth="120"/>
+            <TableColumn fx:id="colGross" text="Gross Pay" prefWidth="105"/>
+            <TableColumn fx:id="colIncomeTax" text="Income Tax" prefWidth="95"/>
+            <TableColumn fx:id="colEpf" text="EPF" prefWidth="85"/>
             <TableColumn fx:id="colLopDays" text="LOP Days" prefWidth="80"/>
-            <TableColumn fx:id="colBasic" text="Basic Pay" prefWidth="100"/>
-            <TableColumn fx:id="colSpl" text="Special Allw" prefWidth="100"/>
-            <TableColumn fx:id="colGross" text="Gross Pay" prefWidth="110"/>
-            <TableColumn fx:id="colDeductions" text="Deductions" prefWidth="100"/>
+            <TableColumn fx:id="colLopAmt" text="LOP Amount" prefWidth="95"/>
             <TableColumn fx:id="colNet" text="Net Pay" prefWidth="110"/>
         </columns>
     </TableView>

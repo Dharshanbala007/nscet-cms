@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.FeesLetterController"
+      spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 15;">
+
+    <!-- Top Action Toolbar for Single and Batch Student Generation/Printing -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 6;">
+        <Button text="◀ Previous" onAction="#handlePrevStudent" prefWidth="100"/>
+        <Label fx:id="studentNavLabel" text="Student 1 of 1" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #1e3a8a;"/>
+        <Button text="Next ▶" onAction="#handleNextStudent" prefWidth="100"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Print Current Letter" styleClass="btn-primary" prefWidth="150" onAction="#handlePrintCurrent"/>
+        <Button text="Print All Letters (Batch)" styleClass="btn-secondary" prefWidth="170" onAction="#handlePrintAll"/>
+        <Button text="Close" styleClass="btn-secondary" prefWidth="80" onAction="#handleClose"/>
+    </HBox>
+
+    <!-- Scrollable Printable Letter Document Area -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" style="-fx-background-color: transparent;">
+        <VBox alignment="TOP_CENTER" style="-fx-padding: 10;">
+
+            <!-- A4 Letter Paper Container matching media_1788256483622.jpg & media_1788256916965.png -->
+            <VBox fx:id="letterPaper" prefWidth="760" style="-fx-background-color: white; -fx-padding: 25 30 25 30; -fx-border-color: #94a3b8; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);" spacing="10">
+
+                <!-- Header Block -->
+                <VBox alignment="CENTER" spacing="2">
+                    <Label text="Theni Melapettai Hindu Nadargal Uravinmurai" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                    <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING &amp; TECHNOLOGY" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0f172a;"/>
+                    <Label text="Approved by AICTE-New Delhi &amp; Affiliated to Anna University-Chennai" style="-fx-font-size: 11px; -fx-text-fill: #475569;"/>
+                    <Label text="Annanji Post, Vadapudupatti, Theni - 625 531" style="-fx-font-size: 11px; -fx-text-fill: #475569;"/>
+                    <Separator prefWidth="700" style="-fx-padding: 4 0;"/>
+                </VBox>
+
+                <!-- Student Info Block -->
+                <GridPane hgap="15" vgap="4">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="260" prefWidth="280"/>
+                        <ColumnConstraints minWidth="130" prefWidth="140"/>
+                        <ColumnConstraints minWidth="100" prefWidth="110"/>
+                        <ColumnConstraints minWidth="130" prefWidth="150"/>
+                    </columnConstraints>
+
+                    <Label text="பெறுநர்" style="-fx-font-weight: bold; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <HBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="0" alignment="CENTER_RIGHT">
+                        <Label text="Date:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="letterDateLabel" text="08/02/2025" style="-fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <Label fx:id="fatherNameLabel" text="Mr. MALAICHAMY M" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    
+                    <HBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Student Name:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="studentNameLabel" text="SRIRAM M" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                    
+                    <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Roll No:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="rollNoLabel" text="2021FME029" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                    
+                    <HBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Label text="Dept:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="deptLabel" text="MECH" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                    
+                    <HBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Label text="Year:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="yearLabel" text="IV Year" style="-fx-font-weight: bold;"/>
+                    </HBox>
+                </GridPane>
+
+                <!-- Notice Tamil Intimation Letter Text -->
+                <VBox spacing="6">
+                    <Label text="அன்புடையீர் !" style="-fx-font-weight: bold; -fx-font-size: 12.5px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    <Label text="வணக்கம். அண்ணா பல்கலைக்கழகத் தேர்வு விடுமுறைக்குப் பின்பு 2024-25-ம் கல்வியாண்டிற்கான வகுப்புகள் B.E/B.Tech பயிலும் இரண்டாம், மூன்றாம் மற்றும் நான்காமாண்டு மாணவர்களுக்கு 24.02.2025 திங்கள்கிழமை முதல் இனிதே துவக்க உள்ளது என்பதை மகிழ்ச்சியுடன் தெரிவித்துக் கொள்கிறோம்." wrapText="true" style="-fx-font-size: 11.5px; -fx-line-spacing: 3; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    <Label text="மேலும் கல்லூரி கட்டணம், இதரக்கட்டணம் மற்றும் பேருந்து கட்டணம் விபரம் கீழே குறிப்பிடப்பட்டுள்ளவாறு 03.03.2025-க்குள் செலுத்துமாறு கேட்டுக்கொள்கிறோம்." wrapText="true" style="-fx-font-size: 11.5px; -fx-line-spacing: 3; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                </VBox>
+
+                <!-- SYMMETRIC 2-COLUMN TABLE WITH WIDE AMOUNTS matching media_1788256916965.png -->
+                <GridPane style="-fx-border-color: #0f172a; -fx-border-width: 1.5;" hgap="0" vgap="0">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="350" prefWidth="350"/>
+                        <ColumnConstraints minWidth="350" prefWidth="350"/>
+                    </columnConstraints>
+
+                    <!-- Table Header Row -->
+                    <VBox style="-fx-background-color: #f8fafc; -fx-padding: 8; -fx-border-color: #0f172a; -fx-border-width: 0 1 1 0;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="2024-25ஆம் கல்வியாண்டில் தாங்கள் செலுத்த வேண்டிய கல்விக் கட்டண விபரங்கள்:" wrapText="true" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    </VBox>
+
+                    <VBox style="-fx-background-color: #f8fafc; -fx-padding: 8; -fx-border-color: #0f172a; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="முந்தைய கல்வியாண்டில் தாங்கள் செலுத்த வேண்டிய நிலுவைக் கட்டண விபரங்கள்:" wrapText="true" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e3a8a; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    </VBox>
+
+                    <!-- Left Column: Current Year Fees Breakdown -->
+                    <VBox style="-fx-padding: 8; -fx-border-color: #0f172a; -fx-border-width: 0 1 0 0;" spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="முதல்பருவக்கட்டணம் (கல்வி, இதர, பேருந்துக்கட்டணம்)" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currTerm1Amt" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="செலுத்திய தொகை" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currTerm1Paid" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Separator style="-fx-padding: 2 0;"/>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="மீதமுள்ள தொகை" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currTerm1Bal" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" style="-fx-padding: 6 0 0 0;">
+                            <Label text="பேருந்துக்கட்டணம் (இரண்டாம் பருவம்)" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currBusAmt" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="செலுத்திய தொகை" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currBusPaid" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Separator style="-fx-padding: 2 0;"/>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="மொத்தம் செலுத்த வேண்டிய தொகை (2024-25)" wrapText="true" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="currTotalPayable" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold; -fx-text-fill: #b91c1c;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Right Column: Previous Year Fees Breakdown (Exact Mirror of Left Column for Previous Year) -->
+                    <VBox style="-fx-padding: 8;" spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="முதல்பருவக்கட்டணம் (கல்வி, இதர, பேருந்துக்கட்டணம்)" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevTerm1Amt" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="செலுத்திய தொகை" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevTerm1Paid" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Separator style="-fx-padding: 2 0;"/>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="மீதமுள்ள தொகை" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevTerm1Bal" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" style="-fx-padding: 6 0 0 0;">
+                            <Label text="பேருந்துக்கட்டணம் (இரண்டாம் பருவம்)" wrapText="true" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevBusAmt" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="செலுத்திய தொகை" style="-fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevBusPaid" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Separator style="-fx-padding: 2 0;"/>
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="மொத்தம் செலுத்த வேண்டிய தொகை (முந்தைய ஆண்டு)" wrapText="true" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;" HBox.hgrow="ALWAYS"/>
+                            <Label text="Rs =" style="-fx-font-size: 11px; -fx-padding: 0 4 0 0;"/>
+                            <Label fx:id="prevTotalPayable" text="0" prefWidth="85" minWidth="85" alignment="CENTER_RIGHT" style="-fx-font-weight: bold; -fx-text-fill: #b91c1c;"/>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+
+                <!-- Grand Total Box -->
+                <VBox style="-fx-background-color: #fef2f2; -fx-border-color: #fca5a5; -fx-border-radius: 4; -fx-padding: 8 15;" alignment="CENTER">
+                    <HBox alignment="CENTER" spacing="15">
+                        <Label text="மொத்த நிலுவைத் தொகை (Grand Total Pending):" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #991b1b; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                        <Label fx:id="grandTotalPending" text="Rs = 0" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #991b1b;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Footer Signatures -->
+                <HBox alignment="CENTER_RIGHT" spacing="100" style="-fx-padding: 12 0 4 0;">
+                    <Label text="நன்றி" style="-fx-font-size: 12px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox alignment="CENTER_RIGHT" spacing="18">
+                        <Label text="இப்படிக்கு," style="-fx-font-size: 12px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                        <Label text="முதல்வர்" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;"/>
+                    </VBox>
+                </HBox>
+
+                <Separator prefWidth="700"/>
+
+                <!-- Bottom BOOK POST Section -->
+                <VBox spacing="3" style="-fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-style: dashed; -fx-border-width: 1;">
+                    <Label text="BOOK POST" style="-fx-font-weight: bold; -fx-underline: true; -fx-font-size: 11.5px;"/>
+                    <Label text="To" style="-fx-font-weight: bold; -fx-font-size: 11.5px;"/>
+
+                    <GridPane hgap="15" vgap="2" style="-fx-padding: 0 0 0 40;">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="250" prefWidth="280"/>
+                            <ColumnConstraints minWidth="150" prefWidth="180"/>
+                        </columnConstraints>
+
+                        <Label fx:id="postStudentName" text="SRIRAM M" style="-fx-font-weight: bold; -fx-font-size: 12.5px;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="postRollNo" text="2021FME029" style="-fx-font-weight: bold; -fx-font-size: 12.5px;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <HBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                            <Label text="S/O" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="postFatherName" text="Mr. MALAICHAMY M" style="-fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <Label fx:id="postAddr1" text="W3 214 POUND STREET WEST PILLAIYAR" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+                        <Label fx:id="postAddr2" text="KOVIL NEAR," GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+
+                        <HBox spacing="20" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                            <Label fx:id="postCity" text="KEELAGUDALUR, CUMBUM, THENI DT." style="-fx-font-weight: bold;"/>
+                        </HBox>
+                        <Label fx:id="postPincode" text="625516" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                        <HBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2">
+                            <Label text="CELL:" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="postPhone" text="6382002664" style="-fx-font-weight: bold;"/>
+                        </HBox>
+                    </GridPane>
+                </VBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

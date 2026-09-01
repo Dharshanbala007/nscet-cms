@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.BankEntryController"
+      styleClass="master-container" spacing="12">
+
+    <!-- Header -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+        <Label text="Bank Entry" styleClass="module-title"/>
+    </HBox>
+
+    <VBox spacing="15" VBox.vgrow="ALWAYS">
+        <padding><Insets top="10" right="20" bottom="20" left="20"/></padding>
+
+        <!-- Form Layout matching Images 2 & 3 -->
+        <GridPane hgap="20" vgap="12" styleClass="form-grid">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="110"/>
+                <ColumnConstraints minWidth="200" prefWidth="220"/>
+                <ColumnConstraints minWidth="110" prefWidth="120"/>
+                <ColumnConstraints minWidth="200" prefWidth="220"/>
+            </columnConstraints>
+
+            <!-- Row 0: Account No & Transaction Date -->
+            <Label text="Account No:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="accountNoCombo" promptText="Select Account" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Transaction Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <DatePicker fx:id="transactionDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+            <!-- Row 1: Bank & Pre.Balance -->
+            <Label text="Bank:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="bankField" text="Federal Bank" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Pre.Balance:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <TextField fx:id="preBalanceField" text="84616695" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+            <!-- Row 2: Mode of Pay & Type -->
+            <Label text="Mode of Pay:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="modeOfPayCombo" promptText="Select Mode" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Type:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="typeCombo" promptText="Select Type" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+            <!-- Row 3: Cheque No & Collection Date -->
+            <Label text="Cheque No:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="chequeNoField" promptText="Enter Cheque No" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Collection Date:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <DatePicker fx:id="collectionDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+            <!-- Row 4: Amount & Balance -->
+            <Label text="Amount:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <TextField fx:id="amountField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="Balance:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <TextField fx:id="balanceField" promptText="0.00" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+            <!-- Row 5: Account -->
+            <Label text="Account:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField fx:id="accountField" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3"/>
+
+            <!-- Row 6: Remarks -->
+            <Label text="Remarks:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextArea fx:id="remarksArea" prefHeight="60" promptText="Enter bank transaction remarks..." GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.columnSpan="3"/>
+        </GridPane>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <!-- Action Buttons Bar matching Images 2 & 3 -->
+        <HBox spacing="10" alignment="CENTER">
+            <padding><Insets top="10" bottom="10"/></padding>
+            <Button text="Add" styleClass="btn-secondary" prefWidth="80" onAction="#handleAdd"/>
+            <Button text="Modify" styleClass="btn-secondary" prefWidth="80" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="btn-danger" prefWidth="80" onAction="#handleDelete"/>
+            <Button text="Save" styleClass="btn-primary" prefWidth="80" onAction="#handleSave"/>
+            <Button text="Cancel" styleClass="btn-secondary" prefWidth="80" onAction="#handleCancel"/>
+            <Button text="Close" styleClass="btn-secondary" prefWidth="80" onAction="#handleClose"/>
+        </HBox>
+    </VBox>
+</VBox>

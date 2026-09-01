@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.DailyAttendanceReportController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Header Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Daily Attendance Summary" styleClass="module-title" minWidth="180"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Date:" minWidth="45"/>
+        <DatePicker fx:id="datePicker" prefWidth="130" minWidth="120"/>
+        <Label text="Session:" minWidth="60"/>
+        <ComboBox fx:id="sessionCombo" prefWidth="120" minWidth="100"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+    </HBox>
+
+    <!-- Printable Preview Area matching media_1787899194311.png -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: #71717a; -fx-padding: 15;">
+        <VBox alignment="TOP_CENTER" spacing="15">
+            <VBox maxWidth="840" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);">
+                
+                <!-- Document Header -->
+                <VBox alignment="CENTER" spacing="4">
+                    <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING AND TECHNOLOGY ," style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #0f172a;"/>
+                    <Label text="VADAPUTHUPATTI ." style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #0f172a;"/>
+                    <HBox alignment="CENTER" spacing="6">
+                        <Label text="Daily Attendance Summary - " style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <Label fx:id="lblSummaryTitle" text="22/07/2026 — Fore Noon" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    </HBox>
+                </VBox>
+                <Separator/>
+
+                <!-- Top Summary Grid (Teaching vs Non-Teaching) -->
+                <GridPane hgap="20" vgap="4" style="-fx-border-color: #000000; -fx-border-width: 1; -fx-padding: 8;">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
+                        <ColumnConstraints minWidth="60" prefWidth="80" alignment="CENTER"/>
+                        <ColumnConstraints minWidth="160" prefWidth="180"/>
+                        <ColumnConstraints minWidth="60" prefWidth="80" alignment="CENTER"/>
+                    </columnConstraints>
+
+                    <Label text="Total Teaching" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblTeachingTotal" text="96" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Total Non - Teaching" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblNonTeachingTotal" text="65" style="-fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <Label text="Total Present:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblTeachingPresent" text="86" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Total Present:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblNonTeachingPresent" text="58" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                    <Label text="Total CL:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblTeachingCl" text="3" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                    <Label text="Total CL:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblNonTeachingCl" text="2" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                    <Label text="Total LOP:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label fx:id="lblTeachingLop" text="3" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                    <Label text="Total LOP:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                    <Label fx:id="lblNonTeachingLop" text="3" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+                    <Label text="Total AB :" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <Label fx:id="lblTeachingAb" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                    <Label text="Total AB :" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                    <Label fx:id="lblNonTeachingAb" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+                    <Label text="Total SPL:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                    <Label fx:id="lblTeachingSpl" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                    <Label text="Total SPL:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                    <Label fx:id="lblNonTeachingSpl" text="0" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+
+                    <Label text="Total OD:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                    <Label fx:id="lblTeachingOd" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                    <Label text="Total OD:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                    <Label fx:id="lblNonTeachingOd" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+
+                    <Label text="Total ML\CPL\VL\OHP:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                    <Label fx:id="lblTeachingOther" text="0" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                    <Label text="Total ML\CPL\VL\OHP:" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                    <Label fx:id="lblNonTeachingOther" text="0" GridPane.columnIndex="3" GridPane.rowIndex="7"/>
+
+                    <Label text="Total:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                    <Label fx:id="lblTeachingSum" text="92" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                    <Label text="Total:" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+                    <Label fx:id="lblNonTeachingSum" text="63" style="-fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="8"/>
+                </GridPane>
+
+                <!-- Side-by-Side Absentees Details Tables -->
+                <HBox spacing="15" VBox.vgrow="ALWAYS">
+                    <!-- Teaching Absentees Table -->
+                    <TableView fx:id="teachingTable" HBox.hgrow="ALWAYS" styleClass="data-table" minHeight="280">
+                        <columns>
+                            <TableColumn fx:id="colTchSlNo" text="Sl.No" prefWidth="50"/>
+                            <TableColumn fx:id="colTchName" text="Staff Name (Teaching)" prefWidth="210"/>
+                            <TableColumn fx:id="colTchDept" text="Dept" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+
+                    <!-- Non-Teaching Absentees Table -->
+                    <TableView fx:id="nonTeachingTable" HBox.hgrow="ALWAYS" styleClass="data-table" minHeight="280">
+                        <columns>
+                            <TableColumn fx:id="colNonTchSlNo" text="Sl.No" prefWidth="50"/>
+                            <TableColumn fx:id="colNonTchName" text="Staff Name (Non-Teaching)" prefWidth="210"/>
+                            <TableColumn fx:id="colNonTchDept" text="Dept" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </HBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.NetSalaryDiffController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls matching media_1787898325499.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Netpay Difference" styleClass="module-title" minWidth="150"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDatePicker" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDatePicker" prefWidth="130" minWidth="120"/>
+        <ComboBox fx:id="typeCombo" prefWidth="130" minWidth="110" promptText="Select"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+    </HBox>
+
+    <!-- Data Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="55"/>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="95"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="130"/>
+            <TableColumn fx:id="colPreviousAmt" text="Previous Amount (₹)" prefWidth="140"/>
+            <TableColumn fx:id="colCurrentAmt" text="Current Amount (₹)" prefWidth="140"/>
+            <TableColumn fx:id="colDiff" text="Difference (₹)" prefWidth="120"/>
+            <TableColumn fx:id="colReason" text="Variance Reason" prefWidth="200"/>
+        </columns>
+    </TableView>
+</VBox>

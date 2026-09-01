@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,7 +21,7 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class DepartmentMasterController implements Initializable {
     @FXML private TableView<DepartmentMaster> table;
-    @FXML private TableColumn<DepartmentMaster, String> codeCol, shortNameCol, nameCol, typeCol, actionsCol;
+    @FXML private TableColumn<DepartmentMaster, String> codeCol, shortNameCol, nameCol, typeCol;
     @FXML private TextField searchField, codeField, shortNameField, nameField;
     @FXML private ComboBox<String> typeCombo;
     @FXML private VBox formPane;
@@ -39,57 +38,101 @@ public class DepartmentMasterController implements Initializable {
         shortNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShortName()));
         nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
         typeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); } else {
-                    DepartmentMaster d = getTableView().getItems().get(getIndex());
-                    Button edit = new Button("Edit"); edit.getStyleClass().add("btn-sm");
-                    edit.setOnAction(e -> handleEdit(d));
-                    Button del = new Button("Delete"); del.getStyleClass().add("btn-sm-danger");
-                    del.setOnAction(e -> handleDelete(d));
-                    setGraphic(new HBox(5, edit, del));
-                }
-            }
-        });
+
         typeCombo.getItems().add("Select");
         typeCombo.getItems().addAll("Academic", "Official");
         typeCombo.getSelectionModel().selectFirst();
-        table.setItems(tableData); loadData();
+        table.setItems(tableData);
+
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                populateForm(newSel);
+            }
+        });
+
+        loadData();
     }
 
     private void loadData() {
         Page<DepartmentMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
         tableData.clear(); tableData.addAll(page.getContent());
-        pageInfo.setText(String.format("Page %d of %d", currentPage + 1, page.getTotalPages()));
+        pageInfo.setText(String.format("Page %d of %d (Total: %d)", currentPage + 1, page.getTotalPages(), page.getTotalElements()));
         prevBtn.setDisable(currentPage == 0); nextBtn.setDisable(currentPage >= page.getTotalPages() - 1);
+    }
+
+    private void populateForm(DepartmentMaster d) {
+        editingId = d.getId();
+        codeField.setText(d.getCode() != null ? d.getCode() : "");
+        shortNameField.setText(d.getShortName() != null ? d.getShortName() : "");
+        nameField.setText(d.getName() != null ? d.getName() : "");
+        if (d.getType() != null && typeCombo.getItems().contains(d.getType())) {
+            typeCombo.setValue(d.getType());
+        } else {
+            typeCombo.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML private void handleSearch() { currentPage = 0; loadData(); }
     @FXML private void handlePrevious() { currentPage--; loadData(); }
     @FXML private void handleNext() { currentPage++; loadData(); }
+
     @FXML private void handleAdd() {
-        editingId = null; codeField.clear(); shortNameField.clear(); nameField.clear(); typeCombo.getSelectionModel().selectFirst();
-        formPane.setVisible(true); formPane.setManaged(true);
+        editingId = null; codeField.clear(); shortNameField.clear(); nameField.clear();
+        typeCombo.getSelectionModel().selectFirst();
+        table.getSelectionModel().clearSelection();
     }
-    @FXML private void handleEdit(DepartmentMaster d) {
-        editingId = d.getId(); codeField.setText(d.getCode()); shortNameField.setText(d.getShortName());
-        nameField.setText(d.getName()); typeCombo.setValue(d.getType());
-        formPane.setVisible(true); formPane.setManaged(true);
+
+    @FXML private void handleModify() {
+        DepartmentMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to modify.", Alert.AlertType.WARNING);
+            return;
+        }
+        populateForm(selected);
     }
+
+    @FXML private void handleDeleteSelected() {
+        DepartmentMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to delete.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleDelete(selected);
+    }
+
     @FXML private void handleSave() {
         try {
             DepartmentMaster d = new DepartmentMaster();
             d.setCode(codeField.getText().trim()); d.setShortName(shortNameField.getText().trim());
-            d.setName(nameField.getText().trim()); d.setType(typeCombo.getValue());
+            d.setName(nameField.getText().trim());
+            d.setType(typeCombo.getValue() != null && !"Select".equals(typeCombo.getValue()) ? typeCombo.getValue() : null);
             if (editingId != null) service.update(editingId, d); else service.create(d);
-            formPane.setVisible(false); formPane.setManaged(false); loadData();
-        } catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait(); }
+            handleAdd();
+            loadData();
+        } catch (Exception e) { showAlert("Error", e.getMessage(), Alert.AlertType.ERROR); }
     }
-    @FXML private void handleCancel() { formPane.setVisible(false); formPane.setManaged(false); }
+
+    @FXML private void handleCancel() {
+        handleAdd();
+    }
+
     private void handleDelete(DepartmentMaster d) {
-        Alert c = new Alert(Alert.AlertType.CONFIRMATION); c.setContentText("Delete: " + d.getName() + "?");
-        c.showAndWait().ifPresent(r -> { if (r == ButtonType.OK) { service.softDelete(d.getId()); loadData(); } });
+        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+        c.setContentText("Are you sure you want to delete department: " + d.getName() + "?");
+        c.showAndWait().ifPresent(r -> {
+            if (r == ButtonType.OK) {
+                service.softDelete(d.getId());
+                handleAdd();
+                loadData();
+            }
+        });
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

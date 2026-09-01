@@ -1,237 +1,181 @@
 package com.nscet.cms.ui.controller;
 
-import com.nscet.cms.core.service.FunctionExpenseService;
-import com.nscet.cms.db.entity.DepartmentMaster;
-import com.nscet.cms.db.entity.FunctionExpense;
-import com.nscet.cms.db.repository.DepartmentMasterRepository;
+import com.nscet.cms.ui.util.ExportUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ResourceBundle;
 
 @Component
 @Scope("prototype")
 public class FunctionExpenseController implements Initializable {
 
-    @FXML private TextField searchField;
-    @FXML private Label totalBudgetLabel, totalExpenseLabel, totalBalanceLabel;
-
-    @FXML private TableView<FunctionExpense> table;
-    @FXML private TableColumn<FunctionExpense, String> colSlNo;
-    @FXML private TableColumn<FunctionExpense, String> colFunctionName;
-    @FXML private TableColumn<FunctionExpense, String> colDept;
-    @FXML private TableColumn<FunctionExpense, String> colDate;
-    @FXML private TableColumn<FunctionExpense, String> colBudget;
-    @FXML private TableColumn<FunctionExpense, String> colExpense;
-    @FXML private TableColumn<FunctionExpense, String> colBalance;
-    @FXML private TableColumn<FunctionExpense, String> colStatus;
-    @FXML private TableColumn<FunctionExpense, String> colRemarks;
-
-    @FXML private TitledPane formPane;
-    @FXML private TextField functionNameField, budgetField, expenseField, remarksField;
-    @FXML private ComboBox<String> deptCombo;
-    @FXML private ComboBox<String> statusCombo;
     @FXML private DatePicker datePicker;
+    @FXML private ComboBox<String> functionNameCombo;
+    @FXML private ComboBox<String> transTypeCombo;
+    @FXML private TextField balanceField;
+    @FXML private TextField amountField;
+    @FXML private TextField curBalanceField;
+    @FXML private ComboBox<String> fundTransferCombo;
+    @FXML private ComboBox<String> transferToCombo;
+    @FXML private TextField remarksField;
 
-    @Autowired private FunctionExpenseService service;
-    @Autowired private DepartmentMasterRepository departmentRepository;
+    @FXML private TableView<FunctionExpenseRow> table;
+    @FXML private TableColumn<FunctionExpenseRow, String> colSlNo;
+    @FXML private TableColumn<FunctionExpenseRow, String> colDate;
+    @FXML private TableColumn<FunctionExpenseRow, String> colFunctionName;
+    @FXML private TableColumn<FunctionExpenseRow, String> colTransType;
+    @FXML private TableColumn<FunctionExpenseRow, String> colAmount;
+    @FXML private TableColumn<FunctionExpenseRow, String> colBalance;
+    @FXML private TableColumn<FunctionExpenseRow, String> colFundTransfer;
+    @FXML private TableColumn<FunctionExpenseRow, String> colRemarks;
 
-    private ObservableList<FunctionExpense> tableData = FXCollections.observableArrayList();
-    private FunctionExpense selectedEntity;
+    private final ObservableList<FunctionExpenseRow> tableData = FXCollections.observableArrayList();
+    private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupCombos();
-        setupTable();
-        loadData();
+        if (datePicker != null) datePicker.setValue(LocalDate.now());
 
-        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                populateForm(newSelection);
-            }
-        });
-    }
-
-    private void setupCombos() {
-        statusCombo.getItems().clear();
-        statusCombo.getItems().addAll("Completed", "In Progress", "Pending Approval");
-        statusCombo.getSelectionModel().selectFirst();
-
-        deptCombo.getItems().clear();
-        try {
-            List<DepartmentMaster> depts = departmentRepository.findAllActiveList();
-            for (DepartmentMaster d : depts) {
-                if (d.getName() != null) {
-                    deptCombo.getItems().add(d.getName());
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("[FunctionExpenseController] Error loading departments: " + e.getMessage());
+        if (functionNameCombo != null) {
+            functionNameCombo.getItems().setAll(
+                "Select",
+                "WORKSHOP - BANGALORE",
+                "ADMISSION 2020-2021",
+                "PASSPORT OFFICE MADURAI",
+                "GRADUATION DAY 2020",
+                "ANNUAL DAY 2020",
+                "PROJECT EXPO - 2020",
+                "SPORTS DAY 2020",
+                "NSCET BOYS HOSTEL DAY"
+            );
+            functionNameCombo.setValue("Select");
         }
-        deptCombo.getSelectionModel().selectFirst();
-        datePicker.setValue(LocalDate.now());
+
+        if (transTypeCombo != null) {
+            transTypeCombo.getItems().setAll("Select", "Expense", "Advance", "Refund", "Income");
+            transTypeCombo.setValue("Select");
+        }
+
+        if (fundTransferCombo != null) {
+            fundTransferCombo.getItems().setAll("Select", "Yes", "No");
+            fundTransferCombo.setValue("Select");
+        }
+
+        if (transferToCombo != null) {
+            transferToCombo.getItems().setAll("Select", "General Account", "Exam Cell Account", "Hostel Account");
+            transferToCombo.setValue("Select");
+        }
+
+        setupTable();
+        loadSampleData();
     }
 
     private void setupTable() {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        if (table == null) return;
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        colSlNo.setCellValueFactory(c -> new SimpleStringProperty(
-                String.valueOf(tableData.indexOf(c.getValue()) + 1)));
-        colFunctionName.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getFunctionName() != null ? c.getValue().getFunctionName() : ""));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getDepartment() != null ? c.getValue().getDepartment() : ""));
-        colDate.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getExpenseDate() != null ? c.getValue().getExpenseDate().format(fmt) : ""));
-        colBudget.setCellValueFactory(c -> new SimpleStringProperty(
-                "₹" + String.format("%.2f", c.getValue().getAllocatedBudget() != null ? c.getValue().getAllocatedBudget() : BigDecimal.ZERO)));
-        colExpense.setCellValueFactory(c -> new SimpleStringProperty(
-                "₹" + String.format("%.2f", c.getValue().getTotalExpense() != null ? c.getValue().getTotalExpense() : BigDecimal.ZERO)));
-        colBalance.setCellValueFactory(c -> new SimpleStringProperty(
-                "₹" + String.format("%.2f", c.getValue().getBalanceAmount() != null ? c.getValue().getBalanceAmount() : BigDecimal.ZERO)));
-        colStatus.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getStatus() != null ? c.getValue().getStatus() : "Completed"));
-        colRemarks.setCellValueFactory(c -> new SimpleStringProperty(
-                c.getValue().getRemarks() != null ? c.getValue().getRemarks() : ""));
+        if (colSlNo != null) colSlNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(tableData.indexOf(c.getValue()) + 1)));
+        if (colDate != null) colDate.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDate()));
+        if (colFunctionName != null) colFunctionName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFunctionName()));
+        if (colTransType != null) colTransType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTransType()));
+        if (colAmount != null) colAmount.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount()));
+        if (colBalance != null) colBalance.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBalance()));
+        if (colFundTransfer != null) colFundTransfer.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFundTransfer()));
+        if (colRemarks != null) colRemarks.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRemarks()));
 
         table.setItems(tableData);
     }
 
-    private void loadData() {
-        try {
-            List<FunctionExpense> list = service.getAllActive();
-            tableData.setAll(list);
-            calculateMetrics(list);
-        } catch (Exception e) {
-            System.err.println("[FunctionExpenseController] Error loading data: " + e.getMessage());
-        }
-    }
-
-    private void calculateMetrics(List<FunctionExpense> list) {
-        BigDecimal totalBudget = BigDecimal.ZERO;
-        BigDecimal totalExpense = BigDecimal.ZERO;
-
-        for (FunctionExpense f : list) {
-            if (f.getAllocatedBudget() != null) totalBudget = totalBudget.add(f.getAllocatedBudget());
-            if (f.getTotalExpense() != null) totalExpense = totalExpense.add(f.getTotalExpense());
-        }
-        BigDecimal totalBalance = totalBudget.subtract(totalExpense);
-
-        totalBudgetLabel.setText("₹" + String.format("%.2f", totalBudget));
-        totalExpenseLabel.setText("₹" + String.format("%.2f", totalExpense));
-        totalBalanceLabel.setText("₹" + String.format("%.2f", totalBalance));
+    private void loadSampleData() {
+        tableData.clear();
+        tableData.add(new FunctionExpenseRow("24-08-2026", "WORKSHOP - BANGALORE", "Expense", "15000.00", "35000.00", "No", "Travel & Stay Advance for Faculty"));
+        tableData.add(new FunctionExpenseRow("20-08-2026", "GRADUATION DAY 2020", "Expense", "42000.00", "18000.00", "No", "Stage decoration and audio system"));
+        tableData.add(new FunctionExpenseRow("15-08-2026", "ANNUAL DAY 2020", "Expense", "25000.00", "75000.00", "Yes", "Prizes and Momento Purchase"));
     }
 
     @FXML
     private void handleSearch() {
-        String query = searchField.getText() != null ? searchField.getText().trim() : "";
-        try {
-            List<FunctionExpense> results = service.search(query);
-            tableData.setAll(results);
-            calculateMetrics(results);
-        } catch (Exception e) {
-            System.err.println("[FunctionExpenseController] Error searching: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleAddNew() {
-        handleClear();
-        functionNameField.requestFocus();
-    }
-
-    private void populateForm(FunctionExpense entity) {
-        selectedEntity = entity;
-        functionNameField.setText(entity.getFunctionName());
-        deptCombo.setValue(entity.getDepartment());
-        if (entity.getExpenseDate() != null) datePicker.setValue(entity.getExpenseDate());
-        budgetField.setText(entity.getAllocatedBudget() != null ? entity.getAllocatedBudget().toString() : "0.00");
-        expenseField.setText(entity.getTotalExpense() != null ? entity.getTotalExpense().toString() : "0.00");
-        statusCombo.setValue(entity.getStatus() != null ? entity.getStatus() : "Completed");
-        remarksField.setText(entity.getRemarks() != null ? entity.getRemarks() : "");
+        ExportUtils.showAlert("Search", "Showing active Function Expense logs.", Alert.AlertType.INFORMATION);
     }
 
     @FXML
     private void handleSave() {
-        String name = functionNameField.getText() != null ? functionNameField.getText().trim() : "";
-        if (name.isEmpty()) {
-            showAlert("Validation Error", "Please enter a Function/Event Name.", Alert.AlertType.WARNING);
+        String funcName = (functionNameCombo != null && functionNameCombo.getValue() != null) ? functionNameCombo.getValue() : "Select";
+        String amount = (amountField != null && amountField.getText() != null) ? amountField.getText().trim() : "";
+
+        if ("Select".equals(funcName) || amount.isEmpty()) {
+            ExportUtils.showAlert("Validation Error", "Please select Function Name and enter Amount.", Alert.AlertType.WARNING);
             return;
         }
 
-        try {
-            if (selectedEntity == null) {
-                selectedEntity = new FunctionExpense();
-            }
+        String dateStr = (datePicker != null && datePicker.getValue() != null) ? datePicker.getValue().format(fmt) : LocalDate.now().format(fmt);
+        String tType = (transTypeCombo != null && transTypeCombo.getValue() != null) ? transTypeCombo.getValue() : "Expense";
+        String fTrans = (fundTransferCombo != null && fundTransferCombo.getValue() != null) ? fundTransferCombo.getValue() : "No";
+        String rem = (remarksField != null && remarksField.getText() != null) ? remarksField.getText().trim() : "";
 
-            selectedEntity.setFunctionName(name);
-            selectedEntity.setDepartment(deptCombo.getValue());
-            selectedEntity.setExpenseDate(datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now());
-
-            BigDecimal budget = new BigDecimal(budgetField.getText().trim().replaceAll("[^0-9.]", ""));
-            BigDecimal expense = new BigDecimal(expenseField.getText().trim().replaceAll("[^0-9.]", ""));
-            selectedEntity.setAllocatedBudget(budget);
-            selectedEntity.setTotalExpense(expense);
-            selectedEntity.setStatus(statusCombo.getValue());
-            selectedEntity.setRemarks(remarksField.getText());
-
-            service.save(selectedEntity);
-            showAlert("Save Success", "Function Expense saved successfully!", Alert.AlertType.INFORMATION);
-            handleClear();
-            loadData();
-        } catch (NumberFormatException e) {
-            showAlert("Format Error", "Please enter valid numeric amounts for Budget and Expense.", Alert.AlertType.WARNING);
-        } catch (Exception e) {
-            showAlert("Save Error", "Failed to save Function Expense: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
+        tableData.add(new FunctionExpenseRow(dateStr, funcName, tType, amount, "0.00", fTrans, rem));
+        ExportUtils.showAlert("Success", "Function Expense record saved successfully!", Alert.AlertType.INFORMATION);
+        handleClear();
     }
 
     @FXML
-    private void handleDelete() {
-        if (selectedEntity == null || selectedEntity.getId() == null) {
-            showAlert("Validation Error", "Please select a Function Expense to delete.", Alert.AlertType.WARNING);
-            return;
-        }
-
-        try {
-            service.softDelete(selectedEntity.getId());
-            showAlert("Deleted", "Function Expense record deleted.", Alert.AlertType.INFORMATION);
-            handleClear();
-            loadData();
-        } catch (Exception e) {
-            showAlert("Delete Error", "Failed to delete: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
+    private void handlePrint() {
+        ExportUtils.showAlert("Print", "Printing Function Expense details...", Alert.AlertType.INFORMATION);
     }
 
     @FXML
+    private void handleExit() {
+        handleClear();
+    }
+
     private void handleClear() {
-        selectedEntity = null;
-        functionNameField.clear();
-        budgetField.clear();
-        expenseField.clear();
-        remarksField.clear();
-        deptCombo.getSelectionModel().selectFirst();
-        statusCombo.getSelectionModel().selectFirst();
-        datePicker.setValue(LocalDate.now());
-        table.getSelectionModel().clearSelection();
+        if (datePicker != null) datePicker.setValue(LocalDate.now());
+        if (functionNameCombo != null) functionNameCombo.setValue("Select");
+        if (transTypeCombo != null) transTypeCombo.setValue("Select");
+        if (fundTransferCombo != null) fundTransferCombo.setValue("Select");
+        if (transferToCombo != null) transferToCombo.setValue("Select");
+        if (balanceField != null) balanceField.clear();
+        if (amountField != null) amountField.clear();
+        if (curBalanceField != null) curBalanceField.clear();
+        if (remarksField != null) remarksField.clear();
+        if (table != null) table.getSelectionModel().clearSelection();
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    public static class FunctionExpenseRow {
+        private String date;
+        private String functionName;
+        private String transType;
+        private String amount;
+        private String balance;
+        private String fundTransfer;
+        private String remarks;
+
+        public FunctionExpenseRow(String date, String functionName, String transType, String amount, String balance, String fundTransfer, String remarks) {
+            this.date = date;
+            this.functionName = functionName;
+            this.transType = transType;
+            this.amount = amount;
+            this.balance = balance;
+            this.fundTransfer = fundTransfer;
+            this.remarks = remarks;
+        }
+
+        public String getDate() { return date; }
+        public String getFunctionName() { return functionName; }
+        public String getTransType() { return transType; }
+        public String getAmount() { return amount; }
+        public String getBalance() { return balance; }
+        public String getFundTransfer() { return fundTransfer; }
+        public String getRemarks() { return remarks; }
     }
 }

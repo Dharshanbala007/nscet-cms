@@ -61,9 +61,17 @@ public class StudentService {
 
     @Transactional
     public StudentMaster create(StudentMaster student) {
-        if (student.getRollNumber() != null && !student.getRollNumber().isEmpty()
-                && repository.existsByRollNumber(student.getRollNumber())) {
-            throw new DuplicateResourceException("Student", "rollNumber", student.getRollNumber());
+        if (student.getRollNumber() == null || student.getRollNumber().trim().isEmpty()) {
+            if (student.getAdmissionNo() != null && !student.getAdmissionNo().trim().isEmpty()) {
+                student.setRollNumber(student.getAdmissionNo().trim());
+            } else if (student.getRegistrationNo() != null && !student.getRegistrationNo().trim().isEmpty()) {
+                student.setRollNumber(student.getRegistrationNo().trim());
+            } else {
+                student.setRollNumber("STU" + (System.currentTimeMillis() % 1000000));
+            }
+        }
+        if (repository.existsByRollNumber(student.getRollNumber())) {
+            student.setRollNumber(student.getRollNumber() + "_" + (System.currentTimeMillis() % 1000));
         }
         student.setIsActive(true);
         return repository.save(student);
@@ -72,6 +80,9 @@ public class StudentService {
     @Transactional
     public StudentMaster update(Long id, StudentMaster updated) {
         StudentMaster existing = getById(id);
+        if (updated.getRollNumber() != null && !updated.getRollNumber().trim().isEmpty()) {
+            existing.setRollNumber(updated.getRollNumber().trim());
+        }
         existing.setRegistrationNo(updated.getRegistrationNo());
         existing.setAdmissionNo(updated.getAdmissionNo());
         existing.setName(updated.getName());
@@ -99,6 +110,7 @@ public class StudentService {
         existing.setSection(updated.getSection());
         existing.setOccupation(updated.getOccupation());
         existing.setReligion(updated.getReligion());
+        existing.setDepartment(updated.getDepartment());
         return repository.save(existing);
     }
 

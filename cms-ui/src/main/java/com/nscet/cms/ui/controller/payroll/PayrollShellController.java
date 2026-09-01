@@ -31,6 +31,7 @@ public class PayrollShellController implements Initializable {
     @FXML private Label userNameLabel;
     @FXML private Label portalLabel;
     @FXML private Label academicYearLabel;
+    @FXML private Label footerInfoLabel;
     @FXML private StackPane contentArea;
 
     @FXML private ToggleButton mastersToggle;
@@ -80,6 +81,13 @@ public class PayrollShellController implements Initializable {
                 userNameLabel.setText("Payroll Administrator");
             }
         }
+        if (footerInfoLabel != null) {
+            String name = (userSession != null && userSession.getCurrentUser() != null && !"Accounts Portal User".equals(userSession.getCurrentUser().getFullName()))
+                    ? userSession.getCurrentUser().getFullName().toUpperCase() : "PAYROLL ADMINISTRATOR";
+            String username = (userSession != null && userSession.getCurrentUser() != null) ? userSession.getCurrentUser().getUsername() : "payroll";
+            footerInfoLabel.setText(String.format("Logged User: %s | Username: %s | Role: ADMIN | Academic Year: 2025-26 | Nadar Saraswathi College of Engineering and Technology, Theni - Payroll Portal",
+                    name, username));
+        }
     }
 
     private void setupNavigation() {
@@ -87,36 +95,58 @@ public class PayrollShellController implements Initializable {
         mastersMenu.getChildren().clear();
         addMenuItem(mastersMenu, "Leave Master", "leaveMaster");
         addMenuItem(mastersMenu, "Staff Salary Master", "staffSalary");
+        addMenuItem(mastersMenu, "Salary Structure Definition", "salaryStructure");
+        addMenuItem(mastersMenu, "Pay Bank Account Master", "payBankAccount");
 
         // TRANSACTIONS
         transactionsMenu.getChildren().clear();
-        addMenuItem(transactionsMenu, "Attendance Entry (Daily)", "attendanceEntry");
-        addMenuItem(transactionsMenu, "Attendance Entry (Single)", "attendanceSingle");
-        addMenuItem(transactionsMenu, "Increment / Revised Salary", "salaryIncrement");
-        addMenuItem(transactionsMenu, "Leave Details & Check", "leaveDetails");
+        addMenuItem(transactionsMenu, "Attendance", "attendanceEntry");
+        addMenuItem(transactionsMenu, "Attendance Single Entry", "attendanceSingle");
+        addMenuItem(transactionsMenu, "Staff Details", "staffSalary");
+        addMenuItem(transactionsMenu, "Transfer", "staffTransfer");
+        addMenuItem(transactionsMenu, "Increment\\Revised Salary Details", "salaryIncrement");
+        addMenuItem(transactionsMenu, "Late\\Permission Details", "latePermission");
+        addMenuItem(transactionsMenu, "Resign\\Termination Details", "resignTermination");
         addMenuItem(transactionsMenu, "Payroll Calculation Engine", "payrollCalc");
 
         // REPORTS
         reportsMenu.getChildren().clear();
+        addMenuItem(reportsMenu, "Leave Details", "leaveDetails");
+        addMenuItem(reportsMenu, "Leave Check", "salaryLeaveCheck");
+        addMenuItem(reportsMenu, "Payroll Calculation", "payrollCalc");
+        addMenuItem(reportsMenu, "Pay BankAccount", "payBankAccount");
         addMenuItem(reportsMenu, "Payroll Acquittance Report", "payrollReports");
-        addMenuItem(reportsMenu, "Payslip Print", "payslipPrint");
-        addMenuItem(reportsMenu, "Casual Leave Monthly View", "clMonthlyView");
-        addMenuItem(reportsMenu, "Deduction Salary Details Matrix", "deductionSalaryReport");
-        addMenuItem(reportsMenu, "OD Admission Duty Report", "odAdmissionReport");
+        addMenuItem(reportsMenu, "Salary Tally Statement", "salaryTally");
+        addMenuItem(reportsMenu, "Net Salary Difference", "netSalaryDiff");
+        addMenuItem(reportsMenu, "Attendance View", "attendanceView");
+        addMenuItem(reportsMenu, "LOP Report", "lopReport");
+        addMenuItem(reportsMenu, "Daily Attendance Report", "dailyAttendanceReport");
+        addMenuItem(reportsMenu, "Full Leave Details", "fullLeaveDetails");
+        addMenuItem(reportsMenu, "OD Admission Report", "odAdmissionReport");
+        addMenuItem(reportsMenu, "CL Monthly View", "clMonthlyView");
 
         // TOOLS
         toolsMenu.getChildren().clear();
-        addMenuItem(toolsMenu, "Monthly Leave Credit / Deduction", "monthlyLeaveCredit");
-        addMenuItem(toolsMenu, "Salary Leave Check", "salaryLeaveCheck");
-        addMenuItem(toolsMenu, "Old Salary Structure", "oldSalaryStructure");
-        addMenuItem(toolsMenu, "PF / ESI Statements & ECR", "pfEsiTools");
+        addMenuItem(toolsMenu, "Monthly Leave Credit", "monthlyLeaveCredit");
+        addMenuItem(toolsMenu, "Deduction Salary", "deductionSalaryReport");
+        addMenuItem(toolsMenu, "leave check old", "salaryLeaveCheck");
+        addMenuItem(toolsMenu, "Salary Structure", "salaryStructure");
     }
+
+    private Button lastActiveButton = null;
 
     private void addMenuItem(VBox menu, String label, String module) {
         Button button = new Button(label);
         button.getStyleClass().add("sidebar-button");
         button.setMaxWidth(Double.MAX_VALUE);
-        button.setOnAction(e -> NavigationManager.loadModule(module, contentArea));
+        button.setOnAction(e -> {
+            if (lastActiveButton != null) {
+                lastActiveButton.getStyleClass().remove("active");
+            }
+            button.getStyleClass().add("active");
+            lastActiveButton = button;
+            NavigationManager.loadModule(module, contentArea);
+        });
         menu.getChildren().add(button);
     }
 

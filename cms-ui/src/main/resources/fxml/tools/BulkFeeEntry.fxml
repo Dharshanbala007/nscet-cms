@@ -5,46 +5,100 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.BulkFeeEntryController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
 
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Bulk Fee Entry" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
+    <!-- Title Header matching media_1788254361569.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Bulk Fees Entry" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Fee Configuration" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Department:"/>
-                    <ComboBox fx:id="deptCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="Semester:"/>
-                    <ComboBox fx:id="semesterCombo" prefWidth="150" promptText="Select"/>
-                    <Label text="Fee Name:"/>
-                    <ComboBox fx:id="feeNameCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="Amount:"/>
-                    <TextField fx:id="amountField" prefWidth="120"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="studentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+    <!-- Top Control Bar matching media_1788254361569.png -->
+    <VBox spacing="8" style="-fx-background-color: #ffffff; -fx-padding: 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <!-- Row 1: Dept, Semester, Date, Pay Type, Base Ac -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Dept:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="deptCombo" prefWidth="110" promptText="MECH"/>
+            
+            <Label text="Semester:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="semesterCombo" prefWidth="80" promptText="7"/>
+            
+            <DatePicker fx:id="entryDatePicker" prefWidth="125"/>
+            
+            <Label text="Pay Type:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="payTypeCombo" prefWidth="95" promptText="Pay"/>
+            
+            <Label text="Base Ac:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="baseAccountCombo" prefWidth="110" promptText="Cash"/>
+        </HBox>
+
+        <!-- Row 2: Fees Name, Amount, DD Amount, Remarks, View -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Fees Name:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="feeNameCombo" prefWidth="160" promptText="Exam Fees"/>
+            
+            <TextField fx:id="amountField" text="2800" prefWidth="80" style="-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT;"/>
+            
+            <Label text="DD Amount:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <TextField fx:id="ddAmountField" prefWidth="80" promptText="0"/>
+            
+            <Label text="Remarks:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <TextField fx:id="remarksField" HBox.hgrow="ALWAYS"/>
+            
+            <Button text="View" styleClass="btn-primary" prefWidth="75" onAction="#handleLoadStudents"/>
+        </HBox>
+    </VBox>
+
+    <!-- Main Dual Table Transfer Layout matching media_1788254361569.png -->
+    <HBox spacing="10" VBox.vgrow="ALWAYS">
+        <!-- Left Table: Available Students -->
+        <VBox spacing="4" prefWidth="300">
+            <Label text="Available Students" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11.5px;"/>
+            <TableView fx:id="leftTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="selectCol" text="Select" prefWidth="60"/>
-                    <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
-                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                    <TableColumn fx:id="deptCol" text="Department" prefWidth="120"/>
-                    <TableColumn fx:id="feeAmountCol" text="Fee Amount" prefWidth="100"/>
+                    <TableColumn fx:id="leftAdmNoCol" text="Admission No" prefWidth="100"/>
+                    <TableColumn fx:id="leftNameCol" text="Student Name" prefWidth="135"/>
+                    <TableColumn fx:id="leftGenderCol" text="Gender" prefWidth="55"/>
                 </columns>
             </TableView>
         </VBox>
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Load Students" styleClass="btn-secondary" onAction="#handleLoadStudents"/>
-            <Button text="Apply Fee" styleClass="btn-primary" onAction="#handleApplyFee"/>
-        </HBox>
-    </VBox>
+
+        <!-- Center Transfer Action Buttons -->
+        <VBox spacing="10" alignment="CENTER">
+            <Button text="&gt;&gt;" prefWidth="45" styleClass="btn-secondary" onAction="#handleAddAll"/>
+            <Button text="&gt;" prefWidth="45" styleClass="btn-secondary" onAction="#handleAddSelected"/>
+            <Button text="&lt;" prefWidth="45" styleClass="btn-secondary" onAction="#handleRemoveSelected"/>
+            <Button text="&lt;&lt;" prefWidth="45" styleClass="btn-secondary" onAction="#handleRemoveAll"/>
+        </VBox>
+
+        <!-- Right Table: Selected Students -->
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Selected Students for Fee Entry" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11.5px;"/>
+            <TableView fx:id="rightTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="rightAdmNoCol" text="Admission No" prefWidth="100"/>
+                    <TableColumn fx:id="rightNameCol" text="Student Name" prefWidth="140"/>
+                    <TableColumn fx:id="rightExamAmtCol" text="Exam Amount" prefWidth="90"/>
+                    <TableColumn fx:id="rightDdAmtCol" text="DD Amount" prefWidth="85"/>
+                    <TableColumn fx:id="rightTotalCol" text="Total" prefWidth="85"/>
+                    <TableColumn fx:id="rightTotalWordsCol" text="Total in Words" prefWidth="150"/>
+                    <TableColumn fx:id="rightReceiptNoCol" text="Receipt No" prefWidth="100"/>
+                    <TableColumn fx:id="rightSNoCol" text="S.No" prefWidth="45"/>
+                    <TableColumn fx:id="rightRemarksCol" text="Remarks" prefWidth="110"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </HBox>
+
+    <!-- Bottom Action & Total Summary Bar matching media_1788254370522.png -->
+    <HBox spacing="15" alignment="CENTER" style="-fx-background-color: #ffffff; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Button text="Calculate" styleClass="btn-secondary" prefWidth="90" onAction="#handleCalculate"/>
+        
+        <TextField fx:id="totalCountField" text="0" editable="false" prefWidth="70" style="-fx-font-weight: bold; -fx-alignment: CENTER;"/>
+        <TextField fx:id="totalAmountField" text="0" editable="false" prefWidth="120" style="-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT;"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button text="Save" styleClass="btn-primary" prefWidth="90" onAction="#handleApplyFee"/>
+        <Button text="Close" styleClass="btn-secondary" prefWidth="90" onAction="#handleClose"/>
+    </HBox>
 </VBox>

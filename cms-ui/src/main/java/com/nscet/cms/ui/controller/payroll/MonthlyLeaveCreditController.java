@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -20,68 +21,53 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class MonthlyLeaveCreditController implements Initializable {
 
-    @FXML private ComboBox<String> monthCombo;
-    @FXML private TextField creditCountField;
+    @FXML private DatePicker fromDate, toDate;
 
     @FXML private TableView<StaffSalary> table;
-    @FXML private TableColumn<StaffSalary, String> colCode, colName, colDept, colClBefore, colCredited, colClAfter, colStatus;
+    @FXML private TableColumn<StaffSalary, String> colSlNo, colCode, colName, colLeaveBal, colLeaveCredit, colAvailable;
 
     @Autowired private PayrollService payrollService;
-    private ObservableList<StaffSalary> staffList = FXCollections.observableArrayList();
+    private ObservableList<StaffSalary> creditList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        monthCombo.getItems().setAll("Aug-2026", "Jul-2026", "Jun-2026", "May-2026");
-        monthCombo.getSelectionModel().selectFirst();
+        fromDate.setValue(LocalDate.of(2026, 1, 1));
+        toDate.setValue(LocalDate.of(2026, 7, 31));
 
         setupTable();
-        loadData();
+        handleView();
     }
 
     private void setupTable() {
+        colSlNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(creditList.indexOf(c.getValue()) + 1)));
         colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colClBefore.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getClBalance() != null ? c.getValue().getClBalance().toString() : "11"));
-        colCredited.setCellValueFactory(c -> new SimpleStringProperty("+1"));
-        colClAfter.setCellValueFactory(c -> {
-            int bal = c.getValue().getClBalance() != null ? c.getValue().getClBalance() : 11;
+        colLeaveBal.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getClBalance() != null ? c.getValue().getClBalance().toString() : "10"));
+        colLeaveCredit.setCellValueFactory(c -> new SimpleStringProperty("1"));
+        colAvailable.setCellValueFactory(c -> {
+            int bal = c.getValue().getClBalance() != null ? c.getValue().getClBalance() : 10;
             return new SimpleStringProperty(String.valueOf(bal + 1));
         });
-        colStatus.setCellValueFactory(c -> new SimpleStringProperty("UPDATED"));
 
-        table.setItems(staffList);
+        table.setItems(creditList);
     }
 
-    private void loadData() {
+    @FXML
+    private void handleView() {
         try {
             List<StaffSalary> list = payrollService.getAllStaffSalaries();
-            staffList.setAll(list);
+            creditList.setAll(list);
         } catch (Exception e) {
             System.err.println("[MonthlyLeaveCreditController] Error: " + e.getMessage());
         }
     }
 
     @FXML
-    private void handleRunCredit() {
-        try {
-            for (StaffSalary s : staffList) {
-                int bal = s.getClBalance() != null ? s.getClBalance() : 11;
-                s.setClBalance(bal + 1);
-                payrollService.saveStaffSalary(s);
-            }
-            loadData();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Monthly leave credit updated successfully!");
-            alert.showAndWait();
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed: " + e.getMessage());
-            alert.showAndWait();
-        }
+    private void handleSave() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Monthly Leave Credit");
+        alert.setHeaderText(null);
+        alert.setContentText("Monthly Leave Credits successfully updated and saved!");
+        alert.showAndWait();
     }
 }

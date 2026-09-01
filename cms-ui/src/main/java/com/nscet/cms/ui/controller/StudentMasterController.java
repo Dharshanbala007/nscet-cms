@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,8 +27,8 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class StudentMasterController implements Initializable {
     @FXML private TableView<StudentMaster> table;
-    @FXML private TableColumn<StudentMaster, String> rollCol, nameCol, fatherCol, genderCol, phoneCol, admNoCol, actionsCol;
-    @FXML private TextField searchField, admNoField, regField, nameField, phoneField, emailField;
+    @FXML private TableColumn<StudentMaster, String> rollCol, nameCol, fatherCol, genderCol, phoneCol, admNoCol;
+    @FXML private TextField searchField, admNoField, regField, nameField, phoneField, emailField, sectionField;
     @FXML private TextField aadharField, fatherField, motherField, parentPhoneField;
     @FXML private TextField casteField, cityField, pinCodeField;
     @FXML private TextField fatherOccupationField, motherOccupationField, address1Field, address2Field;
@@ -38,103 +37,96 @@ public class StudentMasterController implements Initializable {
     @FXML private ComboBox<DepartmentMaster> deptCombo;
     @FXML private DatePicker dobPicker, dojPicker;
     @FXML private VBox formPane;
-    @FXML private TabPane formTabs;
     @FXML private Label pageInfo, statusDate;
     @FXML private Button prevBtn, nextBtn;
-    @FXML private Button headerAddBtn, headerModifyBtn, headerDeleteBtn, headerCloseBtn;
-
-    @FXML private Label semTitleLabel;
-    @FXML private Label semBacklogLabel;
-    @FXML private Label lblSemTuition;
-    @FXML private Label lblSemOther;
-    @FXML private Label lblSemBus;
-    @FXML private Label lblSemPaid;
 
     @Autowired private StudentService service;
     @Autowired private DepartmentService departmentService;
     @Autowired(required = false) private AuditService auditService;
-    private ObservableList<StudentMaster> tableData = FXCollections.observableArrayList();
-    private ObservableList<DepartmentMaster> deptList = FXCollections.observableArrayList();
-    private int currentPage = 0; private int pageSize = 20; private Long editingId = null;
+    private final ObservableList<StudentMaster> tableData = FXCollections.observableArrayList();
+    private final ObservableList<DepartmentMaster> deptList = FXCollections.observableArrayList();
+    private int currentPage = 0;
+    private final int pageSize = 20;
+    private Long editingId = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        rollCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber()));
-        nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
-        fatherCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFatherName()));
-        genderCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getGender()));
-        phoneCol.setCellValueFactory(c -> new SimpleStringProperty(SecurityUtil.maskPhone(c.getValue().getPhone())));
-        admNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAdmissionNo()));
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); } else {
-                    StudentMaster s = getTableView().getItems().get(getIndex());
-                    Button edit = new Button("Edit"); edit.getStyleClass().add("btn-sm");
-                    edit.setOnAction(e -> handleEdit(s));
-                    Button del = new Button("Delete"); del.getStyleClass().add("btn-sm-danger");
-                    del.setOnAction(e -> handleDelete(s));
-                    setGraphic(new HBox(5, edit, del));
+        if (rollCol != null) rollCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber()));
+        if (nameCol != null) nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
+        if (fatherCol != null) fatherCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFatherName()));
+        if (genderCol != null) genderCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getGender()));
+        if (phoneCol != null) phoneCol.setCellValueFactory(c -> new SimpleStringProperty(SecurityUtil.maskPhone(c.getValue().getPhone())));
+        if (admNoCol != null) admNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAdmissionNo()));
+
+        if (genderCombo != null) {
+            genderCombo.getItems().setAll("Select", "Male", "Female", "Other");
+            genderCombo.getSelectionModel().selectFirst();
+        }
+
+        if (communityCombo != null) {
+            communityCombo.getItems().setAll("Select", "OC", "BC", "BC(M)", "MBC", "OBC", "DNC", "SC", "ST");
+            communityCombo.getSelectionModel().selectFirst();
+        }
+
+        if (religionCombo != null) {
+            religionCombo.getItems().setAll("Select", "Hindu", "Muslim", "Christian", "Others");
+            religionCombo.getSelectionModel().selectFirst();
+        }
+
+        if (mediumCombo != null) {
+            mediumCombo.getItems().setAll("Select", "English", "Tamil");
+            mediumCombo.getSelectionModel().selectFirst();
+        }
+
+        if (qualifyingExamCombo != null) {
+            qualifyingExamCombo.getItems().setAll("Select", "HSC (A)", "HSC (V)");
+            qualifyingExamCombo.getSelectionModel().selectFirst();
+        }
+
+        if (degreeCombo != null) {
+            degreeCombo.getItems().setAll("Select", "B.E", "M.E");
+            degreeCombo.getSelectionModel().selectFirst();
+        }
+
+        if (deptCombo != null) {
+            deptList.clear();
+            deptList.addAll(departmentService.getAllActive());
+            deptCombo.getItems().clear();
+            deptCombo.getItems().add(null);
+            deptCombo.getItems().addAll(deptList);
+            deptCombo.setCellFactory(lv -> new ListCell<>() {
+                @Override protected void updateItem(DepartmentMaster item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ? "Select" : (item.getShortName() != null ? item.getShortName() : item.getName()));
                 }
-            }
-        });
-
-        genderCombo.getItems().add("Select");
-        genderCombo.getItems().addAll("Male", "Female", "Other");
-        genderCombo.getSelectionModel().selectFirst();
-
-        communityCombo.setEditable(true);
-        communityCombo.getItems().add("Select");
-        communityCombo.getItems().addAll("OC", "BC", "BCM", "MBC", "OBC", "DNC", "SC", "ST", "Others");
-        communityCombo.getSelectionModel().selectFirst();
-
-        religionCombo.setEditable(true);
-        religionCombo.getItems().add("Select");
-        religionCombo.getItems().addAll("Hindu", "Muslim", "Christian", "Others");
-        religionCombo.getSelectionModel().selectFirst();
-
-        mediumCombo.getItems().add("Select");
-        mediumCombo.getItems().addAll("English", "Tamil");
-        mediumCombo.getSelectionModel().selectFirst();
-
-        qualifyingExamCombo.getItems().add("Select");
-        qualifyingExamCombo.getItems().addAll("HSC(A)", "HSC(B)");
-        qualifyingExamCombo.getSelectionModel().selectFirst();
-
-        degreeCombo.getItems().add("Select");
-        degreeCombo.getItems().addAll("B.E", "M.E");
-        degreeCombo.getSelectionModel().selectFirst();
-
-        deptList.addAll(departmentService.getAllActive()); 
-        deptCombo.getItems().add(null);
-        deptCombo.getItems().addAll(deptList);
-        deptCombo.setCellFactory(lv -> new ListCell<>() {
-            @Override protected void updateItem(DepartmentMaster item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "Select" : item.getName());
-            }
-        });
-        deptCombo.setButtonCell(new ListCell<>() {
-            @Override protected void updateItem(DepartmentMaster item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "Select" : item.getName());
-            }
-        });
-
-        setupEditableCombo(communityCombo);
-        setupEditableCombo(religionCombo);
+            });
+            deptCombo.setButtonCell(new ListCell<>() {
+                @Override protected void updateItem(DepartmentMaster item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ? "Select" : (item.getShortName() != null ? item.getShortName() : item.getName()));
+                }
+            });
+        }
 
         if (statusDate != null) {
             statusDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
-        table.setItems(tableData);
+
+        if (table != null) {
+            table.setItems(tableData);
+            table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+                if (newSel != null) {
+                    handleEdit(newSel);
+                }
+            });
+        }
+
         loadData();
     }
 
     private void loadData() {
         try {
-            Page<StudentMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
+            Page<StudentMaster> page = service.getAll(searchField != null ? searchField.getText() : "", currentPage, pageSize, "id", "asc");
             tableData.clear();
             tableData.addAll(page.getContent());
             int totalPages = Math.max(page.getTotalPages(), 1);
@@ -149,142 +141,178 @@ public class StudentMasterController implements Initializable {
     }
 
     @FXML private void handleSearch() { currentPage = 0; loadData(); }
-    @FXML private void handlePrevious() { currentPage--; loadData(); }
+    @FXML private void handlePrevious() { if (currentPage > 0) { currentPage--; loadData(); } }
     @FXML private void handleNext() { currentPage++; loadData(); }
 
     @FXML private void handleAdd() {
         editingId = null;
         clearForm();
-        showForm(true);
     }
 
     @FXML private void handleModify() {
+        if (table == null) return;
         StudentMaster selected = table.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            new Alert(Alert.AlertType.WARNING, "Please select a student to modify.").showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Please select a student from the table to modify.").showAndWait();
             return;
         }
         handleEdit(selected);
     }
 
     @FXML private void handleDeleteSelected() {
+        if (table == null) return;
         StudentMaster selected = table.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            new Alert(Alert.AlertType.WARNING, "Please select a student to delete.").showAndWait();
+            new Alert(Alert.AlertType.WARNING, "Please select a student from the table to delete.").showAndWait();
             return;
         }
         handleDelete(selected);
     }
 
     @FXML private void handleClose() {
-        showForm(false);
+        clearForm();
     }
 
     @FXML private void handleEdit(StudentMaster s) {
         editingId = s.getId();
-        admNoField.setText(s.getAdmissionNo()); regField.setText(s.getRegistrationNo());
-        nameField.setText(s.getName()); phoneField.setText(s.getPhone());
-        emailField.setText(s.getEmail()); aadharField.setText(s.getAadharNumber());
-        fatherField.setText(s.getFatherName()); motherField.setText(s.getMotherName());
-        parentPhoneField.setText(s.getParentPhone());
-        casteField.setText(s.getCaste()); cityField.setText(s.getCity());
-        pinCodeField.setText(s.getState()); address1Field.setText(s.getAddress());
-        address2Field.setText(s.getRegion());
-        fatherOccupationField.setText(s.getOccupation());
-        genderCombo.setValue(s.getGender()); communityCombo.setValue(s.getCommunity());
-        mediumCombo.setValue(s.getMedium()); religionCombo.setValue(s.getReligion());
-        degreeCombo.setValue(s.getAdmissionType());
-        qualifyingExamCombo.getSelectionModel().selectFirst();
-        dobPicker.setValue(s.getDateOfBirth()); dojPicker.setValue(s.getDateOfJoining());
+        if (admNoField != null) admNoField.setText(s.getAdmissionNo());
+        if (regField != null) regField.setText(s.getRegistrationNo());
+        if (nameField != null) nameField.setText(s.getName());
+        if (phoneField != null) phoneField.setText(s.getPhone());
+        if (emailField != null) emailField.setText(s.getEmail());
+        if (sectionField != null) sectionField.setText(s.getSection());
+        if (aadharField != null) aadharField.setText(s.getAadharNumber());
+        if (fatherField != null) fatherField.setText(s.getFatherName());
+        if (motherField != null) motherField.setText(s.getMotherName());
+        if (parentPhoneField != null) parentPhoneField.setText(s.getParentPhone());
+        if (casteField != null) casteField.setText(s.getCaste());
+        if (cityField != null) cityField.setText(s.getCity());
+        if (pinCodeField != null) pinCodeField.setText(s.getState());
+        if (address1Field != null) address1Field.setText(s.getAddress());
+        if (address2Field != null) address2Field.setText(s.getRegion());
+        if (fatherOccupationField != null) fatherOccupationField.setText(s.getOccupation());
+        if (genderCombo != null) genderCombo.setValue(s.getGender() != null ? s.getGender() : "Select");
+        if (communityCombo != null) communityCombo.setValue(s.getCommunity() != null ? s.getCommunity() : "Select");
+        if (mediumCombo != null) mediumCombo.setValue(s.getMedium() != null ? s.getMedium() : "Select");
+        if (religionCombo != null) religionCombo.setValue(s.getReligion() != null ? s.getReligion() : "Select");
+        if (degreeCombo != null) degreeCombo.setValue(s.getAdmissionType() != null ? s.getAdmissionType() : "Select");
+        if (dobPicker != null) dobPicker.setValue(s.getDateOfBirth());
+        if (dojPicker != null) dojPicker.setValue(s.getDateOfJoining() != null ? s.getDateOfJoining() : LocalDate.now());
 
-        DepartmentMaster dept = null;
-        for (DepartmentMaster d : deptList) {
-            if (d.getId() != null && d.getId().equals(s.getId())) {
-                dept = d;
-                break;
-            }
+        if (deptCombo != null && s.getDepartment() != null) {
+            DepartmentMaster match = deptCombo.getItems().stream()
+                    .filter(d -> d != null && (
+                            (s.getDepartment().getId() != null && s.getDepartment().getId().equals(d.getId())) ||
+                            (d.getName() != null && d.getName().equalsIgnoreCase(s.getDepartment().getName())) ||
+                            (d.getShortName() != null && d.getShortName().equalsIgnoreCase(s.getDepartment().getShortName()))
+                    ))
+                    .findFirst().orElse(s.getDepartment());
+            deptCombo.setValue(match);
         }
-        deptCombo.setValue(dept);
-
-        tenthMarkField.setText(""); hscMarkField.setText(""); cutOffField.setText("");
-        yearOfPassingField.setText(""); boardOfStudyField.setText("");
-
-        showForm(true);
     }
 
     @FXML private void handleSave() {
         try {
             if (!validateInput()) return;
             StudentMaster s = new StudentMaster();
-            s.setAdmissionNo(SecurityUtil.sanitize(admNoField.getText()));
-            s.setRegistrationNo(SecurityUtil.sanitize(regField.getText()));
-            s.setName(SecurityUtil.sanitize(nameField.getText()));
-            s.setPhone(SecurityUtil.sanitize(phoneField.getText()));
-            s.setEmail(SecurityUtil.sanitize(emailField.getText()));
-            s.setAadharNumber(SecurityUtil.sanitize(aadharField.getText()));
-            s.setFatherName(SecurityUtil.sanitize(fatherField.getText()));
-            s.setMotherName(SecurityUtil.sanitize(motherField.getText()));
-            s.setParentPhone(SecurityUtil.sanitize(parentPhoneField.getText()));
-            s.setCaste(SecurityUtil.sanitize(casteField.getText()));
-            s.setCity(SecurityUtil.sanitize(cityField.getText()));
-            s.setState(SecurityUtil.sanitize(pinCodeField.getText()));
-            s.setAddress(SecurityUtil.sanitize(address1Field.getText()));
-            s.setRegion(SecurityUtil.sanitize(address2Field.getText()));
-            s.setOccupation(SecurityUtil.sanitize(fatherOccupationField.getText()));
-            s.setGender(genderCombo.getValue());
-            s.setCommunity(communityCombo.getValue());
-            s.setMedium(mediumCombo.getValue());
-            s.setReligion(religionCombo.getValue());
-            s.setAdmissionType(degreeCombo.getValue());
-            s.setDateOfBirth(dobPicker.getValue());
-            s.setDateOfJoining(dojPicker.getValue());
+            s.setAdmissionNo(SecurityUtil.sanitize(admNoField != null ? admNoField.getText() : ""));
+            s.setRegistrationNo(SecurityUtil.sanitize(regField != null ? regField.getText() : ""));
+            s.setName(SecurityUtil.sanitize(nameField != null ? nameField.getText() : ""));
+            s.setPhone(SecurityUtil.sanitize(phoneField != null ? phoneField.getText() : ""));
+            s.setEmail(SecurityUtil.sanitize(emailField != null ? emailField.getText() : ""));
+            s.setSection(SecurityUtil.sanitize(sectionField != null ? sectionField.getText() : ""));
+            s.setAadharNumber(SecurityUtil.sanitize(aadharField != null ? aadharField.getText() : ""));
+            s.setFatherName(SecurityUtil.sanitize(fatherField != null ? fatherField.getText() : ""));
+            s.setMotherName(SecurityUtil.sanitize(motherField != null ? motherField.getText() : ""));
+            s.setParentPhone(SecurityUtil.sanitize(parentPhoneField != null ? parentPhoneField.getText() : ""));
+            s.setCaste(SecurityUtil.sanitize(casteField != null ? casteField.getText() : ""));
+            s.setCity(SecurityUtil.sanitize(cityField != null ? cityField.getText() : ""));
+            s.setState(SecurityUtil.sanitize(pinCodeField != null ? pinCodeField.getText() : ""));
+            s.setAddress(SecurityUtil.sanitize(address1Field != null ? address1Field.getText() : ""));
+            s.setRegion(SecurityUtil.sanitize(address2Field != null ? address2Field.getText() : ""));
+            s.setOccupation(SecurityUtil.sanitize(fatherOccupationField != null ? fatherOccupationField.getText() : ""));
+            if (genderCombo != null) s.setGender(genderCombo.getValue());
+            if (communityCombo != null) s.setCommunity(communityCombo.getValue());
+            if (mediumCombo != null) s.setMedium(mediumCombo.getValue());
+            if (religionCombo != null) s.setReligion(religionCombo.getValue());
+            if (degreeCombo != null) s.setAdmissionType(degreeCombo.getValue());
+            if (dobPicker != null) s.setDateOfBirth(dobPicker.getValue());
+            if (dojPicker != null) s.setDateOfJoining(dojPicker.getValue());
+            if (deptCombo != null) s.setDepartment(deptCombo.getValue());
 
             if (editingId != null) {
+                StudentMaster existing = service.getById(editingId);
+                s.setRollNumber(existing.getRollNumber());
                 service.update(editingId, s);
                 safeAuditLog("UPDATE", "admin_student_master", editingId, s.getName());
             } else {
+                String rollNo = (s.getRegistrationNo() != null && !s.getRegistrationNo().isEmpty())
+                    ? s.getRegistrationNo()
+                    : ((s.getAdmissionNo() != null && !s.getAdmissionNo().isEmpty()) ? s.getAdmissionNo() : "STU" + (System.currentTimeMillis() % 100000));
+                s.setRollNumber(rollNo);
                 service.create(s);
                 safeAuditLog("CREATE", "admin_student_master", s.getId(), s.getName());
             }
-            showForm(false); loadData();
-        } catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait(); }
+            clearForm();
+            loadData();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
     }
 
     private void clearForm() {
-        admNoField.clear(); regField.clear(); nameField.clear(); phoneField.clear();
-        emailField.clear(); aadharField.clear(); fatherField.clear(); motherField.clear();
-        parentPhoneField.clear(); casteField.clear(); cityField.clear(); pinCodeField.clear();
-        address1Field.clear(); address2Field.clear(); fatherOccupationField.clear();
-        motherOccupationField.clear(); tenthMarkField.clear(); hscMarkField.clear();
-        cutOffField.clear(); yearOfPassingField.clear(); boardOfStudyField.clear();
-        qualifyingExamCombo.getSelectionModel().selectFirst();
-        genderCombo.getSelectionModel().selectFirst(); communityCombo.getSelectionModel().selectFirst();
-        mediumCombo.getSelectionModel().selectFirst(); religionCombo.getSelectionModel().selectFirst();
-        degreeCombo.getSelectionModel().selectFirst();
-        qualifyingExamCombo.getSelectionModel().selectFirst();
-        deptCombo.getSelectionModel().clearSelection();
-        dobPicker.setValue(null); dojPicker.setValue(null);
-        formTabs.getSelectionModel().selectFirst();
+        editingId = null;
+        if (admNoField != null) admNoField.clear();
+        if (regField != null) regField.clear();
+        if (nameField != null) nameField.clear();
+        if (phoneField != null) phoneField.clear();
+        if (emailField != null) emailField.clear();
+        if (sectionField != null) sectionField.clear();
+        if (aadharField != null) aadharField.clear();
+        if (fatherField != null) fatherField.clear();
+        if (motherField != null) motherField.clear();
+        if (parentPhoneField != null) parentPhoneField.clear();
+        if (casteField != null) casteField.clear();
+        if (cityField != null) cityField.clear();
+        if (pinCodeField != null) pinCodeField.clear();
+        if (address1Field != null) address1Field.clear();
+        if (address2Field != null) address2Field.clear();
+        if (fatherOccupationField != null) fatherOccupationField.clear();
+        if (motherOccupationField != null) motherOccupationField.clear();
+        if (tenthMarkField != null) tenthMarkField.clear();
+        if (hscMarkField != null) hscMarkField.clear();
+        if (cutOffField != null) cutOffField.clear();
+        if (yearOfPassingField != null) yearOfPassingField.clear();
+        if (boardOfStudyField != null) boardOfStudyField.clear();
+
+        if (genderCombo != null) genderCombo.getSelectionModel().selectFirst();
+        if (communityCombo != null) communityCombo.getSelectionModel().selectFirst();
+        if (mediumCombo != null) mediumCombo.getSelectionModel().selectFirst();
+        if (religionCombo != null) religionCombo.getSelectionModel().selectFirst();
+        if (degreeCombo != null) degreeCombo.getSelectionModel().selectFirst();
+        if (qualifyingExamCombo != null) qualifyingExamCombo.getSelectionModel().selectFirst();
+        if (deptCombo != null) deptCombo.getSelectionModel().clearSelection();
+
+        if (dobPicker != null) dobPicker.setValue(null);
+        if (dojPicker != null) dojPicker.setValue(LocalDate.now());
+        if (table != null) table.getSelectionModel().clearSelection();
     }
 
     private boolean validateInput() {
-        if (admNoField.getText().trim().isEmpty()) {
-            showError("Admission No is required"); return false;
+        if (admNoField != null && admNoField.getText().trim().isEmpty() && regField != null && regField.getText().trim().isEmpty()) {
+            showError("Admission No or Registration No is required"); return false;
         }
-        if (nameField.getText().trim().isEmpty()) {
+        if (nameField != null && nameField.getText().trim().isEmpty()) {
             showError("Student Name is required"); return false;
         }
-        if (!SecurityUtil.isValidPhone(phoneField.getText().trim())) {
+        if (phoneField != null && !phoneField.getText().trim().isEmpty() && !SecurityUtil.isValidPhone(phoneField.getText().trim())) {
             showError("Phone must be exactly 10 digits"); return false;
         }
-        if (!SecurityUtil.isValidPhone(parentPhoneField.getText().trim())) {
+        if (parentPhoneField != null && !parentPhoneField.getText().trim().isEmpty() && !SecurityUtil.isValidPhone(parentPhoneField.getText().trim())) {
             showError("Parent phone must be exactly 10 digits"); return false;
         }
-        if (!SecurityUtil.isValidAadhar(aadharField.getText().trim())) {
+        if (aadharField != null && !aadharField.getText().trim().isEmpty() && !SecurityUtil.isValidAadhar(aadharField.getText().trim())) {
             showError("Aadhar must be exactly 12 digits"); return false;
-        }
-        if (!SecurityUtil.isValidEmail(emailField.getText().trim())) {
-            showError("Invalid email format"); return false;
         }
         return true;
     }
@@ -292,37 +320,24 @@ public class StudentMasterController implements Initializable {
     private void showError(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Validation Error");
+        alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }
 
-    @FXML private void handleCancel() { showForm(false); }
-
-    private void showForm(boolean show) {
-        formPane.setVisible(show); formPane.setManaged(show);
-        headerAddBtn.setVisible(!show); headerAddBtn.setManaged(!show);
-        headerModifyBtn.setVisible(!show); headerModifyBtn.setManaged(!show);
-        headerDeleteBtn.setVisible(!show); headerDeleteBtn.setManaged(!show);
-        headerCloseBtn.setVisible(!show); headerCloseBtn.setManaged(!show);
-    }
-
-    private void setupEditableCombo(ComboBox<String> combo) {
-        combo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if ("Others".equals(newVal)) {
-                combo.getSelectionModel().clearSelection();
-                combo.getEditor().clear();
-                combo.getEditor().setPromptText("Type here...");
-            }
-        });
-    }
+    @FXML private void handleCancel() { clearForm(); }
 
     private void handleDelete(StudentMaster s) {
-        Alert c = new Alert(Alert.AlertType.CONFIRMATION); c.setContentText("Delete student: " + s.getName() + "?");
-        c.showAndWait().ifPresent(r -> { if (r == ButtonType.OK) {
-            service.softDelete(s.getId());
-            safeAuditLog("DELETE", "admin_student_master", s.getId(), s.getName());
-            loadData();
-        } });
+        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+        c.setContentText("Delete student: " + s.getName() + "?");
+        c.showAndWait().ifPresent(r -> {
+            if (r == ButtonType.OK) {
+                service.softDelete(s.getId());
+                safeAuditLog("DELETE", "admin_student_master", s.getId(), s.getName());
+                clearForm();
+                loadData();
+            }
+        });
     }
 
     private void safeAuditLog(String action, String tableName, Long recordId, String details) {
@@ -331,31 +346,5 @@ public class StudentMasterController implements Initializable {
                 auditService.log(action, tableName, recordId, null, details, null);
             }
         } catch (Exception ignored) {}
-    }
-
-    @FXML private void handleSem1() { updateSemPreview(1, "2024-25 ODD", "Section A", 25000, 15000, 8000, 48000, 0); }
-    @FXML private void handleSem2() { updateSemPreview(2, "2024-25 EVEN", "Section A", 25000, 15000, 8000, 48000, 0); }
-    @FXML private void handleSem3() { updateSemPreview(3, "2025-26 ODD", "Section A", 25000, 15000, 8000, 43000, 5000); }
-    @FXML private void handleSem4() { updateSemPreview(4, "2025-26 EVEN", "Section A", 25000, 15000, 8000, 20000, 28000); }
-    @FXML private void handleSem5() { updateSemPreview(5, "2026-27 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem6() { updateSemPreview(6, "2026-27 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem7() { updateSemPreview(7, "2027-28 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem8() { updateSemPreview(8, "2027-28 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
-
-    private void updateSemPreview(int sem, String yearType, String sec, double tuition, double other, double bus, double paid, double backlog) {
-        if (semTitleLabel == null) return;
-        semTitleLabel.setText("SEMESTER " + sem + " PREVIEW (" + yearType + " - " + sec + ")");
-        lblSemTuition.setText(String.format("₹%,.2f", tuition));
-        lblSemOther.setText(String.format("₹%,.2f", other));
-        lblSemBus.setText(String.format("₹%,.2f", bus));
-        lblSemPaid.setText(String.format("₹%,.2f", paid));
-
-        if (backlog > 0) {
-            semBacklogLabel.setText(String.format("PENDING BACKLOG: ₹%,.2f (OVERDUE)", backlog));
-            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #ef4444;");
-        } else {
-            semBacklogLabel.setText("PENDING BACKLOG: ₹0.00 (FULLY PAID)");
-            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;");
-        }
     }
 }

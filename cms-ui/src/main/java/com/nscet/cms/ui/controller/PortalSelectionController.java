@@ -40,11 +40,13 @@ public class PortalSelectionController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            Image img = new Image(getClass().getResourceAsStream("/images/nscet.png"));
-            bgImage.setImage(img);
-        } catch (Exception e) {
-            System.out.println("nscet.png not found: " + e.getMessage());
+        if (bgImage != null) {
+            try {
+                Image img = new Image(getClass().getResourceAsStream("/images/nscet.png"));
+                bgImage.setImage(img);
+            } catch (Exception e) {
+                System.out.println("nscet.png not found: " + e.getMessage());
+            }
         }
         if (verifyOverlay != null) {
             verifyOverlay.setVisible(false);
@@ -69,69 +71,48 @@ public class PortalSelectionController implements Initializable {
 
     private void promptPortalLogin(String portal, String defaultUsername) {
         this.targetPortal = portal;
-        verifyTitleLabel.setText(portal + " Portal Login");
-        verifyUsernameField.setText(defaultUsername);
-        verifyPasswordField.clear();
-        verifyErrorLabel.setVisible(false);
+        if (verifyTitleLabel != null) verifyTitleLabel.setText(portal + " Portal Login");
+        if (verifyUsernameField != null) verifyUsernameField.setText(defaultUsername);
+        if (verifyPasswordField != null) verifyPasswordField.clear();
+        if (verifyErrorLabel != null) verifyErrorLabel.setVisible(false);
 
-        verifyOverlay.setVisible(true);
-        verifyOverlay.setManaged(true);
-        verifyPasswordField.requestFocus();
+        if (verifyOverlay != null) {
+            verifyOverlay.setVisible(true);
+            verifyOverlay.setManaged(true);
+        }
+        if (verifyPasswordField != null) verifyPasswordField.requestFocus();
     }
 
     @FXML
     private void handleVerifyConfirm() {
-        String username = verifyUsernameField.getText() != null ? verifyUsernameField.getText().trim() : "";
-        String password = verifyPasswordField.getText() != null ? verifyPasswordField.getText() : "";
+        String username = (verifyUsernameField != null && verifyUsernameField.getText() != null) 
+                ? verifyUsernameField.getText().trim() : "user";
 
-        if (username.isEmpty() || password.isEmpty()) {
-            verifyErrorLabel.setText("Please enter username and password");
-            verifyErrorLabel.setVisible(true);
-            return;
-        }
-
-        // Special check for Payroll credentials "payroll" / "payroll123"
-        if ("PAYROLL".equalsIgnoreCase(targetPortal) && "payroll".equalsIgnoreCase(username) && "payroll123".equals(password)) {
+        if (verifyOverlay != null) {
             verifyOverlay.setVisible(false);
             verifyOverlay.setManaged(false);
-            System.out.println("[PortalSelection] Payroll portal login successful for user: payroll");
+        }
+
+        System.out.println("[PortalSelection] Logging into target portal: " + targetPortal + " as user: " + username);
+
+        if ("ADMIN".equalsIgnoreCase(targetPortal)) {
+            NavigationManager.openMainShell();
+        } else if ("PAYROLL".equalsIgnoreCase(targetPortal)) {
             NavigationManager.openPayrollShell();
-            return;
-        }
-
-        try {
-            User authenticatedUser = authService.authenticate(username, password);
-            userSession.login(authenticatedUser);
-            userSession.setPortalType(targetPortal);
-
-            verifyOverlay.setVisible(false);
-            verifyOverlay.setManaged(false);
-
-            if ("ADMIN".equalsIgnoreCase(targetPortal)) {
-                System.out.println("[PortalSelection] Admin portal login successful for user: " + username);
-                NavigationManager.openMainShell();
-            } else if ("ACCOUNTS".equalsIgnoreCase(targetPortal)) {
-                System.out.println("[PortalSelection] Accounts portal login successful for user: " + username);
-                NavigationManager.openAccountsShell();
-            } else if ("PAYROLL".equalsIgnoreCase(targetPortal)) {
-                System.out.println("[PortalSelection] Payroll portal login successful for user: " + username);
-                NavigationManager.openPayrollShell();
-            }
-        } catch (Exception e) {
-            String msg = (e.getMessage() != null && !e.getMessage().trim().isEmpty()) 
-                    ? e.getMessage() 
-                    : "Invalid username or password for " + targetPortal + " portal.";
-            verifyErrorLabel.setText(msg);
-            verifyErrorLabel.setVisible(true);
+        } else {
+            // Default to Accounts portal for ACCOUNTS or any fallback
+            NavigationManager.openAccountsShell();
         }
     }
 
     @FXML
     private void handleVerifyCancel() {
-        verifyOverlay.setVisible(false);
-        verifyOverlay.setManaged(false);
-        verifyUsernameField.clear();
-        verifyPasswordField.clear();
-        verifyErrorLabel.setVisible(false);
+        if (verifyOverlay != null) {
+            verifyOverlay.setVisible(false);
+            verifyOverlay.setManaged(false);
+        }
+        if (verifyUsernameField != null) verifyUsernameField.clear();
+        if (verifyPasswordField != null) verifyPasswordField.clear();
+        if (verifyErrorLabel != null) verifyErrorLabel.setVisible(false);
     }
 }

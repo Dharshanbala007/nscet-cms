@@ -29,7 +29,6 @@ public class DesignationController implements Initializable {
     @FXML private TableColumn<DesignationMaster, String> shortNameCol;
     @FXML private TableColumn<DesignationMaster, String> nameCol;
     @FXML private TableColumn<DesignationMaster, String> categoryCol;
-    @FXML private TableColumn<DesignationMaster, String> actionsCol;
     @FXML private TextField searchField;
     @FXML private VBox formPane;
     @FXML private TextField codeField;
@@ -53,6 +52,12 @@ public class DesignationController implements Initializable {
         setupTable();
         setupCategoryCombo();
         loadData();
+
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                populateForm(newSelection);
+            }
+        });
     }
 
     private void setupTable() {
@@ -60,30 +65,6 @@ public class DesignationController implements Initializable {
         shortNameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getShortName()));
         nameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getName()));
         categoryCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCategory()));
-
-        actionsCol.setCellValueFactory(cell -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    DesignationMaster desig = getTableView().getItems().get(getIndex());
-                    Button editBtn = new Button("Edit");
-                    editBtn.getStyleClass().add("btn-sm");
-                    editBtn.setOnAction(e -> handleEdit(desig));
-
-                    Button deleteBtn = new Button("Delete");
-                    deleteBtn.getStyleClass().add("btn-sm-danger");
-                    deleteBtn.setOnAction(e -> handleDelete(desig));
-
-                    HBox actions = new HBox(5, editBtn, deleteBtn);
-                    setGraphic(actions);
-                }
-            }
-        });
-
         table.setItems(tableData);
     }
 
@@ -131,19 +112,39 @@ public class DesignationController implements Initializable {
         shortNameField.clear();
         nameField.clear();
         categoryCombo.getSelectionModel().selectFirst();
-        formPane.setVisible(true);
-        formPane.setManaged(true);
+        table.getSelectionModel().clearSelection();
+    }
+
+    private void populateForm(DesignationMaster desig) {
+        editingId = desig.getId();
+        codeField.setText(desig.getCode() != null ? desig.getCode() : "");
+        shortNameField.setText(desig.getShortName() != null ? desig.getShortName() : "");
+        nameField.setText(desig.getName() != null ? desig.getName() : "");
+        if (desig.getCategory() != null && categoryCombo.getItems().contains(desig.getCategory())) {
+            categoryCombo.setValue(desig.getCategory());
+        } else {
+            categoryCombo.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML
-    private void handleEdit(DesignationMaster desig) {
-        editingId = desig.getId();
-        codeField.setText(desig.getCode());
-        shortNameField.setText(desig.getShortName());
-        nameField.setText(desig.getName());
-        categoryCombo.setValue(desig.getCategory());
-        formPane.setVisible(true);
-        formPane.setManaged(true);
+    private void handleModify() {
+        DesignationMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to modify.", Alert.AlertType.WARNING);
+            return;
+        }
+        populateForm(selected);
+    }
+
+    @FXML
+    private void handleDeleteSelected() {
+        DesignationMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to delete.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleDelete(selected);
     }
 
     @FXML
@@ -163,8 +164,7 @@ public class DesignationController implements Initializable {
                 showAlert("Success", "Designation created successfully", Alert.AlertType.INFORMATION);
             }
 
-            formPane.setVisible(false);
-            formPane.setManaged(false);
+            handleAdd();
             loadData();
         } catch (DuplicateResourceException e) {
             showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
@@ -177,8 +177,7 @@ public class DesignationController implements Initializable {
 
     @FXML
     private void handleCancel() {
-        formPane.setVisible(false);
-        formPane.setManaged(false);
+        handleAdd();
     }
 
     private void handleDelete(DesignationMaster desig) {
@@ -192,6 +191,7 @@ public class DesignationController implements Initializable {
                 try {
                     service.softDelete(desig.getId());
                     showAlert("Success", "Designation deleted successfully", Alert.AlertType.INFORMATION);
+                    handleAdd();
                     loadData();
                 } catch (Exception e) {
                     showAlert("Error", "Cannot delete: " + e.getMessage(), Alert.AlertType.ERROR);

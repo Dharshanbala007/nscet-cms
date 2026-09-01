@@ -24,24 +24,34 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("student", "/fxml/masters/StudentMaster.fxml");
         MODULE_FXML_MAP.put("studentDetails", "/fxml/masters/StudentDetails.fxml");
         MODULE_FXML_MAP.put("feesDetails", "/fxml/masters/FeesDetails.fxml");
+        MODULE_FXML_MAP.put("feesReport", "/fxml/masters/FeesDetails.fxml");
         MODULE_FXML_MAP.put("users", "/fxml/masters/UserMaster.fxml");
         MODULE_FXML_MAP.put("feeCollection", "/fxml/transactions/FeeCollection.fxml");
+        MODULE_FXML_MAP.put("receiptNew", "/fxml/transactions/FeeCollection.fxml");
+        MODULE_FXML_MAP.put("otherFees", "/fxml/transactions/OtherFees.fxml");
+        MODULE_FXML_MAP.put("bankEntry", "/fxml/transactions/BankEntry.fxml");
         MODULE_FXML_MAP.put("tc", "/fxml/transactions/TransferCertificate.fxml");
         MODULE_FXML_MAP.put("regUpdate", "/fxml/transactions/RegistrationUpdate.fxml");
+        MODULE_FXML_MAP.put("bulkRegNoUpdate", "/fxml/transactions/RegistrationUpdate.fxml");
         MODULE_FXML_MAP.put("feeTransactionLog", "/fxml/transactions/FeeTransactionLog.fxml");
         MODULE_FXML_MAP.put("appReport", "/fxml/reports/ApplicationReport.fxml");
-        MODULE_FXML_MAP.put("feesReport", "/fxml/reports/FeesDetailsReport.fxml");
+        MODULE_FXML_MAP.put("applicationReport", "/fxml/reports/ApplicationReport.fxml");
         MODULE_FXML_MAP.put("pendingFees", "/fxml/reports/PendingFeesReport.fxml");
+        MODULE_FXML_MAP.put("pendingFeesReport", "/fxml/reports/PendingFeesReport.fxml");
+        MODULE_FXML_MAP.put("pendingBusFee", "/fxml/reports/PendingBusFeesReport.fxml");
         MODULE_FXML_MAP.put("pendingBusFees", "/fxml/reports/PendingBusFeesReport.fxml");
         MODULE_FXML_MAP.put("studentReceiptDetails", "/fxml/reports/StudentReceiptDetails.fxml");
         MODULE_FXML_MAP.put("examFeesReport", "/fxml/reports/ExamFeesReport.fxml");
         MODULE_FXML_MAP.put("receiptBankChecking", "/fxml/reports/ReceiptBankChecking.fxml");
         MODULE_FXML_MAP.put("headwise", "/fxml/reports/HeadwiseDetailsReport.fxml");
+        MODULE_FXML_MAP.put("headwiseDetails", "/fxml/reports/HeadwiseDetailsReport.fxml");
         MODULE_FXML_MAP.put("receiptReprint", "/fxml/reports/ReceiptReprint.fxml");
         MODULE_FXML_MAP.put("strength", "/fxml/reports/StrengthReport.fxml");
+        MODULE_FXML_MAP.put("strengthReport", "/fxml/reports/StrengthReport.fxml");
         MODULE_FXML_MAP.put("tcPrint", "/fxml/reports/TcPrint.fxml");
         MODULE_FXML_MAP.put("dfcrReport", "/fxml/reports/DfcrReport.fxml");
         MODULE_FXML_MAP.put("dfcrGroupwiseReport", "/fxml/reports/DfcrGroupwiseReport.fxml");
+        MODULE_FXML_MAP.put("parentsMeeting", "/fxml/reports/ParentsMeeting.fxml");
         MODULE_FXML_MAP.put("daySettlement", "/fxml/tools/DaySettlement.fxml");
         MODULE_FXML_MAP.put("bulkFeeEntry", "/fxml/tools/BulkFeeEntry.fxml");
         MODULE_FXML_MAP.put("busFeesUpdate", "/fxml/tools/BusFeesUpdate.fxml");
@@ -54,6 +64,11 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("dailyTransaction", "/fxml/accounts/DailyTransaction.fxml");
         MODULE_FXML_MAP.put("accountsDashboard", "/fxml/accounts/AccountsDashboard.fxml");
         MODULE_FXML_MAP.put("functionExpense", "/fxml/accounts/FunctionExpense.fxml");
+        MODULE_FXML_MAP.put("accountGroup", "/fxml/accounts/AccountGroup.fxml");
+        MODULE_FXML_MAP.put("accountMaster", "/fxml/accounts/AccountMaster.fxml");
+        MODULE_FXML_MAP.put("functionMaster", "/fxml/accounts/FunctionMaster.fxml");
+        MODULE_FXML_MAP.put("pendingBillDetails", "/fxml/accounts/PendingBillDetails.fxml");
+        MODULE_FXML_MAP.put("pendingBills", "/fxml/accounts/PendingBillDetails.fxml");
 
         // Payroll Modules
         MODULE_FXML_MAP.put("leaveMaster", "/fxml/payroll/LeaveMaster.fxml");
@@ -71,10 +86,22 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("oldSalaryStructure", "/fxml/payroll/OldSalaryStructure.fxml");
         MODULE_FXML_MAP.put("pfEsiTools", "/fxml/payroll/PfEsiTools.fxml");
 
-        // Detailed Reports from Screenshots 55-70
+        // Detailed Reports & Masters from Final payroll.rar (Screenshots 01-70)
         MODULE_FXML_MAP.put("odAdmissionReport", "/fxml/payroll/OdAdmissionReport.fxml");
         MODULE_FXML_MAP.put("clMonthlyView", "/fxml/payroll/ClMonthlyView.fxml");
         MODULE_FXML_MAP.put("deductionSalaryReport", "/fxml/payroll/DeductionSalaryReport.fxml");
+        MODULE_FXML_MAP.put("payBankAccount", "/fxml/payroll/PayBankAccount.fxml");
+        MODULE_FXML_MAP.put("salaryStructure", "/fxml/payroll/SalaryStructure.fxml");
+        MODULE_FXML_MAP.put("attendanceView", "/fxml/payroll/AttendanceView.fxml");
+        MODULE_FXML_MAP.put("dailyAttendanceReport", "/fxml/payroll/DailyAttendanceReport.fxml");
+        MODULE_FXML_MAP.put("deductionSalaryDetails", "/fxml/payroll/DeductionSalaryDetails.fxml");
+        MODULE_FXML_MAP.put("fullLeaveDetails", "/fxml/payroll/FullLeaveDetails.fxml");
+        MODULE_FXML_MAP.put("lopReport", "/fxml/payroll/LopReport.fxml");
+        MODULE_FXML_MAP.put("staffTransfer", "/fxml/payroll/StaffTransfer.fxml");
+        MODULE_FXML_MAP.put("latePermission", "/fxml/payroll/LatePermission.fxml");
+        MODULE_FXML_MAP.put("resignTermination", "/fxml/payroll/ResignTermination.fxml");
+        MODULE_FXML_MAP.put("salaryTally", "/fxml/payroll/SalaryTally.fxml");
+        MODULE_FXML_MAP.put("netSalaryDiff", "/fxml/payroll/NetSalaryDiff.fxml");
     }
 
     private static String currentStylesheet;

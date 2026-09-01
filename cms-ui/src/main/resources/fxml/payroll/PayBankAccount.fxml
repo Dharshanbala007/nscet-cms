@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.PayBankAccountController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Header Controls -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Staff Bank Account" styleClass="module-title" minWidth="150"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDatePicker" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDatePicker" prefWidth="130" minWidth="120"/>
+        <Label text="Category:" minWidth="65"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="130" minWidth="120"/>
+        <Label text="Bank:" minWidth="45"/>
+        <ComboBox fx:id="bankCombo" prefWidth="100" minWidth="90"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+    </HBox>
+
+    <!-- Bank Account Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="60"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="110"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="200"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="160"/>
+            <TableColumn fx:id="colAccNo" text="Bank Acc.No" prefWidth="170"/>
+            <TableColumn fx:id="colIfsc" text="IFSC" prefWidth="100"/>
+            <TableColumn fx:id="colCredit" text="Credit" prefWidth="80"/>
+        </columns>
+    </TableView>
+
+    <!-- Bottom Total -->
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Label text="Total:" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+        <TextField fx:id="totalField" editable="false" prefWidth="160" style="-fx-font-weight: bold; -fx-background-color: #f8fafc;"/>
+    </HBox>
+</VBox>

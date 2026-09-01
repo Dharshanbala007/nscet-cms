@@ -8,28 +8,29 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header Controls -->
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="OD Admission Duty Report" styleClass="module-title"/>
+    <!-- Header Controls matching media_1787899669431.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="OD Admission Report" styleClass="module-title" minWidth="160"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="From Date:"/>
-        <DatePicker fx:id="fromDate" prefWidth="130"/>
-        <Label text="To Date:"/>
-        <DatePicker fx:id="toDate" prefWidth="130"/>
-        <Label text="Department:"/>
-        <ComboBox fx:id="deptCombo" prefWidth="150"/>
-        <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDate" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDate" prefWidth="130" minWidth="120"/>
+        <Label text="Dept:" minWidth="45"/>
+        <ComboBox fx:id="deptCombo" prefWidth="120" minWidth="100" promptText="Select"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleGenerate"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
     </HBox>
 
+    <!-- Data Table matching media_1787899676001.png -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
-            <TableColumn fx:id="colDesig" text="Designation" prefWidth="150"/>
-            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="120"/>
-            <TableColumn fx:id="colOdCount" text="OD Admission Count" prefWidth="140"/>
-            <TableColumn fx:id="colRemarks" text="Remarks / Duty Details" prefWidth="250"/>
+            <TableColumn fx:id="colSlNo" text="S.NO" prefWidth="60"/>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="110"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="200"/>
+            <TableColumn fx:id="colDept" text="Dept" prefWidth="90"/>
+            <TableColumn fx:id="colDesig" text="Design" prefWidth="120"/>
+            <TableColumn fx:id="colOdCount" text="OD Admission" prefWidth="130"/>
         </columns>
     </TableView>
 </VBox>

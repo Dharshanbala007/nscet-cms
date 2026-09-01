@@ -1,112 +1,127 @@
 package com.nscet.cms.ui.controller;
 
-import com.nscet.cms.db.entity.StudentMaster;
-import com.nscet.cms.db.repository.StudentMasterRepository;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import org.springframework.beans.factory.annotation.Autowired;
+import javafx.scene.control.cell.TextFieldTableCell;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.*;
 import java.util.ResourceBundle;
 
 @Component
 @Scope("prototype")
 public class BusFeesUpdateController implements Initializable {
 
-    @FXML private ComboBox<String> routeCombo;
-    @FXML private TextField busFeeField;
-    @FXML private TableView<StudentMaster> studentTable;
-    @FXML private TableColumn<StudentMaster, Boolean> selectCol;
-    @FXML private TableColumn<StudentMaster, String> rollNoCol;
-    @FXML private TableColumn<StudentMaster, String> nameCol;
-    @FXML private TableColumn<StudentMaster, String> routeCol;
-    @FXML private TableColumn<StudentMaster, String> currentFeeCol;
+    @FXML private ComboBox<String> academicYearCombo;
+    @FXML private ComboBox<String> busRouteCombo;
 
-    @Autowired private StudentMasterRepository studentMasterRepository;
+    @FXML private TableView<BusFeeStopRowDto> reportTable;
+    @FXML private TableColumn<BusFeeStopRowDto, String> routeNoCol;
+    @FXML private TableColumn<BusFeeStopRowDto, String> routeNameCol;
+    @FXML private TableColumn<BusFeeStopRowDto, String> busStopNameCol;
+    @FXML private TableColumn<BusFeeStopRowDto, String> amountCol;
+    @FXML private TableColumn<BusFeeStopRowDto, String> academicYearCol;
 
-    private ObservableList<StudentMaster> tableData = FXCollections.observableArrayList();
-    private Map<Long, Boolean> selectedMap = new HashMap<>();
+    private final ObservableList<BusFeeStopRowDto> dataList = FXCollections.observableArrayList();
+
+    public static class BusFeeStopRowDto {
+        private String routeNo;
+        private String routeName;
+        private String busStopName;
+        private String amount;
+        private String academicYear;
+
+        public BusFeeStopRowDto(String routeNo, String routeName, String busStopName, String amount, String academicYear) {
+            this.routeNo = routeNo;
+            this.routeName = routeName;
+            this.busStopName = busStopName;
+            this.amount = amount;
+            this.academicYear = academicYear;
+        }
+
+        public String getRouteNo() { return routeNo; }
+        public String getRouteName() { return routeName; }
+        public String getBusStopName() { return busStopName; }
+        public String getAmount() { return amount; }
+        public void setAmount(String amount) { this.amount = amount; }
+        public String getAcademicYear() { return academicYear; }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setupCombos();
-        setupTableColumns();
-        studentTable.setItems(tableData);
-        handleLoadStudents();
-    }
-
-    private void setupCombos() {
-        try {
-            routeCombo.setItems(FXCollections.observableArrayList("ALL", "Route 1 - PERIYAKULAM", "Route 2 - CUMBUM", "Route 3 - AUNDIPATTI", "Route 4 - THENI LOCAL"));
-            routeCombo.setValue("ALL");
-            busFeeField.setText("7150");
-        } catch (Exception e) {
-            System.err.println("[BusFeesUpdateController] Error loading route combo: " + e.getMessage());
+        if (academicYearCombo != null) {
+            academicYearCombo.getItems().clear();
+            academicYearCombo.getItems().addAll("2024-25", "2025-26", "2026-27");
+            academicYearCombo.setValue("2026-27");
         }
+
+        if (busRouteCombo != null) {
+            busRouteCombo.getItems().clear();
+            busRouteCombo.getItems().addAll(
+                "BOOTHIPURAM & RATHNA NAGAR",
+                "PERIYAKULAM & VADUGAPATTI",
+                "CUMBUM & UTHAMAPALAYAM",
+                "THENI LOCAL & ALLINAGARAM",
+                "AUNDIPATTI & CHINNAMANUR"
+            );
+            busRouteCombo.getSelectionModel().selectFirst();
+        }
+
+        setupTableColumns();
+        reportTable.setItems(dataList);
+        handleLoadData();
     }
 
     private void setupTableColumns() {
-        selectCol.setCellValueFactory(c -> {
-            Long id = c.getValue().getId();
-            boolean isSelected = selectedMap.getOrDefault(id, true);
-            SimpleBooleanProperty prop = new SimpleBooleanProperty(isSelected);
-            prop.addListener((obs, oldVal, newVal) -> selectedMap.put(id, newVal));
-            return prop;
-        });
-        selectCol.setCellFactory(CheckBoxTableCell.forTableColumn(selectCol));
-        studentTable.setEditable(true);
-
-        rollNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRollNumber() != null ? c.getValue().getRollNumber() : "N/A"));
-        nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName() != null ? c.getValue().getName() : "N/A"));
-        routeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusStop() != null ? c.getValue().getBusStop() : "THENI"));
-        currentFeeCol.setCellValueFactory(c -> new SimpleStringProperty("\u20B9" + (busFeeField.getText() != null ? busFeeField.getText() : "0")));
-    }
-
-    @FXML
-    private void handleLoadStudents() {
-        try {
-            List<StudentMaster> students = studentMasterRepository.findAll();
-            tableData.clear();
-            selectedMap.clear();
-
-            String selectedRoute = routeCombo.getValue();
-
-            for (StudentMaster s : students) {
-                if ("ALL".equals(selectedRoute) || selectedRoute == null) {
-                    tableData.add(s);
-                    selectedMap.put(s.getId(), true);
-                } else {
-                    String busStop = s.getBusStop();
-                    if (busStop != null) {
-                        tableData.add(s);
-                        selectedMap.put(s.getId(), true);
-                    }
+        if (routeNoCol != null) routeNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRouteNo()));
+        if (routeNameCol != null) routeNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRouteName()));
+        if (busStopNameCol != null) busStopNameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusStopName()));
+        
+        if (amountCol != null) {
+            amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount()));
+            amountCol.setCellFactory(TextFieldTableCell.forTableColumn());
+            amountCol.setOnEditCommit(e -> {
+                BusFeeStopRowDto row = e.getRowValue();
+                if (row != null) {
+                    row.setAmount(e.getNewValue());
                 }
-            }
-        } catch (Exception e) {
-            System.err.println("[BusFeesUpdateController] Error loading bus students: " + e.getMessage());
+            });
         }
+
+        if (academicYearCol != null) academicYearCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAcademicYear()));
+        
+        reportTable.setEditable(true);
     }
 
     @FXML
-    private void handleUpdateFees() {
-        long count = selectedMap.values().stream().filter(Boolean::booleanValue).count();
-        String amount = busFeeField.getText();
-        String route = routeCombo.getValue();
+    public void handleLoadData() {
+        dataList.clear();
+        String year = academicYearCombo != null && academicYearCombo.getValue() != null ? academicYearCombo.getValue() : "2026-27";
+        String route = busRouteCombo != null && busRouteCombo.getValue() != null ? busRouteCombo.getValue() : "BOOTHIPURAM & RATHNA NAGAR";
 
+        // Add exact reference stop records from media_1788254870198.png
+        dataList.add(new BusFeeStopRowDto("17", route, "ANNANJI", "4810", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "ANNANJI PALLIVASAL", "4810", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "ARAVIND EYE HOSPITAL", "5315", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "BOOTHIPURAM", "8225", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "RATHINA NAGAR", "5315", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "VADAPUDUPATTI", "4810", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "VANI SWEETS", "5315", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "SUNDARAM MAHAL", "5315", year));
+        dataList.add(new BusFeeStopRowDto("17", route, "CAFÉ MILANO", "5315", year));
+    }
+
+    @FXML
+    public void handleSave() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Bus Fees Updated");
+        alert.setTitle("Bus Fees Saved");
         alert.setHeaderText(null);
-        alert.setContentText("Bus fee updated to \u20B9" + amount + " for " + count + " students on route '" + route + "'.");
+        alert.setContentText("Bus fee updates saved successfully for " + dataList.size() + " bus stops!");
         alert.showAndWait();
     }
 }

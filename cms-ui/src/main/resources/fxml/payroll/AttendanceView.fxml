@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.AttendanceViewController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Header Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Attendance View" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Export CSV" styleClass="btn-secondary" minWidth="90" onAction="#handleExportCsv"/>
+        <Button text="Export PDF" styleClass="btn-secondary" minWidth="90" onAction="#handleExportPdf"/>
+        <Button text="Find / View Table ▶" styleClass="btn-primary" style="-fx-font-weight: bold;" minWidth="140" onAction="#handleFind"/>
+        <Button text="Exit" styleClass="btn-secondary" minWidth="75" onAction="#handleClose"/>
+    </HBox>
+
+    <!-- Filter Controls Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="130"/>
+
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="130"/>
+
+        <Label text="Category:"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="160"/>
+
+        <Button text="View Table ▶" styleClass="btn-primary" style="-fx-font-weight: bold;" minWidth="110" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+    </HBox>
+
+    <!-- Table Container (Hidden by default for privacy, shown on View) -->
+    <VBox fx:id="tableContainer" visible="false" managed="false" VBox.vgrow="ALWAYS" spacing="8">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 6 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <Label text="Attendance View Table" styleClass="form-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✖ Close Table" styleClass="btn-danger" style="-fx-font-weight: bold;" onAction="#handleCloseTable"/>
+        </HBox>
+
+        <!-- Days Grid Data Table -->
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="160"/>
+                <TableColumn fx:id="colD26" text="26" prefWidth="35"/>
+                <TableColumn fx:id="colD27" text="27" prefWidth="35"/>
+                <TableColumn fx:id="colD28" text="28" prefWidth="35"/>
+                <TableColumn fx:id="colD29" text="29" prefWidth="35"/>
+                <TableColumn fx:id="colD30" text="30" prefWidth="35"/>
+                <TableColumn fx:id="colD31" text="31" prefWidth="35"/>
+                <TableColumn fx:id="colD1" text="1" prefWidth="30"/>
+                <TableColumn fx:id="colD2" text="2" prefWidth="30"/>
+                <TableColumn fx:id="colD3" text="3" prefWidth="30"/>
+                <TableColumn fx:id="colD4" text="4" prefWidth="30"/>
+                <TableColumn fx:id="colD5" text="5" prefWidth="30"/>
+                <TableColumn fx:id="colD6" text="6" prefWidth="30"/>
+                <TableColumn fx:id="colD7" text="7" prefWidth="30"/>
+                <TableColumn fx:id="colD8" text="8" prefWidth="30"/>
+                <TableColumn fx:id="colD9" text="9" prefWidth="30"/>
+                <TableColumn fx:id="colD10" text="10" prefWidth="30"/>
+                <TableColumn fx:id="colD11" text="11" prefWidth="30"/>
+                <TableColumn fx:id="colD12" text="12" prefWidth="30"/>
+                <TableColumn fx:id="colD13" text="13" prefWidth="30"/>
+                <TableColumn fx:id="colD14" text="14" prefWidth="30"/>
+                <TableColumn fx:id="colD15" text="15" prefWidth="30"/>
+                <TableColumn fx:id="colD16" text="16" prefWidth="30"/>
+                <TableColumn fx:id="colD17" text="17" prefWidth="30"/>
+                <TableColumn fx:id="colD18" text="18" prefWidth="30"/>
+                <TableColumn fx:id="colD19" text="19" prefWidth="30"/>
+                <TableColumn fx:id="colD20" text="20" prefWidth="30"/>
+                <TableColumn fx:id="colD21" text="21" prefWidth="30"/>
+                <TableColumn fx:id="colD22" text="22" prefWidth="30"/>
+                <TableColumn fx:id="colD23" text="23" prefWidth="30"/>
+                <TableColumn fx:id="colD24" text="24" prefWidth="30"/>
+                <TableColumn fx:id="colD25" text="25" prefWidth="30"/>
+                <TableColumn fx:id="colP" text="P" prefWidth="40"/>
+                <TableColumn fx:id="colCL" text="CL" prefWidth="40"/>
+                <TableColumn fx:id="colLOP" text="LOP" prefWidth="45"/>
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT">
+            <Button text="✖ Close Table" styleClass="btn-secondary" onAction="#handleCloseTable"/>
+        </HBox>
+    </VBox>
+</VBox>

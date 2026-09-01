@@ -12,6 +12,10 @@ import java.time.LocalDate;
 @Table(name = "admin_student_master")
 public class StudentMaster extends BaseEntity {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private DepartmentMaster department;
+
     @Column(name = "roll_number", unique = true, nullable = false, length = 20)
     private String rollNumber;
 

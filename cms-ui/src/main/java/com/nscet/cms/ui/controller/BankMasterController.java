@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,7 +27,6 @@ public class BankMasterController implements Initializable {
     @FXML private TableColumn<BankMaster, String> accNoCol;
     @FXML private TableColumn<BankMaster, String> branchCol;
     @FXML private TableColumn<BankMaster, String> remarksCol;
-    @FXML private TableColumn<BankMaster, String> actionsCol;
     @FXML private TextField searchField;
     @FXML private VBox formPane;
     @FXML private TextField bankNameField;
@@ -54,30 +52,33 @@ public class BankMasterController implements Initializable {
         accNoCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAccountNumber()));
         branchCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBranch()));
         remarksCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRemarks()));
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); } else {
-                    BankMaster b = getTableView().getItems().get(getIndex());
-                    Button edit = new Button("Edit"); edit.getStyleClass().add("btn-sm");
-                    edit.setOnAction(e -> handleEdit(b));
-                    Button del = new Button("Delete"); del.getStyleClass().add("btn-sm-danger");
-                    del.setOnAction(e -> handleDelete(b));
-                    setGraphic(new HBox(5, edit, del));
-                }
+        table.setItems(tableData);
+
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                populateForm(newSel);
             }
         });
-        table.setItems(tableData);
+
         loadData();
     }
 
     private void loadData() {
         Page<BankMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
         tableData.clear(); tableData.addAll(page.getContent());
-        pageInfo.setText(String.format("Page %d of %d", currentPage + 1, page.getTotalPages()));
+        pageInfo.setText(String.format("Page %d of %d (Total: %d)", currentPage + 1, page.getTotalPages(), page.getTotalElements()));
         prevBtn.setDisable(currentPage == 0);
         nextBtn.setDisable(currentPage >= page.getTotalPages() - 1);
+    }
+
+    private void populateForm(BankMaster b) {
+        editingId = b.getId();
+        bankNameField.setText(b.getBankName() != null ? b.getBankName() : "");
+        shortNameField.setText(b.getBankShortName() != null ? b.getBankShortName() : "");
+        accNoField.setText(b.getAccountNumber() != null ? b.getAccountNumber() : "");
+        branchField.setText(b.getBranch() != null ? b.getBranch() : "");
+        ifscField.setText(b.getIfscCode() != null ? b.getIfscCode() : "");
+        remarksField.setText(b.getRemarks() != null ? b.getRemarks() : "");
     }
 
     @FXML private void handleSearch() { currentPage = 0; loadData(); }
@@ -87,14 +88,25 @@ public class BankMasterController implements Initializable {
     @FXML private void handleAdd() {
         editingId = null; bankNameField.clear(); shortNameField.clear(); accNoField.clear();
         branchField.clear(); ifscField.clear(); remarksField.clear();
-        formPane.setVisible(true); formPane.setManaged(true);
+        table.getSelectionModel().clearSelection();
     }
 
-    @FXML private void handleEdit(BankMaster b) {
-        editingId = b.getId(); bankNameField.setText(b.getBankName()); shortNameField.setText(b.getBankShortName());
-        accNoField.setText(b.getAccountNumber()); branchField.setText(b.getBranch());
-        ifscField.setText(b.getIfscCode()); remarksField.setText(b.getRemarks());
-        formPane.setVisible(true); formPane.setManaged(true);
+    @FXML private void handleModify() {
+        BankMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to modify.", Alert.AlertType.WARNING);
+            return;
+        }
+        populateForm(selected);
+    }
+
+    @FXML private void handleDeleteSelected() {
+        BankMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to delete.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleDelete(selected);
     }
 
     @FXML private void handleSave() {
@@ -104,16 +116,25 @@ public class BankMasterController implements Initializable {
             b.setAccountNumber(accNoField.getText().trim()); b.setBranch(branchField.getText().trim());
             b.setIfscCode(ifscField.getText().trim()); b.setRemarks(remarksField.getText().trim());
             if (editingId != null) service.update(editingId, b); else service.create(b);
-            formPane.setVisible(false); formPane.setManaged(false); loadData();
+            handleAdd();
+            loadData();
         } catch (Exception e) { showAlert("Error", e.getMessage(), Alert.AlertType.ERROR); }
     }
 
-    @FXML private void handleCancel() { formPane.setVisible(false); formPane.setManaged(false); }
+    @FXML private void handleCancel() {
+        handleAdd();
+    }
 
     private void handleDelete(BankMaster b) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setContentText("Delete bank: " + b.getBankName() + "?");
-        confirm.showAndWait().ifPresent(r -> { if (r == ButtonType.OK) { service.softDelete(b.getId()); loadData(); } });
+        confirm.setContentText("Are you sure you want to delete bank: " + b.getBankName() + "?");
+        confirm.showAndWait().ifPresent(r -> {
+            if (r == ButtonType.OK) {
+                service.softDelete(b.getId());
+                handleAdd();
+                loadData();
+            }
+        });
     }
 
     private void showAlert(String t, String m, Alert.AlertType ty) {

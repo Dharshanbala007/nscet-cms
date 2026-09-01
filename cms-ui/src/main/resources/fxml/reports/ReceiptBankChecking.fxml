@@ -5,35 +5,58 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.ReceiptBankCheckingController"
-      styleClass="master-container" spacing="10">
-    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-    
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <Label text="Receipt Bank Checking" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Print / Export" styleClass="btn-secondary" onAction="#handleExport"/>
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
+
+    <!-- Title Header matching media_1788248884454.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Receipts &amp; bank account Checking" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
     </HBox>
 
-    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="form-container">
-        <padding><Insets top="10" right="15" bottom="10" left="15"/></padding>
-        <Label text="Bank Account:"/>
-        <ComboBox fx:id="bankAccountCombo" prefWidth="220"/>
-        <Label text="From Date:"/>
-        <DatePicker fx:id="fromDate" prefWidth="120"/>
-        <Label text="To Date:"/>
-        <DatePicker fx:id="toDate" prefWidth="120"/>
-        <Button text="Verify &amp; Search" styleClass="btn-primary" onAction="#handleGenerate"/>
-    </HBox>
+    <!-- Top Control Bar matching media_1788248884454.png -->
+    <VBox spacing="8" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <fx:define>
+            <ToggleGroup fx:id="periodGroup"/>
+        </fx:define>
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <RadioButton fx:id="dayWiseRadio" text="Day wise" selected="true" toggleGroup="$periodGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <RadioButton fx:id="monthWiseRadio" text="Month wise" toggleGroup="$periodGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            <ComboBox fx:id="selectCombo" prefWidth="140" promptText="Select"/>
+        </HBox>
 
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="From Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="fromDate" prefWidth="125"/>
+            
+            <Label text="To Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="toDate" prefWidth="125"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button text="View" styleClass="btn-primary" prefWidth="80" onAction="#handleGenerate"/>
+            <Button text="Print" styleClass="btn-secondary" prefWidth="80" onAction="#handleExport"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table View matching media_1788248884454.png -->
     <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="receiptNoCol" text="Receipt No" prefWidth="160"/>
-            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="110"/>
-            <TableColumn fx:id="bankNameCol" text="Bank Account Name" prefWidth="180"/>
-            <TableColumn fx:id="accountNoCol" text="Account No" prefWidth="160"/>
-            <TableColumn fx:id="paymentModeCol" text="Payment Mode" prefWidth="120"/>
-            <TableColumn fx:id="amountCol" text="Total Amount (₹)" prefWidth="140"/>
-            <TableColumn fx:id="statusCol" text="Status" prefWidth="110"/>
+            <TableColumn fx:id="receiptDateCol" text="Date" prefWidth="140"/>
+            <TableColumn fx:id="receiptAmountCol" text="Receipt Amount" prefWidth="220"/>
+            <TableColumn fx:id="bankDateCol" text="Date" prefWidth="140"/>
+            <TableColumn fx:id="bankAmountCol" text="Bank Amount" prefWidth="220"/>
         </columns>
     </TableView>
+
+    <!-- Bottom Total Summary Bar matching media_1788248884454.png -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="Total Receipt:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 12px;"/>
+            <TextField fx:id="totalReceiptField" editable="false" prefWidth="160" text="0.00" style="-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT;"/>
+        </HBox>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="Total Bank Deposit:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 12px;"/>
+            <TextField fx:id="totalBankDepositField" editable="false" prefWidth="160" text="0.00" style="-fx-font-weight: bold; -fx-alignment: CENTER-RIGHT;"/>
+        </HBox>
+    </HBox>
 </VBox>

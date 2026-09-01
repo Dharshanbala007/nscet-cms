@@ -8,64 +8,100 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header -->
+    <!-- Module Header -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Increment &amp; Revised Salary Details" styleClass="module-title"/>
+        <Label text="Increment / Revised Salary Details" styleClass="module-title"/>
     </HBox>
 
-    <!-- Increment Log Table -->
-    <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="220" styleClass="data-table">
+    <!-- Table View -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS" prefHeight="180" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colEffDate" text="Effective Date" prefWidth="120"/>
-            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="180"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="140"/>
-            <TableColumn fx:id="colOldBasic" text="Old Basic Pay" prefWidth="110"/>
-            <TableColumn fx:id="colNewBasic" text="New Basic Pay" prefWidth="110"/>
-            <TableColumn fx:id="colIncrement" text="Increment (₹)" prefWidth="110"/>
-            <TableColumn fx:id="colNewGross" text="New Gross Pay" prefWidth="120"/>
-            <TableColumn fx:id="colRemarks" text="Remarks" prefWidth="200"/>
+            <TableColumn fx:id="colEffDate" text="Eff. From Date" prefWidth="110"/>
+            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="95"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="170"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="130"/>
+            <TableColumn fx:id="colOldBasic" text="Basic Pay" prefWidth="95"/>
+            <TableColumn fx:id="colOldGross" text="Gross Salary" prefWidth="105"/>
+            <TableColumn fx:id="colIncrement" text="Increment" prefWidth="95"/>
+            <TableColumn fx:id="colNewSalary" text="New Salary" prefWidth="105"/>
         </columns>
     </TableView>
 
-    <!-- Apply Increment Form -->
-    <TitledPane text="Apply Salary Increment / Pay Revision" expanded="true">
-        <VBox spacing="10">
-            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <!-- Increment / Revised Salary Details Dialog Box -->
+    <TitledPane text="Increment / Revised Salary Details" expanded="true">
+        <VBox spacing="12">
+            <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
 
             <GridPane hgap="15" vgap="8">
                 <columnConstraints>
-                    <ColumnConstraints minWidth="120" prefWidth="130"/>
-                    <ColumnConstraints minWidth="200" prefWidth="210"/>
-                    <ColumnConstraints minWidth="120" prefWidth="130"/>
-                    <ColumnConstraints minWidth="200" prefWidth="210"/>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints minWidth="200" prefWidth="220"/>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints minWidth="200" prefWidth="220"/>
                 </columnConstraints>
 
-                <Label text="Staff Member:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <ComboBox fx:id="staffCombo" prefWidth="210" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <!-- Row 0 -->
+                <Label text="Staff Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="nameField" promptText="Select or enter staff name..." GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                <Label text="Effective Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                <DatePicker fx:id="datePicker" prefWidth="210" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                <Label text="Category:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <TextField fx:id="categoryField" promptText="e.g. Teaching" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
-                <Label text="Old Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="oldBasicField" editable="false" style="-fx-background-color: #f1f5f9;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <!-- Row 1 -->
+                <Label text="Staff Code:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="codeField" promptText="e.g. CS10" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                <Label text="New Basic Pay:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                <TextField fx:id="newBasicField" promptText="Enter revised basic..." GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label text="Department:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="departmentField" promptText="e.g. CSE" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                <Label text="Old Special Allw:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="oldSplField" editable="false" style="-fx-background-color: #f1f5f9;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <!-- Row 2 -->
+                <Label text="Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="basicPayField" promptText="15000.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                <Label text="New Special Allw:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                <TextField fx:id="newSplField" promptText="Enter revised special allw..." GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                <Label text="HRA:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="hraField" promptText="12000.00" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
-                <Label text="Remarks / Reason:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <TextField fx:id="remarksField" promptText="Appraisal 2026 / Promotion" prefWidth="210" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+                <!-- Row 3 -->
+                <Label text="Spl.Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="splAllowanceField" promptText="21000.00" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Gross Salary:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                <TextField fx:id="grossSalaryField" promptText="48000.00" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+                <!-- Row 4 -->
+                <Label text="Revised Salary:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="revisedSalaryField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="Increment:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="incrementField" promptText="2000.00" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+                <!-- Row 5 -->
+                <Label text="Eff.From Date:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <DatePicker fx:id="effFromDatePicker" prefWidth="220" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="New Salary:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                <TextField fx:id="newSalaryField" promptText="50000.00" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+
+                <!-- Row 6 -->
+                <Label text="Basic Pay:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <TextField fx:id="newBasicPayField" promptText="New Basic Pay" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                <Label text="HRA:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                <TextField fx:id="newHraField" promptText="New HRA" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+
+                <!-- Row 7 -->
+                <Label text="Spl.Allowance:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <TextField fx:id="newSplAllowanceField" promptText="New Spl. Allowance" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
             </GridPane>
 
-            <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Button text="Clear" styleClass="btn-secondary" onAction="#handleClear"/>
-                <Button text="Apply Increment" styleClass="btn-primary" onAction="#handleApply"/>
+            <!-- Bottom Action Buttons matching screenshot template -->
+            <HBox spacing="8" alignment="CENTER" style="-fx-padding: 8 0 0 0;">
+                <Button text="Add" minWidth="80" styleClass="btn-secondary" onAction="#handleAdd"/>
+                <Button text="Modify" minWidth="80" styleClass="btn-secondary" onAction="#handleModify"/>
+                <Button text="Delete" minWidth="80" styleClass="btn-danger" onAction="#handleDelete"/>
+                <Button text="Save" minWidth="80" styleClass="btn-primary" onAction="#handleSave"/>
+                <Button text="Cancel" minWidth="80" styleClass="btn-secondary" onAction="#handleCancel"/>
+                <Button text="Close" minWidth="80" styleClass="btn-secondary" onAction="#handleClose"/>
             </HBox>
         </VBox>
     </TitledPane>

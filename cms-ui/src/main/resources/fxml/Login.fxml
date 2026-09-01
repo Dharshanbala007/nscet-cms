@@ -3,58 +3,101 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
 
-<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.nscet.cms.ui.controller.LoginController"
-           styleClass="login-container">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.LoginController"
+      styleClass="login-container" alignment="TOP_CENTER" spacing="0">
 
-    <VBox alignment="CENTER" spacing="20" maxWidth="400" maxHeight="500" styleClass="login-card">
-        <padding>
-            <Insets top="40" right="40" bottom="40" left="40"/>
-        </padding>
+    <!-- Top College Real Header Layout -->
+    <HBox alignment="CENTER" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 8 25 8 25; -fx-border-color: #cbd5e1; -fx-border-width: 0 0 1 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);" maxWidth="Infinity">
+        <!-- Left College Logo -->
+        <ImageView fitHeight="72" preserveRatio="true">
+            <image>
+                <Image url="@/images/college_logo_left.png"/>
+            </image>
+        </ImageView>
 
-        <!-- Header -->
-        <VBox alignment="CENTER" spacing="5">
-            <Label text="NSCET" styleClass="login-title"/>
-            <Label text="College Management System" styleClass="login-subtitle"/>
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Center College Text Header -->
+        <VBox alignment="CENTER" spacing="2">
+            <Label text="Theni Melapettai Hindu Nadargal Uravinmurai" 
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #991b1b; -fx-font-style: italic;"/>
+            
+            <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING &amp; TECHNOLOGY" 
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
+            
+            <Label text="Approved by AICTE, New Delhi | Affiliated to Anna University, Chennai" 
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10.5px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            
+            <Label text="Accredited by NAAC with 'A' Grade | Recognized under Section 2(f) | ISO 9001:2015 Certified Institution" 
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
+            
+            <Label text="Vadapudupatti, Annanji (P.O), Theni - 625 531" 
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
         </VBox>
 
-        <!-- Form -->
-        <VBox alignment="CENTER" spacing="15">
-            <TextField fx:id="usernameField" promptText="Username" styleClass="login-input"
-                       onAction="#handleLogin"/>
+        <Region HBox.hgrow="ALWAYS"/>
 
-            <StackPane>
-                <PasswordField fx:id="passwordField" promptText="Password" styleClass="login-input"
-                               onAction="#handleLogin" visible="true" managed="true"/>
-                <TextField fx:id="passwordTextField" promptText="Password" styleClass="login-input"
-                           onAction="#handleLogin" visible="false" managed="false"/>
-                <ToggleButton fx:id="togglePasswordBtn" onAction="#handleTogglePassword"
-                        styleClass="toggle-password-btn" maxWidth="36" maxHeight="36"
-                        StackPane.alignment="CENTER_RIGHT">
-                    <graphic>
-                        <Label fx:id="togglePasswordIcon" text="&#x25CF;">
-                        </Label>
-                    </graphic>
-                </ToggleButton>
-            </StackPane>
+        <!-- Right Kamarajar / TMHNU Logo -->
+        <ImageView fitHeight="72" preserveRatio="true">
+            <image>
+                <Image url="@/images/college_logo_right.png"/>
+            </image>
+        </ImageView>
+    </HBox>
 
-            <HBox alignment="CENTER_LEFT">
-                <CheckBox fx:id="rememberUsernameCheck" text="Remember username" styleClass="remember-check"/>
-            </HBox>
+    <!-- Centered Login Card Area -->
+    <StackPane VBox.vgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="20" maxWidth="400" maxHeight="500" styleClass="login-card">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
 
-            <Label fx:id="errorLabel" styleClass="error-label" visible="false" wrapText="true"/>
+            <!-- Header -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="NSCET" styleClass="login-title"/>
+                <Label text="College Management System" styleClass="login-subtitle"/>
+            </VBox>
 
-            <Button fx:id="loginButton" text="LOGIN" styleClass="login-button"
-                    onAction="#handleLogin" maxWidth="Infinity"/>
+            <!-- Form -->
+            <VBox alignment="CENTER" spacing="15">
+                <TextField fx:id="usernameField" promptText="Username" styleClass="login-input"
+                           onAction="#handleLogin"/>
 
-            <ProgressIndicator fx:id="progressIndicator" maxHeight="30"/>
+                <StackPane>
+                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="login-input"
+                                   onAction="#handleLogin" visible="true" managed="true"/>
+                    <TextField fx:id="passwordTextField" promptText="Password" styleClass="login-input"
+                               onAction="#handleLogin" visible="false" managed="false"/>
+                    <ToggleButton fx:id="togglePasswordBtn" onAction="#handleTogglePassword"
+                            styleClass="toggle-password-btn" maxWidth="36" maxHeight="36"
+                            StackPane.alignment="CENTER_RIGHT">
+                        <graphic>
+                            <Label fx:id="togglePasswordIcon" text="&#x25CF;">
+                            </Label>
+                        </graphic>
+                    </ToggleButton>
+                </StackPane>
+
+                <HBox alignment="CENTER_LEFT">
+                    <CheckBox fx:id="rememberUsernameCheck" text="Remember username" styleClass="remember-check"/>
+                </HBox>
+
+                <Label fx:id="errorLabel" styleClass="error-label" visible="false" wrapText="true"/>
+
+                <Button fx:id="loginButton" text="LOGIN" styleClass="login-button"
+                        onAction="#handleLogin" maxWidth="Infinity"/>
+
+                <ProgressIndicator fx:id="progressIndicator" maxHeight="30"/>
+            </VBox>
+
+            <!-- Footer -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Nadar Saraswathi College of Engineering and Technology" styleClass="footer-text"/>
+                <Label text="Theni" styleClass="footer-text"/>
+            </VBox>
         </VBox>
-
-        <!-- Footer -->
-        <VBox alignment="CENTER" spacing="5">
-            <Label text="Nadar Saraswathi College of Engineering and Technology" styleClass="footer-text"/>
-            <Label text="Theni" styleClass="footer-text"/>
-        </VBox>
-    </VBox>
-</StackPane>
+    </StackPane>
+</VBox>

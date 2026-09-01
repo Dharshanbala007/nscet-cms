@@ -29,14 +29,15 @@ public class FeeCollectionController implements Initializable {
 
     // Top Controls
     @FXML private RadioButton currentRadio, passedOutRadio, staffRadio, miscRadio;
-    @FXML private DatePicker receiptDatePicker;
-    @FXML private TextField pendingFeesTotalField;
+    @FXML private DatePicker receiptDatePicker, dueDatePicker, extDueDatePicker;
+    @FXML private TextField pendingFeesTotalField, fineCalculationField;
     @FXML private ComboBox<String> baseAccountCombo, payTypeCombo, receiptTypeCombo;
 
     // Left Student Details Fields
     @FXML private TextField periodField, receiptNoField, degreeField, studentNameField;
     @FXML private TextField studentSearchField, deptField, regNoField, semField;
-    @FXML private TextField casteField, adNoField;
+    @FXML private TextField casteField, adNoField, quotaField;
+    @FXML private TextField busStopField, busRouteField;
 
     // Left Particulars Table
     @FXML private TableView<ParticularStructItem> particularsTable;
@@ -95,6 +96,16 @@ public class FeeCollectionController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         receiptDatePicker.setValue(LocalDate.now());
+        if (dueDatePicker != null) dueDatePicker.setValue(LocalDate.now().minusDays(15)); // Default 15 days overdue for fine demo
+        if (extDueDatePicker != null) extDueDatePicker.setValue(null);
+
+        if (dueDatePicker != null) dueDatePicker.valueProperty().addListener((obs, oldV, newV) -> refreshPendingIfStudent());
+        if (extDueDatePicker != null) extDueDatePicker.valueProperty().addListener((obs, oldV, newV) -> refreshPendingIfStudent());
+        if (receiptDatePicker != null) receiptDatePicker.valueProperty().addListener((obs, oldV, newV) -> refreshPendingIfStudent());
+
+        if (fineCalculationField != null) {
+            fineCalculationField.setText(getFineCalculationSummary());
+        }
 
         baseAccountCombo.getItems().addAll("Cash", "Federal Bank", "TMB Exam Fee");
         baseAccountCombo.getSelectionModel().selectFirst();
@@ -117,6 +128,39 @@ public class FeeCollectionController implements Initializable {
         } catch (Exception e) {
             System.err.println("[FeeCollectionController] Pre-load student error: " + e.getMessage());
         }
+    }
+
+    private void refreshPendingIfStudent() {
+        if (fineCalculationField != null) {
+            fineCalculationField.setText(getFineCalculationSummary());
+        }
+        if (selectedStudent != null) {
+            loadPendingData(currentStudentSem, calculatePaidAmountsForStudent(selectedStudent.getId()));
+        }
+    }
+
+    private String getFineCalculationSummary() {
+        LocalDate receiptDate = receiptDatePicker != null && receiptDatePicker.getValue() != null ? receiptDatePicker.getValue() : LocalDate.now();
+        LocalDate dueDate = dueDatePicker != null && dueDatePicker.getValue() != null ? dueDatePicker.getValue() : LocalDate.now().minusDays(15);
+        LocalDate extDueDate = extDueDatePicker != null ? extDueDatePicker.getValue() : null;
+
+        if (extDueDate != null && !receiptDate.isAfter(extDueDate)) {
+            return String.format("₹0 (Paused via Extension Letter until %s)", extDueDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        }
+
+        LocalDate effectiveDueDate = (extDueDate != null) ? extDueDate : dueDate;
+        if (effectiveDueDate != null && receiptDate.isAfter(effectiveDueDate)) {
+            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(effectiveDueDate, receiptDate);
+            if (daysOverdue > 0) {
+                long fineAmt = daysOverdue * 50;
+                if (extDueDate != null) {
+                    return String.format("₹%d (%d Overdue Days past Extension Date)", fineAmt, daysOverdue);
+                } else {
+                    return String.format("₹%d (%d Overdue Days @ ₹50/day)", fineAmt, daysOverdue);
+                }
+            }
+        }
+        return "₹0 (No Overdue)";
     }
 
     private void setupTableColumns() {
@@ -142,12 +186,15 @@ public class FeeCollectionController implements Initializable {
         try {
             allFees = feesService.getAllActiveList();
             feeNameCombo.getItems().clear();
+            feeNameCombo.getItems().add("Fine");
             for (FeesMaster fee : allFees) {
-                feeNameCombo.getItems().add(fee.getName());
+                if (!feeNameCombo.getItems().contains(fee.getName())) {
+                    feeNameCombo.getItems().add(fee.getName());
+                }
             }
             feeNameCombo.getSelectionModel().selectFirst();
         } catch (Exception e) {
-            feeNameCombo.getItems().setAll("Tuition Fee", "Other fee", "Bus Fees", "Lab Fee", "Exam Fee");
+            feeNameCombo.getItems().setAll("Fine", "Tuition Fee", "Other fee", "Bus Fees", "Lab Fee", "Exam Fee");
             feeNameCombo.getSelectionModel().selectFirst();
         }
     }
@@ -191,7 +238,18 @@ public class FeeCollectionController implements Initializable {
         studentSearchField.setText(s.getRollNumber() != null ? s.getRollNumber() : "2025FCS044");
         regNoField.setText(s.getRegistrationNo() != null ? s.getRegistrationNo() : "921025104005");
         casteField.setText(s.getCommunity() != null ? s.getCommunity() : "BC");
-        deptField.setText(s.getAdmissionType() != null ? s.getAdmissionType() : "CSE");
+        
+        if (s.getDepartment() != null) {
+            deptField.setText(s.getDepartment().getShortName() != null ? s.getDepartment().getShortName() : s.getDepartment().getName());
+        } else {
+            deptField.setText(s.getRegion() != null ? s.getRegion() : "COMPUTER SCIENCE AND ENGINEERING");
+        }
+
+        degreeField.setText(s.getMedium() != null ? s.getMedium() : "B.E");
+        adNoField.setText(s.getCaste() != null ? s.getCaste() : "Fresh");
+        if (quotaField != null) quotaField.setText(s.getAdmissionType() != null ? s.getAdmissionType() : "Government");
+        if (busRouteField != null) busRouteField.setText(s.getTransportType() != null ? s.getTransportType() : "ROUTE 4 - THENI");
+        if (busStopField != null) busStopField.setText(s.getBusStop() != null ? s.getBusStop() : "CHINNAMANUR");
 
         // Determine current student semester (default sem 3)
         long id = s.getId() != null ? s.getId() : 3;
@@ -221,6 +279,12 @@ public class FeeCollectionController implements Initializable {
     private void loadParticularsData(Map<String, BigDecimal> paidMap) {
         particularsList.clear();
 
+        BigDecimal fineAmt = calculateFineAmount();
+        BigDecimal finePaid = paidMap.getOrDefault("Fine", BigDecimal.ZERO);
+        if (fineAmt.compareTo(BigDecimal.ZERO) > 0 || finePaid.compareTo(BigDecimal.ZERO) > 0) {
+            structAdd("Fine (Late Fee - ₹50/day)", fineAmt, finePaid);
+        }
+
         structAdd("Tuition Fee", new BigDecimal("50000"), paidMap.getOrDefault("Tuition Fee", BigDecimal.ZERO));
         structAdd("Development Fee", new BigDecimal("0"), paidMap.getOrDefault("Development Fee", BigDecimal.ZERO));
         structAdd("Other fee", new BigDecimal("4600"), new BigDecimal("4000").add(paidMap.getOrDefault("Other fee", BigDecimal.ZERO)));
@@ -233,16 +297,17 @@ public class FeeCollectionController implements Initializable {
         structAdd("Uniform - Boys", new BigDecimal("1800"), paidMap.getOrDefault("Uniform - Boys", BigDecimal.ZERO));
         structAdd("Sports Day & Other", new BigDecimal("3000"), new BigDecimal("3000"));
 
-        BigDecimal totalStruct = new BigDecimal("69540");
+        BigDecimal totalStructSum = BigDecimal.ZERO;
         BigDecimal totalPaidSum = BigDecimal.ZERO;
         for (ParticularStructItem item : particularsList) {
             try {
+                totalStructSum = totalStructSum.add(new BigDecimal(item.getAmount()));
                 totalPaidSum = totalPaidSum.add(new BigDecimal(item.getPaid()));
             } catch (Exception ignored) {}
         }
 
-        totalStructAmtField.setText(totalStruct.toPlainString());
-        totalStructPaidField.setText(totalPaidSum.toPlainString());
+        totalStructAmtField.setText(totalStructSum.setScale(0, RoundingMode.HALF_UP).toPlainString());
+        totalStructPaidField.setText(totalPaidSum.setScale(0, RoundingMode.HALF_UP).toPlainString());
     }
 
     private void structAdd(String name, BigDecimal structAmt, BigDecimal paidAmt) {
@@ -253,9 +318,39 @@ public class FeeCollectionController implements Initializable {
         ));
     }
 
+    private BigDecimal calculateFineAmount() {
+        LocalDate receiptDate = receiptDatePicker != null && receiptDatePicker.getValue() != null ? receiptDatePicker.getValue() : LocalDate.now();
+        LocalDate dueDate = dueDatePicker != null && dueDatePicker.getValue() != null ? dueDatePicker.getValue() : LocalDate.now().minusDays(15);
+        LocalDate extDueDate = extDueDatePicker != null ? extDueDatePicker.getValue() : null;
+
+        // Due date extension check: If student requested extension and current receipt date <= extDueDate, FINE IS HELD (₹0)
+        if (extDueDate != null && !receiptDate.isAfter(extDueDate)) {
+            return BigDecimal.ZERO;
+        }
+
+        if (dueDate != null && receiptDate.isAfter(dueDate)) {
+            long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(dueDate, receiptDate);
+            if (daysOverdue > 0) {
+                return BigDecimal.valueOf(daysOverdue * 50); // ₹50 fine per day overdue
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
     private void loadPendingData(int targetSem, Map<String, BigDecimal> paidMap) {
         pendingList.clear();
         BigDecimal totalPendingSum = BigDecimal.ZERO;
+
+        // Priority 1 Fine Item (Auto-calculated: ₹50/day past due date unless extended)
+        BigDecimal fineAmt = calculateFineAmount();
+        BigDecimal finePaid = paidMap.getOrDefault("Fine", BigDecimal.ZERO);
+        BigDecimal finePending = fineAmt.subtract(finePaid);
+        if (finePending.compareTo(BigDecimal.ZERO) < 0) finePending = BigDecimal.ZERO;
+
+        if (finePending.compareTo(BigDecimal.ZERO) > 0) {
+            pendingList.add(new PendingPartItem(String.valueOf(targetSem), "Fine (Late Fee - ₹50/day)", finePending.setScale(0, RoundingMode.HALF_UP).toPlainString(), "1"));
+            totalPendingSum = totalPendingSum.add(finePending);
+        }
 
         // Sem 1 Pending Items
         if (targetSem >= 1) {
@@ -313,13 +408,6 @@ public class FeeCollectionController implements Initializable {
                 totalPendingSum = totalPendingSum.add(placementPending);
             }
 
-            BigDecimal profBase = new BigDecimal("500");
-            BigDecimal profPending = profBase;
-            if (profPending.compareTo(BigDecimal.ZERO) > 0) {
-                pendingList.add(new PendingPartItem("3", "Professional Society", profPending.toPlainString(), "3"));
-                totalPendingSum = totalPendingSum.add(profPending);
-            }
-
             BigDecimal busBase = new BigDecimal("3740");
             BigDecimal busPaid = paidMap.getOrDefault("Bus Fees", BigDecimal.ZERO);
             BigDecimal busPending = busBase.subtract(busPaid);
@@ -359,48 +447,88 @@ public class FeeCollectionController implements Initializable {
 
     @FXML
     private void handleAutoAllocate() {
-        String amountText = amountField.getText().trim();
+        String amountText = amountField.getText().trim().replaceAll("[^0-9.]", "");
         if (amountText.isEmpty()) return;
 
         try {
-            BigDecimal totalAmount = new BigDecimal(amountText);
-            runningTotal = totalAmount;
+            BigDecimal totalPayment = new BigDecimal(amountText);
+            runningTotal = totalPayment;
             runningTotalLabelField.setText(String.format("₹%.2f", runningTotal));
-            amountPaidField.setText(totalAmount.toPlainString());
+            amountPaidField.setText(totalPayment.toPlainString());
 
             items.clear();
+            BigDecimal remaining = totalPayment;
 
-            // PROPORTIONAL PERCENTAGE SPLIT (50% Other Fees, 30% Bus Fee, 20% Tuition Fee)
-            BigDecimal otherAllocated = totalAmount.multiply(new BigDecimal("0.50")).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal busAllocated = totalAmount.multiply(new BigDecimal("0.30")).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal tuitionAllocated = totalAmount.subtract(otherAllocated).subtract(busAllocated);
+            // Calculate current pending balances
+            BigDecimal pendingFine = calculateFineAmount();
+            BigDecimal pendingOthers = new BigDecimal("3800"); // Combined pending other fees (Placement, Lab, Uniform, Other fee)
+            BigDecimal pendingTuition = new BigDecimal("50000");
+            BigDecimal pendingBus = new BigDecimal("3740");
 
-            if (otherAllocated.compareTo(BigDecimal.ZERO) > 0) {
-                FeeReceiptItem other = new FeeReceiptItem();
-                other.setAllocatedTo("Other fee");
-                other.setAmount(otherAllocated);
-                items.add(other);
+            // PRIORITY 1: FINE
+            BigDecimal fineAllocated = BigDecimal.ZERO;
+            if (pendingFine.compareTo(BigDecimal.ZERO) > 0 && remaining.compareTo(BigDecimal.ZERO) > 0) {
+                fineAllocated = remaining.min(pendingFine);
+                remaining = remaining.subtract(fineAllocated);
+
+                FeeReceiptItem fineItem = new FeeReceiptItem();
+                fineItem.setAllocatedTo("Fine");
+                fineItem.setAmount(fineAllocated);
+                items.add(fineItem);
             }
-            if (busAllocated.compareTo(BigDecimal.ZERO) > 0) {
-                FeeReceiptItem bus = new FeeReceiptItem();
-                bus.setAllocatedTo("Bus Fees");
-                bus.setAmount(busAllocated);
-                items.add(bus);
+
+            // PRIORITY 2: OTHERS (Other Fees)
+            BigDecimal othersAllocated = BigDecimal.ZERO;
+            if (pendingOthers.compareTo(BigDecimal.ZERO) > 0 && remaining.compareTo(BigDecimal.ZERO) > 0) {
+                othersAllocated = remaining.min(pendingOthers);
+                remaining = remaining.subtract(othersAllocated);
+
+                FeeReceiptItem othersItem = new FeeReceiptItem();
+                othersItem.setAllocatedTo("Other fee");
+                othersItem.setAmount(othersAllocated);
+                items.add(othersItem);
             }
-            if (tuitionAllocated.compareTo(BigDecimal.ZERO) > 0) {
-                FeeReceiptItem tuition = new FeeReceiptItem();
-                tuition.setAllocatedTo("Tuition Fee");
-                tuition.setAmount(tuitionAllocated);
-                items.add(tuition);
+
+            // PRIORITY 3: TUITION (Tuition Fee)
+            BigDecimal tuitionAllocated = BigDecimal.ZERO;
+            if (pendingTuition.compareTo(BigDecimal.ZERO) > 0 && remaining.compareTo(BigDecimal.ZERO) > 0) {
+                tuitionAllocated = remaining.min(pendingTuition);
+                remaining = remaining.subtract(tuitionAllocated);
+
+                FeeReceiptItem tuitionItem = new FeeReceiptItem();
+                tuitionItem.setAllocatedTo("Tuition Fee");
+                tuitionItem.setAmount(tuitionAllocated);
+                items.add(tuitionItem);
+            }
+
+            // PRIORITY 4: BUS FEE
+            BigDecimal busAllocated = BigDecimal.ZERO;
+            if (pendingBus.compareTo(BigDecimal.ZERO) > 0 && remaining.compareTo(BigDecimal.ZERO) > 0) {
+                busAllocated = remaining.min(pendingBus);
+                remaining = remaining.subtract(busAllocated);
+
+                FeeReceiptItem busItem = new FeeReceiptItem();
+                busItem.setAllocatedTo("Bus Fees");
+                busItem.setAmount(busAllocated);
+                items.add(busItem);
+            }
+
+            // REMAINING BALANCE -> ADVANCE
+            if (remaining.compareTo(BigDecimal.ZERO) > 0) {
+                advanceField.setText(remaining.toPlainString());
+            } else {
+                advanceField.setText("0");
             }
 
             Alert info = new Alert(Alert.AlertType.INFORMATION);
-            info.setTitle("Proportional Priority Split");
-            info.setHeaderText("Payment of ₹" + totalAmount + " Allocated");
+            info.setTitle("Strict Priority Fee Allocation");
+            info.setHeaderText("Payment of ₹" + totalPayment + " Allocated Successfully");
             info.setContentText(
-                "• Priority 1 (Other Fees - 50%): ₹" + String.format("%.2f", otherAllocated) + "\n" +
-                "• Priority 2 (Bus Fee - 30%): ₹" + String.format("%.2f", busAllocated) + "\n" +
-                "• Priority 3 (Tuition Fee - 20%): ₹" + String.format("%.2f", tuitionAllocated)
+                "1. Fine (Priority 1): ₹" + String.format("%.2f", fineAllocated) + "\n" +
+                "2. Others (Priority 2): ₹" + String.format("%.2f", othersAllocated) + "\n" +
+                "3. Tuition Fee (Priority 3): ₹" + String.format("%.2f", tuitionAllocated) + "\n" +
+                "4. Bus Fee (Priority 4): ₹" + String.format("%.2f", busAllocated) + "\n" +
+                "5. Excess to Advance: ₹" + String.format("%.2f", remaining)
             );
             info.showAndWait();
         } catch (Exception e) {
@@ -410,9 +538,10 @@ public class FeeCollectionController implements Initializable {
 
     @FXML
     private void handleManualAdd() {
-        if (feeNameCombo.getValue() == null || amountField.getText().trim().isEmpty()) return;
+        String cleanAmt = amountField.getText().trim().replaceAll("[^0-9.]", "");
+        if (feeNameCombo.getValue() == null || cleanAmt.isEmpty()) return;
         try {
-            BigDecimal amt = new BigDecimal(amountField.getText().trim());
+            BigDecimal amt = new BigDecimal(cleanAmt);
             FeeReceiptItem item = new FeeReceiptItem();
             item.setAllocatedTo(feeNameCombo.getValue());
             item.setAmount(amt);
@@ -508,16 +637,26 @@ public class FeeCollectionController implements Initializable {
             params.put("AMOUNT_IN_WORDS", numberToWords(totalAmt));
             params.put("REMARKS", fr.getPaymentMode() != null ? fr.getPaymentMode() : "-");
 
-            List<com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto> itemsList = new ArrayList<>();
+            List<Map<String, Object>> itemsList = new ArrayList<>();
             if (fr.getItems() != null && !fr.getItems().isEmpty()) {
                 int i = 1;
                 for (FeeReceiptItem item : fr.getItems()) {
                     String name = item.getFeesName() != null ? item.getFeesName().getName() : "College Fee";
                     BigDecimal amt = item.getAmount() != null ? item.getAmount() : BigDecimal.ZERO;
-                    itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(i++, "1", name, amt));
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("sNo", i++);
+                    map.put("semester", "1");
+                    map.put("particulars", name);
+                    map.put("amount", amt);
+                    itemsList.add(map);
                 }
             } else {
-                itemsList.add(new com.nscet.cms.ui.controller.ReceiptReprintController.ReceiptPrintItemDto(1, "1", "Tuition Fee", totalAmt));
+                Map<String, Object> map = new HashMap<>();
+                map.put("sNo", 1);
+                map.put("semester", "1");
+                map.put("particulars", "Tuition Fee");
+                map.put("amount", totalAmt);
+                itemsList.add(map);
             }
 
             com.nscet.cms.reports.ReportManager.printReport("FeeReceipt", itemsList, params);

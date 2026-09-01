@@ -22,73 +22,93 @@
         <Button text="Exit" styleClass="btn-secondary" onAction="#handleClear"/>
     </HBox>
 
-    <!-- Top Control Bar -->
-    <HBox style="-fx-background-color: #ffffff; -fx-padding: 6 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Receipt Date:"/>
-        <DatePicker fx:id="receiptDatePicker" prefWidth="130"/>
-        <Label text="Pending Fees:"/>
-        <TextField fx:id="pendingFeesTotalField" editable="false" prefWidth="100" text="0" style="-fx-font-weight: bold;"/>
+    <!-- Top Control Bar with Explicit Fine Calculation Display -->
+    <HBox style="-fx-background-color: #ffffff; -fx-padding: 6 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;" alignment="CENTER_LEFT" spacing="8">
+        <Label text="Receipt Date:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <DatePicker fx:id="receiptDatePicker" prefWidth="110"/>
+        
+        <Label text="Due Date:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <DatePicker fx:id="dueDatePicker" prefWidth="110"/>
+        
+        <Label text="Ext. Due Date:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <DatePicker fx:id="extDueDatePicker" prefWidth="110" promptText="Extension Date"/>
+
+        <Label text="Fine Calculation:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #c2410c;"/>
+        <TextField fx:id="fineCalculationField" editable="false" prefWidth="230" text="₹750 (15 Overdue Days @ ₹50/day)" style="-fx-font-weight: bold; -fx-text-fill: #c2410c; -fx-background-color: #fff7ed; -fx-border-color: #fdba74;"/>
+
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Bank A/C:"/>
-        <ComboBox fx:id="baseAccountCombo" prefWidth="140"/>
-        <Label text="Pay Type:"/>
-        <ComboBox fx:id="payTypeCombo" prefWidth="140"/>
+        
+        <Label text="Pending Fees:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <TextField fx:id="pendingFeesTotalField" editable="false" prefWidth="80" text="0" style="-fx-font-weight: bold; -fx-text-fill: #b91c1c;"/>
+        
+        <Label text="Bank A/C:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <ComboBox fx:id="baseAccountCombo" prefWidth="105"/>
+        
+        <Label text="Pay Type:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e293b;"/>
+        <ComboBox fx:id="payTypeCombo" prefWidth="90"/>
     </HBox>
 
     <!-- Main 3-Column Layout -->
     <HBox spacing="10" VBox.vgrow="ALWAYS">
 
         <!-- COLUMN 1: LEFT PANEL (Student Info, Particulars Table, Semester Grid) -->
-        <VBox spacing="8" prefWidth="380" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
-            <GridPane hgap="8" vgap="4">
+        <VBox spacing="8" prefWidth="420" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <GridPane hgap="6" vgap="4">
                 <columnConstraints>
-                    <ColumnConstraints minWidth="80" prefWidth="85"/>
-                    <ColumnConstraints minWidth="100" prefWidth="110"/>
-                    <ColumnConstraints minWidth="75" prefWidth="80"/>
-                    <ColumnConstraints minWidth="90" prefWidth="100"/>
+                    <ColumnConstraints minWidth="90" prefWidth="95" halignment="RIGHT"/>
+                    <ColumnConstraints minWidth="110" prefWidth="115" hgrow="ALWAYS"/>
+                    <ColumnConstraints minWidth="75" prefWidth="80" halignment="RIGHT"/>
+                    <ColumnConstraints minWidth="110" prefWidth="115" hgrow="ALWAYS"/>
                 </columnConstraints>
-                <Label text="Receipt Type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <ComboBox fx:id="receiptTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="110"/>
-                <Label text="Period:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <Label text="Receipt Type:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="receiptTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity"/>
+                <Label text="Period:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
                 <TextField fx:id="periodField" text="2025-26" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
-                <Label text="Receipt No:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label text="Receipt No:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                 <TextField fx:id="receiptNoField" text="22920" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label text="Degree:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label text="Degree:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                 <TextField fx:id="degreeField" text="B.E" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                <Label text="Student Name:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="studentNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3"/>
+                <Label text="Student Name:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="studentNameField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Dept:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="deptField" text="CSE" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
-                <Label text="Roll No / Search:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Label text="Roll No:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                 <TextField fx:id="studentSearchField" promptText="Enter Roll No" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <Label text="Dept:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-                <TextField fx:id="deptField" text="CSE" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                <Label text="Semester:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                <TextField fx:id="semField" text="3" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
 
-                <Label text="Reg No:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Label text="Reg. No:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                 <TextField fx:id="regNoField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <Label text="Semester:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-                <TextField fx:id="semField" text="3" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                <Label text="Ad.Type:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="adNoField" text="Fresh" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
 
-                <Label text="Caste:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Label text="Caste:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
                 <TextField fx:id="casteField" text="BC" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <Label text="Ad. Type:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-                <TextField fx:id="adNoField" text="Fresh" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+                <Label text="Quota:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                <TextField fx:id="quotaField" text="Government" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+
+                <Label text="Bus Route:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <TextField fx:id="busRouteField" text="ROUTE 4 - THENI" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <Label text="Bus Stop:" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #334155;" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                <TextField fx:id="busStopField" text="CHINNAMANUR" GridPane.columnIndex="3" GridPane.rowIndex="6"/>
             </GridPane>
 
             <!-- Fee Particulars Table -->
-            <Label text="Fee Particulars Structure:" style="-fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Label text="Fee Particulars Structure:" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1e3a8a;"/>
             <TableView fx:id="particularsTable" prefHeight="170" styleClass="data-table">
                 <columns>
-                    <TableColumn fx:id="partNameCol" text="Particulars" prefWidth="180"/>
-                    <TableColumn fx:id="partAmountCol" text="Amount" prefWidth="85"/>
-                    <TableColumn fx:id="partPaidCol" text="Paid" prefWidth="85"/>
+                    <TableColumn fx:id="partNameCol" text="Particulars" prefWidth="200"/>
+                    <TableColumn fx:id="partAmountCol" text="Amount" prefWidth="90"/>
+                    <TableColumn fx:id="partPaidCol" text="Paid" prefWidth="90"/>
                 </columns>
             </TableView>
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Label text="Total Structure:" style="-fx-font-size: 11px;"/>
-                <TextField fx:id="totalStructAmtField" text="69540" editable="false" prefWidth="85"/>
-                <TextField fx:id="totalStructPaidField" text="11500" editable="false" prefWidth="85"/>
+                <Label text="Total Structure:" style="-fx-font-weight: bold; -fx-font-size: 11px;"/>
+                <TextField fx:id="totalStructAmtField" text="69540" editable="false" prefWidth="90" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="totalStructPaidField" text="11500" editable="false" prefWidth="90" style="-fx-font-weight: bold;"/>
             </HBox>
 
             <!-- Bottom Left Semester Grid (1 to 8) -->
@@ -102,21 +122,21 @@
                 </HBox>
                 <!-- Grid of 8 Semester Buttons -->
                 <GridPane hgap="6" vgap="6">
-                    <Button fx:id="btnSem1" text="1" onAction="#handleSem1" prefWidth="80" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <Button fx:id="btnSem2" text="2" onAction="#handleSem2" prefWidth="80" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                    <Button fx:id="btnSem3" text="3" onAction="#handleSem3" prefWidth="80" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                    <Button fx:id="btnSem4" text="4" onAction="#handleSem4" prefWidth="80" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-                    <Button fx:id="btnSem5" text="5" onAction="#handleSem5" prefWidth="80" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <Button fx:id="btnSem6" text="6" onAction="#handleSem6" prefWidth="80" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                    <Button fx:id="btnSem7" text="7" onAction="#handleSem7" prefWidth="80" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <Button fx:id="btnSem8" text="8" onAction="#handleSem8" prefWidth="80" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    <Button fx:id="btnSem1" text="1" onAction="#handleSem1" prefWidth="85" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Button fx:id="btnSem2" text="2" onAction="#handleSem2" prefWidth="85" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Button fx:id="btnSem3" text="3" onAction="#handleSem3" prefWidth="85" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <Button fx:id="btnSem4" text="4" onAction="#handleSem4" prefWidth="85" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                    <Button fx:id="btnSem5" text="5" onAction="#handleSem5" prefWidth="85" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Button fx:id="btnSem6" text="6" onAction="#handleSem6" prefWidth="85" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Button fx:id="btnSem7" text="7" onAction="#handleSem7" prefWidth="85" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Button fx:id="btnSem8" text="8" onAction="#handleSem8" prefWidth="85" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
                 </GridPane>
             </VBox>
         </VBox>
 
         <!-- COLUMN 2: MIDDLE PANEL (Pending Particulars Table) -->
-        <VBox spacing="8" prefWidth="350" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
-            <Label text="Pending Semester Particulars:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+        <VBox spacing="8" prefWidth="340" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <Label text="Pending Semester Particulars:" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1e3a8a;"/>
             <TableView fx:id="pendingParticularsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
                 <columns>
                     <TableColumn fx:id="pendSemCol" text="Sem" prefWidth="45"/>
@@ -133,15 +153,15 @@
 
         <!-- COLUMN 3: RIGHT PANEL (Payment Allocation & Receipt Actions) -->
         <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
-            <Label text="Payment Allocation &amp; Payment Input:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+            <Label text="Payment Allocation &amp; Payment Input:" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1e3a8a;"/>
 
-            <Label text="Remarks:"/>
+            <Label text="Remarks:" style="-fx-font-weight: bold; -fx-font-size: 11px;"/>
             <TextArea fx:id="remarksArea" prefHeight="50" promptText="Enter payment remarks / UPI / DD details..."/>
 
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Fees Name:"/>
+                <Label text="Fees Name:" style="-fx-font-weight: bold; -fx-font-size: 11px;"/>
                 <ComboBox fx:id="feeNameCombo" prefWidth="140"/>
-                <Label text="Amount:"/>
+                <Label text="Amount:" style="-fx-font-weight: bold; -fx-font-size: 11px;"/>
                 <TextField fx:id="amountField" promptText="Enter amount" prefWidth="110"/>
                 <Button text="Auto-Allocate" styleClass="btn-primary" onAction="#handleAutoAllocate"/>
                 <Button text="Add Fee" styleClass="btn-secondary" onAction="#handleManualAdd"/>

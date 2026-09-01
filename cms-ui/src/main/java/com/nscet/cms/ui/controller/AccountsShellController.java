@@ -25,6 +25,7 @@ public class AccountsShellController implements Initializable {
     @FXML private ImageView bgImage;
     @FXML private Label academicYearLabel;
     @FXML private Label userNameLabel;
+    @FXML private Label footerInfoLabel;
 
     @FXML private ToggleButton mastersToggle;
     @FXML private ToggleButton transactionsToggle;
@@ -36,16 +37,19 @@ public class AccountsShellController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            Image img = new Image(getClass().getResourceAsStream("/images/nscet.png"));
-            bgImage.setImage(img);
-        } catch (Exception e) {
-            System.out.println("nscet.png not found: " + e.getMessage());
+        if (bgImage != null) {
+            try {
+                Image img = new Image(getClass().getResourceAsStream("/images/nscet.png"));
+                bgImage.setImage(img);
+            } catch (Exception e) {
+                System.out.println("nscet.png not found: " + e.getMessage());
+            }
         }
 
         try {
-            academicYearLabel.setText("2025-26");
+            if (academicYearLabel != null) academicYearLabel.setText("2025-26");
             if (userNameLabel != null) userNameLabel.setText("Accounts Administrator");
+            if (footerInfoLabel != null) footerInfoLabel.setText("Logged User: ACCOUNTS ADMINISTRATOR | Username: accounts | Role: ADMIN | Academic Year: 2025-26 | Nadar Saraswathi College of Engineering and Technology, Theni - Accounts Portal");
         } catch (Exception ignored) {}
 
         setupNavigation();
@@ -54,50 +58,70 @@ public class AccountsShellController implements Initializable {
 
     private void setupNavigation() {
         // Masters
-        mastersMenu.getChildren().clear();
-        addMenuItem(mastersMenu, "Bank Master", "bank");
-        addMenuItem(mastersMenu, "Department Master", "department");
-        addMenuItem(mastersMenu, "Designation Master", "designation");
-        addMenuItem(mastersMenu, "Staff Master", "staff");
+        if (mastersMenu != null) {
+            mastersMenu.getChildren().clear();
+            addMenuItem(mastersMenu, "Account Group", "accountGroup");
+            addMenuItem(mastersMenu, "Account Master", "accountMaster");
+            addMenuItem(mastersMenu, "Function Master", "functionMaster");
+        }
 
         // Transactions
-        transactionsMenu.getChildren().clear();
-        addMenuItem(transactionsMenu, "Pending Bills", "pendingFees");
-        addMenuItem(transactionsMenu, "Daily Transaction", "dailyTransaction");
-        addMenuItem(transactionsMenu, "Petty Cash", "pettyCash");
-        addMenuItem(transactionsMenu, "Petty Cash (Suspense)", "pettyCashSuspense");
-        addMenuItem(transactionsMenu, "Petty Voucher", "pettyVoucher");
-        addMenuItem(transactionsMenu, "Function Expense", "functionExpense");
+        if (transactionsMenu != null) {
+            transactionsMenu.getChildren().clear();
+            addMenuItem(transactionsMenu, "Pending Bills", "pendingBillDetails");
+            addMenuItem(transactionsMenu, "Daily Transaction", "dailyTransaction");
+            addMenuItem(transactionsMenu, "Petty Cash", "pettyCash");
+            addMenuItem(transactionsMenu, "Petty Cash (Suspense)", "pettyCashSuspense");
+            addMenuItem(transactionsMenu, "Petty Voucher", "pettyVoucher");
+            addMenuItem(transactionsMenu, "Function Expense", "functionExpense");
+        }
 
         // Reports
-        reportsMenu.getChildren().clear();
-        addMenuItem(reportsMenu, "Day Book Petty Cash", "pettyCashDaybook");
+        if (reportsMenu != null) {
+            reportsMenu.getChildren().clear();
+            addMenuItem(reportsMenu, "Day Book Petty Cash", "pettyCashDaybook");
+        }
     }
+
+    private Button lastActiveButton = null;
 
     private void addMenuItem(VBox menu, String label, String module) {
         Button button = new Button(label);
         button.getStyleClass().add("sidebar-button");
         button.setMaxWidth(Double.MAX_VALUE);
-        button.setOnAction(e -> NavigationManager.loadModule(module, contentArea));
+        button.setOnAction(e -> {
+            if (lastActiveButton != null) {
+                lastActiveButton.getStyleClass().remove("active");
+            }
+            button.getStyleClass().add("active");
+            lastActiveButton = button;
+            NavigationManager.loadModule(module, contentArea);
+        });
         menu.getChildren().add(button);
     }
 
     @FXML
     private void toggleMasters() {
-        mastersMenu.setVisible(!mastersMenu.isVisible());
-        mastersMenu.setManaged(mastersMenu.isVisible());
+        if (mastersMenu != null) {
+            mastersMenu.setVisible(!mastersMenu.isVisible());
+            mastersMenu.setManaged(mastersMenu.isVisible());
+        }
     }
 
     @FXML
     private void toggleTransactions() {
-        transactionsMenu.setVisible(!transactionsMenu.isVisible());
-        transactionsMenu.setManaged(transactionsMenu.isVisible());
+        if (transactionsMenu != null) {
+            transactionsMenu.setVisible(!transactionsMenu.isVisible());
+            transactionsMenu.setManaged(transactionsMenu.isVisible());
+        }
     }
 
     @FXML
     private void toggleReports() {
-        reportsMenu.setVisible(!reportsMenu.isVisible());
-        reportsMenu.setManaged(reportsMenu.isVisible());
+        if (reportsMenu != null) {
+            reportsMenu.setVisible(!reportsMenu.isVisible());
+            reportsMenu.setManaged(reportsMenu.isVisible());
+        }
     }
 
     @FXML

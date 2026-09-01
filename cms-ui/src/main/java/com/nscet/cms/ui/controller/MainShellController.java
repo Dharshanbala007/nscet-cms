@@ -4,7 +4,6 @@ import com.nscet.cms.core.session.UserSession;
 import com.nscet.cms.ui.navigation.NavigationManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -32,6 +31,7 @@ public class MainShellController implements Initializable {
     @FXML private Label userNameLabel;
     @FXML private Label portalLabel;
     @FXML private Label academicYearLabel;
+    @FXML private Label footerInfoLabel;
     @FXML private StackPane contentArea;
     @FXML private ToggleButton mastersToggle;
     @FXML private ToggleButton transactionsToggle;
@@ -74,6 +74,12 @@ public class MainShellController implements Initializable {
             userNameLabel.setText(userSession.getCurrentUser().getFullName());
             portalLabel.setText(userSession.getPortalType());
             academicYearLabel.setText(userSession.getCurrentAcademicYear());
+            if (footerInfoLabel != null) {
+                footerInfoLabel.setText(String.format("Logged User: %s | Username: %s | Role: ADMIN | Academic Year: %s | Nadar Saraswathi College of Engineering and Technology, Theni - Admin Portal",
+                        userSession.getCurrentUser().getFullName().toUpperCase(),
+                        userSession.getCurrentUser().getUsername(),
+                        userSession.getCurrentAcademicYear()));
+            }
         }
     }
 
@@ -87,37 +93,36 @@ public class MainShellController implements Initializable {
         addMenuItem(mastersMenu, "Staff Master", "staff");
         addMenuItem(mastersMenu, "Student Master", "student");
         addMenuItem(mastersMenu, "Student Details", "studentDetails");
-        addMenuItem(mastersMenu, "Fees Details", "feesDetails");
         addMenuItem(mastersMenu, "User Master", "users");
 
         transactionsMenu.getChildren().clear();
-        addMenuItem(transactionsMenu, "Fee Collection", "feeCollection");
+        addMenuItem(transactionsMenu, "Other Fees", "otherFees");
+        addMenuItem(transactionsMenu, "Receipt New", "feeCollection");
+        addMenuItem(transactionsMenu, "Bank Entry", "bankEntry");
+        addMenuItem(transactionsMenu, "Transfer Certificate", "tc");
         addMenuItem(transactionsMenu, "Fee Transaction History", "feeTransactionLog");
-        addMenuItem(transactionsMenu, "Registration Update", "regUpdate");
 
         reportsMenu.getChildren().clear();
-        addMenuHeader(reportsMenu, "--- Student Reports ---");
-        addMenuItem(reportsMenu, "  • Student Receipt Details", "studentReceiptDetails");
-        addMenuItem(reportsMenu, "  • Pending Fees", "pendingFees");
-        addMenuItem(reportsMenu, "  • Pending Bus Fee", "pendingBusFees");
-
-        addMenuHeader(reportsMenu, "--- General Reports ---");
-        addMenuItem(reportsMenu, "Application Report", "appReport");
-        addMenuItem(reportsMenu, "Fees Paid and Pending Details", "feesReport");
+        addMenuItem(reportsMenu, "Student Receipt Details", "studentReceiptDetails");
+        addMenuItem(reportsMenu, "Pending Fees", "pendingFees");
+        addMenuItem(reportsMenu, "Pending Bus Fee", "pendingBusFee");
+        addMenuItem(reportsMenu, "Application Report", "applicationReport");
         addMenuItem(reportsMenu, "Exam Fees Overall Report", "examFeesReport");
         addMenuItem(reportsMenu, "Receipt Bank Checking", "receiptBankChecking");
-        addMenuItem(reportsMenu, "Headwise Details", "headwise");
+        addMenuItem(reportsMenu, "Headwise Details", "headwiseDetails");
         addMenuItem(reportsMenu, "Receipt Reprint", "receiptReprint");
-        addMenuItem(reportsMenu, "Strength Report", "strength");
-        addMenuItem(reportsMenu, "TC / CC PRINT", "tcPrint");
+        addMenuItem(reportsMenu, "Strength Report", "strengthReport");
+        addMenuItem(reportsMenu, "TC\\CC PRINT", "tcPrint");
         addMenuItem(reportsMenu, "Daily Fees Collection Register", "dfcrReport");
         addMenuItem(reportsMenu, "DFCR Groupwise", "dfcrGroupwiseReport");
 
         toolsMenu.getChildren().clear();
-        addMenuItem(toolsMenu, "Day Settlement", "daySettlement");
-        addMenuItem(toolsMenu, "Bulk Fee Entry", "bulkFeeEntry");
-        addMenuItem(toolsMenu, "Bus Fees Update", "busFeesUpdate");
         addMenuItem(toolsMenu, "Student Enrollment", "enrollment");
+        addMenuItem(toolsMenu, "Bulk Fees Entry", "bulkFeeEntry");
+        addMenuItem(toolsMenu, "Bulk Reg.No Update", "regUpdate");
+        addMenuItem(toolsMenu, "Bus Fees Update", "busFeesUpdate");
+        addMenuItem(toolsMenu, "User Master", "users");
+        addMenuItem(toolsMenu, "Parents Meeting", "parentsMeeting");
     }
 
     private void addMenuHeader(VBox menu, String title) {
@@ -127,11 +132,20 @@ public class MainShellController implements Initializable {
         menu.getChildren().add(label);
     }
 
+    private Button lastActiveButton = null;
+
     private void addMenuItem(VBox menu, String label, String module) {
         Button button = new Button(label);
         button.getStyleClass().add("sidebar-button");
         button.setMaxWidth(Double.MAX_VALUE);
-        button.setOnAction(e -> NavigationManager.loadModule(module, contentArea));
+        button.setOnAction(e -> {
+            if (lastActiveButton != null) {
+                lastActiveButton.getStyleClass().remove("active");
+            }
+            button.getStyleClass().add("active");
+            lastActiveButton = button;
+            NavigationManager.loadModule(module, contentArea);
+        });
         menu.getChildren().add(button);
     }
 
@@ -168,6 +182,9 @@ public class MainShellController implements Initializable {
 
     @FXML
     private void handleDashboard() {
+        if (lastActiveButton != null) {
+            lastActiveButton.getStyleClass().remove("active");
+        }
         NavigationManager.loadModule("dashboard", contentArea);
     }
 }

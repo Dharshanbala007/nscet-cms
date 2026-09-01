@@ -11,18 +11,16 @@
         <Label text="Fees Master" styleClass="module-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Search..." styleClass="search-field" onKeyTyped="#handleSearch"/>
-        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
     </HBox>
     <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
         <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
         <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-                <TableColumn fx:id="nameCol" text="Fee Name" prefWidth="180"/>
-                <TableColumn fx:id="groupCol" text="Fee Group" prefWidth="120"/>
-                <TableColumn fx:id="semesterFeeCol" text="Sem Fee" prefWidth="80"/>
-                <TableColumn fx:id="fromDateCol" text="From Date" prefWidth="100"/>
-                <TableColumn fx:id="toDateCol" text="To Date" prefWidth="100"/>
-                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="120"/>
+                <TableColumn fx:id="nameCol" text="FeesName" prefWidth="250"/>
+                <TableColumn fx:id="groupCol" text="FeesGroup" prefWidth="180"/>
+                <TableColumn fx:id="semesterFeeCol" text="Sem Fee" prefWidth="90"/>
+                <TableColumn fx:id="fromDateCol" text="From Date" prefWidth="110"/>
+                <TableColumn fx:id="toDateCol" text="To Date" prefWidth="110"/>
             </columns>
         </TableView>
         <HBox alignment="CENTER" spacing="10" styleClass="pagination-bar">
@@ -32,7 +30,7 @@
             <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
         </HBox>
     </VBox>
-    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+    <VBox fx:id="formPane" visible="true" managed="true" styleClass="form-container" spacing="15">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
         <Label text="Fee Details" styleClass="form-title"/>
         <GridPane hgap="15" vgap="10">
@@ -50,6 +48,9 @@
             <CheckBox fx:id="semesterFeeCheck" GridPane.columnIndex="1" GridPane.rowIndex="1" text="Yes (semester_fee=1 shows in receipt, 0=other fee)"/>
         </GridPane>
         <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Add" styleClass="btn-secondary" onAction="#handleAdd"/>
+            <Button text="Edit" styleClass="btn-secondary" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
             <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
             <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
         </HBox>

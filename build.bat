@@ -10,11 +10,16 @@ echo.
 REM Check Maven
 call mvn --version >nul 2>&1
 if errorlevel 1 (
-    echo ERROR: Maven not found!
-    echo Please install Maven from https://maven.apache.org
-    echo Set MAVEN_HOME and add to PATH
-    pause
-    exit /b 1
+    if exist "C:\Users\dhars\maven\bin\mvn.cmd" (
+        set "PATH=%PATH%;C:\Users\dhars\maven\bin"
+        set "MAVEN_HOME=C:\Users\dhars\maven"
+    ) else (
+        echo ERROR: Maven not found!
+        echo Please install Maven from https://maven.apache.org
+        echo Set MAVEN_HOME and add to PATH
+        pause
+        exit /b 1
+    )
 )
 
 echo Step 1: Cleaning previous builds...

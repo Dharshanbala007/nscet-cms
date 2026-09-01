@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.TcDocumentController"
+      spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 15;">
+
+    <!-- Top Action Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 6;">
+        <Button text="◀ Previous" onAction="#handlePrevStudent" prefWidth="100"/>
+        <Label fx:id="studentNavLabel" text="Student 1 of 1" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+        <Button text="Next ▶" onAction="#handleNextStudent" prefWidth="100"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Print Current TC" styleClass="btn-primary" onAction="#handlePrintCurrent"/>
+        <Button text="Print All Batch TCs" styleClass="btn-secondary" onAction="#handlePrintAll"/>
+        <Button text="Close" styleClass="btn-secondary" onAction="#handleClose"/>
+    </HBox>
+
+    <!-- Scrollable Printable TC Document Area -->
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" style="-fx-background-color: transparent;">
+        <VBox alignment="TOP_CENTER" style="-fx-padding: 10;">
+
+            <!-- A4 Document Box formatted for Pre-printed College Stationery -->
+            <VBox fx:id="tcPaper" prefWidth="760" style="-fx-background-color: white; -fx-padding: 70 35 25 35; -fx-border-color: #94a3b8; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);" spacing="12">
+
+                <!-- Serial No, Admission No & UMIS No Row (Starts below pre-printed stationery header) -->
+                <GridPane hgap="10" vgap="4" style="-fx-padding: 0 10 10 10;">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="80" prefWidth="90"/>
+                        <ColumnConstraints minWidth="180" prefWidth="200"/>
+                        <ColumnConstraints minWidth="110" prefWidth="120"/>
+                        <ColumnConstraints minWidth="180" prefWidth="200"/>
+                    </columnConstraints>
+
+                    <Label text="Serial No :" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label fx:id="tcNoLabel" text="2024-25 / 153" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Admission No :" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                    <Label fx:id="admissionNoLabel" text="2021FME012" style="-fx-font-size: 12px;" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <Label text="UMIS No:" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Label fx:id="umisNoLabel" text="9002059887" style="-fx-font-size: 12px;" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                </GridPane>
+
+                <!-- 14 Numbered Items matching media_1787568413666.jpg -->
+                <VBox spacing="10" style="-fx-padding: 5 10;">
+                    <!-- Item 1 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="1. Name of the Pupil in Full (in Block Letters)" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="studentNameLabel" text="LAKSHMIPRABHA K" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 2 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="2. Father's Name" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="fatherNameLabel" text="KANNAN" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 3 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="3. Nationality, Religion and Caste" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="nationalityReligionCasteLabel" text="INDIAN - REFER COMMUNITY CERTIFICATE" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 4 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="4. Community SC/ST/BC/MBC/others Converted to Christianity from Scheduled Caste or Denotified Tribes" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="communityLabel" text="REFER COMMUNITY CERTIFICATE" style="-fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 5 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="5. Date of Birth(in words) as entered in the Admission Register" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="dobLabel" text="30/01/2004  30th of January Two Thousand And Four" style="-fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 6 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="6. Course to which the student was Admitted" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="courseAdmittedLabel" text="BACHELOR OF ENGINEERING" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 7 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="7. Branch of Study" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="deptLabel" text="MECHANICAL ENGINEERING" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 8 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="8. Whether the Course has been Completed (or) not" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="courseCompletedLabel" text="REFER THE GRADE STATEMENT" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 9 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="9. Whether qualified for Promotion to a higher Class (or) not" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="promotionLabel" text="REFER THE GRADE STATEMENT" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 10 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="10. Whether the student has paid all fees due to the College" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="feesPaidLabel" text="YES" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 11 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="11. Date on which the student actually left the College" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="dateLeftLabel" text="29/05/2025" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 12 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="12. Date on which application for Transfer Certificate was made" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" wrapText="true" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="dateAppLabel" text="29/05/2025" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 13 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="13. Date of the Transfer Certificate" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="dateIssuedLabel" text="29/05/2025" style="-fx-font-size: 11.5px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+
+                    <!-- Item 14 -->
+                    <GridPane hgap="10" vgap="2">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                            <ColumnConstraints minWidth="15" prefWidth="20"/>
+                            <ColumnConstraints minWidth="320" prefWidth="340"/>
+                        </columnConstraints>
+                        <Label text="14. The Student's Conduct" style="-fx-font-weight: bold; -fx-font-size: 11.5px;" GridPane.columnIndex="0"/>
+                        <Label text=":" style="-fx-font-weight: bold;" GridPane.columnIndex="1"/>
+                        <Label fx:id="conductLabel" text="GOOD" style="-fx-font-weight: bold; -fx-font-size: 12px;" GridPane.columnIndex="2"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Footer Signatures matching media_1787568413666.jpg -->
+                <HBox alignment="BOTTOM_RIGHT" spacing="100" style="-fx-padding: 35 20 10 20;">
+                    <VBox alignment="CENTER_LEFT" spacing="30">
+                        <Label text="Seal &amp; Date" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label text="Principal" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #000000;"/>
+                        <Label text="Dr. C. MATHALAI SUNDARAM, M.E., Ph.D." style="-fx-font-size: 10px; -fx-font-weight: bold;"/>
+                        <Label text="Principal" style="-fx-font-size: 10px;"/>
+                        <Label text="Nadar Saraswathi College of Engineering and Technology" style="-fx-font-size: 9.5px;" wrapText="true"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

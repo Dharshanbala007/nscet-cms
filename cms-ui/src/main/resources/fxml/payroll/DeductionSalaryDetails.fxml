@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.DeductionSalaryDetailsController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Header Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Deduction Salary Details" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Export CSV" styleClass="btn-secondary" minWidth="90" onAction="#handleExportCsv"/>
+        <Button text="Export PDF" styleClass="btn-secondary" minWidth="90" onAction="#handleExportPdf"/>
+        <Button text="Find / View Table ▶" styleClass="btn-primary" style="-fx-font-weight: bold;" minWidth="140" onAction="#handleFind"/>
+        <Button text="Exit" styleClass="btn-secondary" minWidth="75" onAction="#handleClose"/>
+    </HBox>
+
+    <!-- Controls Filter Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="form-container">
+        <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+        <Label text="From Date:"/>
+        <DatePicker fx:id="fromDate" prefWidth="130"/>
+
+        <Label text="To Date:"/>
+        <DatePicker fx:id="toDate" prefWidth="130"/>
+
+        <Button text="View Table ▶" styleClass="btn-primary" style="-fx-font-weight: bold;" minWidth="110" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+
+        <ComboBox fx:id="yearCombo" prefWidth="110"/>
+    </HBox>
+
+    <!-- Table Container (Hidden by default for privacy, shown on View) -->
+    <VBox fx:id="tableContainer" visible="false" managed="false" VBox.vgrow="ALWAYS" spacing="8">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 6 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <Label text="Deduction Salary Details Table" styleClass="form-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✖ Close Table" styleClass="btn-danger" style="-fx-font-weight: bold;" onAction="#handleCloseTable"/>
+        </HBox>
+
+        <!-- Data Table Matrix -->
+        <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="50"/>
+                <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="160"/>
+                <TableColumn fx:id="colDesig" text="Designation" prefWidth="130"/>
+                <TableColumn fx:id="colDoj" text="DOJ" prefWidth="90"/>
+                <TableColumn fx:id="colJun" text="June 2021" prefWidth="80"/>
+                <TableColumn fx:id="colJul" text="July 2021" prefWidth="80"/>
+                <TableColumn fx:id="colAug" text="Aug 2021" prefWidth="80"/>
+                <TableColumn fx:id="colSep" text="Sep 2021" prefWidth="80"/>
+                <TableColumn fx:id="colOct" text="Oct 2021" prefWidth="80"/>
+                <TableColumn fx:id="colNov" text="Nov 2021" prefWidth="80"/>
+                <TableColumn fx:id="colDec" text="Dec 2021" prefWidth="80"/>
+                <TableColumn fx:id="colJan" text="Jan 2022" prefWidth="80"/>
+                <TableColumn fx:id="colTotal" text="Total" prefWidth="65"/>
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT">
+            <Button text="✖ Close Table" styleClass="btn-secondary" onAction="#handleCloseTable"/>
+        </HBox>
+    </VBox>
+</VBox>

@@ -41,6 +41,11 @@ public class PayrollService {
         return leaveRepo.save(leave);
     }
 
+    @Transactional
+    public void deleteLeave(Long id) {
+        if (id != null) leaveRepo.deleteById(id);
+    }
+
     // Staff Salary Master
     public List<StaffSalary> getAllStaffSalaries() { return staffSalaryRepo.findAllActive(); }
 

@@ -5,42 +5,33 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nscet.cms.ui.controller.BusFeesUpdateController"
-      styleClass="master-container">
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
 
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
-        <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
-        <Label text="Bus Fees Update" styleClass="module-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
+    <!-- Title Header matching media_1788254870198.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Bus Fees Update" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
     </HBox>
 
-    <VBox VBox.vgrow="ALWAYS" spacing="10">
-        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
-        <TitledPane text="Update Filters" expanded="true">
-            <VBox spacing="10">
-                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Route:"/>
-                    <ComboBox fx:id="routeCombo" prefWidth="200" promptText="Select"/>
-                    <Label text="Bus Fee:"/>
-                    <TextField fx:id="busFeeField" prefWidth="120"/>
-                    <Button text="Load Students" styleClass="btn-primary" onAction="#handleLoadStudents"/>
-                </HBox>
-            </VBox>
-        </TitledPane>
-        <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-            <TableView fx:id="studentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
-                <columns>
-                    <TableColumn fx:id="selectCol" text="Select" prefWidth="60"/>
-                    <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="120"/>
-                    <TableColumn fx:id="nameCol" text="Name" prefWidth="150"/>
-                    <TableColumn fx:id="routeCol" text="Route" prefWidth="120"/>
-                    <TableColumn fx:id="currentFeeCol" text="Current Fee" prefWidth="100"/>
-                </columns>
-            </TableView>
-        </VBox>
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Update Fees" styleClass="btn-primary" onAction="#handleUpdateFees"/>
-        </HBox>
-    </VBox>
+    <!-- Top Control Bar matching media_1788254870198.png -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Acadamic Year:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+        <ComboBox fx:id="academicYearCombo" prefWidth="130" promptText="2026-27"/>
+
+        <Label text="Bus Route:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+        <ComboBox fx:id="busRouteCombo" prefWidth="260" promptText="BOOTHIPURAM &amp; RATHNA NAGAR"/>
+
+        <Button text="View" styleClass="btn-primary" prefWidth="80" onAction="#handleLoadData"/>
+        <Button text="Save" styleClass="btn-secondary" prefWidth="80" onAction="#handleSave"/>
+    </HBox>
+
+    <!-- Main Table View matching media_1788254870198.png -->
+    <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="routeNoCol" text="Route No" prefWidth="75"/>
+            <TableColumn fx:id="routeNameCol" text="Route Name" prefWidth="220"/>
+            <TableColumn fx:id="busStopNameCol" text="Bus stop Name" prefWidth="220"/>
+            <TableColumn fx:id="amountCol" text="Amount" prefWidth="110"/>
+            <TableColumn fx:id="academicYearCol" text="Acadmic Year" prefWidth="110"/>
+        </columns>
+    </TableView>
 </VBox>

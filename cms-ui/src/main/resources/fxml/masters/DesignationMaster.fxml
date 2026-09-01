@@ -18,7 +18,6 @@
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Search..." styleClass="search-field"
                    onKeyTyped="#handleSearch"/>
-        <Button text="Add" styleClass="btn-primary" onAction="#handleAdd"/>
     </HBox>
 
     <!-- Table -->
@@ -29,11 +28,10 @@
 
         <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
-                <TableColumn fx:id="codeCol" text="Code" prefWidth="80"/>
-                <TableColumn fx:id="shortNameCol" text="Short Name" prefWidth="120"/>
-                <TableColumn fx:id="nameCol" text="Name" prefWidth="200"/>
-                <TableColumn fx:id="categoryCol" text="Category" prefWidth="120"/>
-                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="150"/>
+                <TableColumn fx:id="codeCol" text="DesignCode" prefWidth="100"/>
+                <TableColumn fx:id="shortNameCol" text="Design. Sh.Name" prefWidth="150"/>
+                <TableColumn fx:id="nameCol" text="Designation" prefWidth="250"/>
+                <TableColumn fx:id="categoryCol" text="Category" prefWidth="150"/>
             </columns>
         </TableView>
 
@@ -48,8 +46,8 @@
         </HBox>
     </VBox>
 
-    <!-- Detail Form (shown on Add/Edit) -->
-    <VBox fx:id="formPane" visible="false" managed="false" styleClass="form-container" spacing="15">
+    <!-- Detail Form at Bottom -->
+    <VBox fx:id="formPane" visible="true" managed="true" styleClass="form-container" spacing="15">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>
         </padding>
@@ -78,6 +76,9 @@
         </GridPane>
 
         <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Add" styleClass="btn-secondary" onAction="#handleAdd"/>
+            <Button text="Edit" styleClass="btn-secondary" onAction="#handleModify"/>
+            <Button text="Delete" styleClass="btn-danger" onAction="#handleDeleteSelected"/>
             <Button text="Save" styleClass="btn-primary" onAction="#handleSave"/>
             <Button text="Cancel" styleClass="btn-secondary" onAction="#handleCancel"/>
         </HBox>

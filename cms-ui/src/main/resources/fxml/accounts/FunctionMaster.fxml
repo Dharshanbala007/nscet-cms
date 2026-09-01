@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.accounts.FunctionMasterController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Action Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Function Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Find Table" styleClass="btn-primary" style="-fx-font-weight: bold;" onAction="#handleFind"/>
+        <Button text="Export CSV" styleClass="btn-secondary" onAction="#handleExportCsv"/>
+        <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExportPdf"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Function Master Entry Card (Left) -->
+        <TitledPane text="Function Master Entry" expanded="true" prefWidth="420" collapsible="false">
+            <VBox spacing="15">
+                <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                <GridPane hgap="10" vgap="12">
+                    <Label text="Function Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="fnNameField" promptText="Enter Function Name" GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>
+                </GridPane>
+
+                <Region prefHeight="15"/>
+
+                <!-- Buttons: Save, Close -->
+                <HBox spacing="12" alignment="CENTER">
+                    <Button text="Save" styleClass="btn-primary" onAction="#handleSave" prefWidth="90"/>
+                    <Button text="Close" styleClass="btn-secondary" onAction="#handleClose" prefWidth="90"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+        <!-- Find Table Container (Hidden by default for security, shown on Find) -->
+        <TitledPane fx:id="tableContainer" visible="false" managed="false" text="Find - Function Masters" expanded="true" HBox.hgrow="ALWAYS" collapsible="false">
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 6 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+                    <Label text="Function Master Results" styleClass="form-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="✖ Close Table" styleClass="btn-danger" style="-fx-font-weight: bold;" onAction="#handleCloseTable"/>
+                </HBox>
+                
+                <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colFnName" text="Function / Event Name" prefWidth="280"/>
+                        <TableColumn fx:id="colDept" text="Department" prefWidth="180"/>
+                        <TableColumn fx:id="colBudget" text="Allocated Budget" prefWidth="140"/>
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </TitledPane>
+    </HBox>
+</VBox>

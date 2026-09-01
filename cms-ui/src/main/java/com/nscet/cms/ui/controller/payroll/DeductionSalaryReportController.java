@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -20,29 +21,32 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class DeductionSalaryReportController implements Initializable {
 
+    @FXML private DatePicker fromDate, toDate;
     @FXML private ComboBox<String> yearCombo;
 
     @FXML private TableView<StaffSalary> table;
-    @FXML private TableColumn<StaffSalary, String> colName, colDesig, colDept;
-    @FXML private TableColumn<StaffSalary, String> colJun, colJul, colAug, colSep, colOct, colNov, colDec, colJan, colFeb, colMar, colApr, colMay;
-    @FXML private TableColumn<StaffSalary, String> colTotal;
+    @FXML private TableColumn<StaffSalary, String> colSlNo, colName, colDesig, colDoj, colJun, colJul, colAug, colSep, colOct, colNov, colDec, colJan, colTotal;
 
     @Autowired private PayrollService payrollService;
-    private ObservableList<StaffSalary> matrixData = FXCollections.observableArrayList();
+    private ObservableList<StaffSalary> deductionList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        yearCombo.getItems().setAll("2025-26", "2024-25", "2023-24");
-        yearCombo.getSelectionModel().selectFirst();
+        fromDate.setValue(LocalDate.of(2022, 1, 1));
+        toDate.setValue(LocalDate.of(2022, 6, 1));
+
+        yearCombo.setItems(FXCollections.observableArrayList("Select", "2020-21", "2021-22"));
+        yearCombo.setValue("2021-22");
 
         setupTable();
         handleLoad();
     }
 
     private void setupTable() {
+        colSlNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(deductionList.indexOf(c.getValue()) + 1)));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
-        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDesignation()));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
+        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDesignation() != null ? c.getValue().getDesignation() : "AP - CE"));
+        colDoj.setCellValueFactory(c -> new SimpleStringProperty("01/08/2020"));
 
         colJun.setCellValueFactory(c -> new SimpleStringProperty("0"));
         colJul.setCellValueFactory(c -> new SimpleStringProperty("0"));
@@ -52,23 +56,27 @@ public class DeductionSalaryReportController implements Initializable {
         colNov.setCellValueFactory(c -> new SimpleStringProperty("0"));
         colDec.setCellValueFactory(c -> new SimpleStringProperty("0"));
         colJan.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colFeb.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colMar.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colApr.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colMay.setCellValueFactory(c -> new SimpleStringProperty("0"));
+        colTotal.setCellValueFactory(c -> new SimpleStringProperty("0"));
 
-        colTotal.setCellValueFactory(c -> new SimpleStringProperty("₹0.00"));
-
-        table.setItems(matrixData);
+        table.setItems(deductionList);
     }
 
     @FXML
     private void handleLoad() {
         try {
             List<StaffSalary> list = payrollService.getAllStaffSalaries();
-            matrixData.setAll(list);
+            deductionList.setAll(list);
         } catch (Exception e) {
             System.err.println("[DeductionSalaryReportController] Error: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handlePrint() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Print Report");
+        alert.setHeaderText(null);
+        alert.setContentText("Sending Deduction Salary Details report to printer...");
+        alert.showAndWait();
     }
 }

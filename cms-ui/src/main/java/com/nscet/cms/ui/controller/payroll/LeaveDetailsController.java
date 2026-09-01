@@ -22,10 +22,11 @@ import java.util.ResourceBundle;
 public class LeaveDetailsController implements Initializable {
 
     @FXML private DatePicker fromDate, toDate;
+    @FXML private ComboBox<String> categoryCombo;
 
     @FXML private TableView<StaffSalary> table;
-    @FXML private TableColumn<StaffSalary, String> colCode, colName, colDept, colCategory, colDoj;
-    @FXML private TableColumn<StaffSalary, String> colCl, colLop, colAb, colSpl, colOd, colComp, colFdp, colOdAdmis, colOdOthers, colClBalance;
+    @FXML private TableColumn<StaffSalary, String> colSlNo, colName, colDept, colClAllowed, colClTaken, colClDate, colClBal;
+    @FXML private TableColumn<StaffSalary, String> colLopLastMonth, colLop, colLopDate, colTotalLop, colMl, colMlDate, colSpl, colSplDate, colOd, colOdDate;
 
     @Autowired private PayrollService payrollService;
 
@@ -36,38 +37,35 @@ public class LeaveDetailsController implements Initializable {
         fromDate.setValue(LocalDate.now().withDayOfMonth(1));
         toDate.setValue(LocalDate.now());
 
-        fromDate.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) handleView();
-        });
-        toDate.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) handleView();
-        });
+        categoryCombo.setItems(FXCollections.observableArrayList("Select", "Regular", "New Emp Last Month", "Contract Emp", "Relived Emp"));
+        categoryCombo.setValue("Regular");
 
         setupTable();
         handleView();
     }
 
     private void setupTable() {
-        colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
+        colSlNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(staffList.indexOf(c.getValue()) + 1)));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
         colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colCategory.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCategory() != null ? c.getValue().getCategory() : "Teaching"));
-        colDoj.setCellValueFactory(c -> new SimpleStringProperty("01/08/2023"));
+        colClAllowed.setCellValueFactory(c -> new SimpleStringProperty("10"));
 
-        colCl.setCellValueFactory(c -> {
-            int bal = c.getValue().getClBalance() != null ? c.getValue().getClBalance() : 12;
-            return new SimpleStringProperty(String.valueOf(Math.max(0, 12 - bal)));
+        colClTaken.setCellValueFactory(c -> {
+            int bal = c.getValue().getClBalance() != null ? c.getValue().getClBalance() : 10;
+            return new SimpleStringProperty(String.valueOf(Math.max(0, 10 - bal)));
         });
-
+        colClDate.setCellValueFactory(c -> new SimpleStringProperty("{28/07/2026}"));
+        colClBal.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getClBalance() != null ? c.getValue().getClBalance().toString() : "9"));
+        colLopLastMonth.setCellValueFactory(c -> new SimpleStringProperty("0"));
         colLop.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colAb.setCellValueFactory(c -> new SimpleStringProperty("0"));
+        colLopDate.setCellValueFactory(c -> new SimpleStringProperty("-"));
+        colTotalLop.setCellValueFactory(c -> new SimpleStringProperty("0"));
+        colMl.setCellValueFactory(c -> new SimpleStringProperty("0"));
+        colMlDate.setCellValueFactory(c -> new SimpleStringProperty("-"));
         colSpl.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colOd.setCellValueFactory(c -> new SimpleStringProperty("1"));
-        colComp.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colFdp.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colOdAdmis.setCellValueFactory(c -> new SimpleStringProperty("2"));
-        colOdOthers.setCellValueFactory(c -> new SimpleStringProperty("0"));
-        colClBalance.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getClBalance() != null ? c.getValue().getClBalance().toString() : "12"));
+        colSplDate.setCellValueFactory(c -> new SimpleStringProperty("{18/06/2026, 19/06/2026}"));
+        colOd.setCellValueFactory(c -> new SimpleStringProperty("0"));
+        colOdDate.setCellValueFactory(c -> new SimpleStringProperty("-"));
 
         table.setItems(staffList);
     }
@@ -86,5 +84,28 @@ public class LeaveDetailsController implements Initializable {
         } catch (Exception e) {
             System.err.println("[LeaveDetailsController] Error loading leave details: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleSave() {
+        showAlert("Saved", "Leave details saved successfully.", Alert.AlertType.INFORMATION);
+    }
+
+    @FXML
+    private void handlePrint() {
+        showAlert("Print Report", "Sending Leave Details Report to printer...", Alert.AlertType.INFORMATION);
+    }
+
+    @FXML
+    private void handleCommit() {
+        showAlert("Committed", "Leave details committed for period.", Alert.AlertType.INFORMATION);
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

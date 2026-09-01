@@ -120,6 +120,13 @@ public class ReportService {
             dto.setDept(dept);
             dto.setRollNo(s.getRollNumber());
             dto.setStudentName(s.getName());
+            dto.setFatherName(s.getFatherName());
+            dto.setPhone(s.getParentPhone() != null ? s.getParentPhone() : s.getPhone());
+            dto.setAddressLine1(s.getAddress());
+            dto.setAddressLine2("");
+            dto.setCity(s.getCity());
+            dto.setPincode("");
+            dto.setBusFee(BigDecimal.ZERO);
             dto.setQuota(s.getAdmissionType() != null ? s.getAdmissionType() : "Government");
             dto.setAdmissionType("Fresh");
             dto.setCommunity(s.getCommunity() != null ? s.getCommunity() : "BC");
@@ -543,18 +550,25 @@ public class ReportService {
         private String dept;
         private String rollNo;
         private String studentName;
+        private String fatherName;
         private String quota;
         private String admissionType;
         private String community;
         private BigDecimal previousPending;
         private BigDecimal tuitionFees;
         private BigDecimal otherFees;
+        private BigDecimal busFee;
         private BigDecimal scholarship;
         private BigDecimal annaUnivReg;
         private BigDecimal total;
         private BigDecimal paidAmount;
         private BigDecimal balanceAmount;
         private BigDecimal fineAmount;
+        private String addressLine1;
+        private String addressLine2;
+        private String city;
+        private String pincode;
+        private String phone;
 
         public String getDept() { return dept; }
         public void setDept(String dept) { this.dept = dept; }
@@ -562,6 +576,8 @@ public class ReportService {
         public void setRollNo(String rollNo) { this.rollNo = rollNo; }
         public String getStudentName() { return studentName; }
         public void setStudentName(String studentName) { this.studentName = studentName; }
+        public String getFatherName() { return fatherName; }
+        public void setFatherName(String fatherName) { this.fatherName = fatherName; }
         public String getQuota() { return quota; }
         public void setQuota(String quota) { this.quota = quota; }
         public String getAdmissionType() { return admissionType; }
@@ -574,6 +590,8 @@ public class ReportService {
         public void setTuitionFees(BigDecimal tuitionFees) { this.tuitionFees = tuitionFees; }
         public BigDecimal getOtherFees() { return otherFees; }
         public void setOtherFees(BigDecimal otherFees) { this.otherFees = otherFees; }
+        public BigDecimal getBusFee() { return busFee; }
+        public void setBusFee(BigDecimal busFee) { this.busFee = busFee; }
         public BigDecimal getScholarship() { return scholarship; }
         public void setScholarship(BigDecimal scholarship) { this.scholarship = scholarship; }
         public BigDecimal getAnnaUnivReg() { return annaUnivReg; }
@@ -586,6 +604,16 @@ public class ReportService {
         public void setBalanceAmount(BigDecimal balanceAmount) { this.balanceAmount = balanceAmount; }
         public BigDecimal getFineAmount() { return fineAmount; }
         public void setFineAmount(BigDecimal fineAmount) { this.fineAmount = fineAmount; }
+        public String getAddressLine1() { return addressLine1; }
+        public void setAddressLine1(String addressLine1) { this.addressLine1 = addressLine1; }
+        public String getAddressLine2() { return addressLine2; }
+        public void setAddressLine2(String addressLine2) { this.addressLine2 = addressLine2; }
+        public String getCity() { return city; }
+        public void setCity(String city) { this.city = city; }
+        public String getPincode() { return pincode; }
+        public void setPincode(String pincode) { this.pincode = pincode; }
+        public String getPhone() { return phone; }
+        public void setPhone(String phone) { this.phone = phone; }
     }
 
     public static class PendingBusFeesDto {
@@ -627,11 +655,13 @@ public class ReportService {
 
     public static class ApplicationReportDto {
         private Integer slNo;
+        private String receiptNo;
         private String appNo;
         private String studentName;
         private String address;
         private String hscMark;
         private String doteCutOff;
+        private String annaUnivCutOff;
         private String community;
         private String mgGq;
         private BigDecimal amountPaid;
@@ -641,6 +671,8 @@ public class ReportService {
 
         public Integer getSlNo() { return slNo; }
         public void setSlNo(Integer slNo) { this.slNo = slNo; }
+        public String getReceiptNo() { return receiptNo; }
+        public void setReceiptNo(String receiptNo) { this.receiptNo = receiptNo; }
         public String getAppNo() { return appNo; }
         public void setAppNo(String appNo) { this.appNo = appNo; }
         public String getStudentName() { return studentName; }
@@ -651,6 +683,8 @@ public class ReportService {
         public void setHscMark(String hscMark) { this.hscMark = hscMark; }
         public String getDoteCutOff() { return doteCutOff; }
         public void setDoteCutOff(String doteCutOff) { this.doteCutOff = doteCutOff; }
+        public String getAnnaUnivCutOff() { return annaUnivCutOff; }
+        public void setAnnaUnivCutOff(String annaUnivCutOff) { this.annaUnivCutOff = annaUnivCutOff; }
         public String getCommunity() { return community; }
         public void setCommunity(String community) { this.community = community; }
         public String getMgGq() { return mgGq; }
@@ -877,5 +911,27 @@ public class ReportService {
         public void setTotalCollected(BigDecimal totalCollected) { this.totalCollected = totalCollected; }
         public Integer getReceiptCount() { return receiptCount; }
         public void setReceiptCount(Integer receiptCount) { this.receiptCount = receiptCount; }
+    }
+
+    public static class TcPrintDto {
+        private String certType;
+        private String tcNo;
+        private String studentName;
+        private String dept;
+        private String issueDate;
+        private String rollNo;
+
+        public String getCertType() { return certType; }
+        public void setCertType(String certType) { this.certType = certType; }
+        public String getTcNo() { return tcNo; }
+        public void setTcNo(String tcNo) { this.tcNo = tcNo; }
+        public String getStudentName() { return studentName; }
+        public void setStudentName(String studentName) { this.studentName = studentName; }
+        public String getDept() { return dept; }
+        public void setDept(String dept) { this.dept = dept; }
+        public String getIssueDate() { return issueDate; }
+        public void setIssueDate(String issueDate) { this.issueDate = issueDate; }
+        public String getRollNo() { return rollNo; }
+        public void setRollNo(String rollNo) { this.rollNo = rollNo; }
     }
 }

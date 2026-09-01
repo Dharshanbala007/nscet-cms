@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.payroll.LopReportController"
+      styleClass="master-container" spacing="10">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Header Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="LOP Report" styleClass="module-title" minWidth="120"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDate" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDate" prefWidth="130" minWidth="120"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleShow"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+    </HBox>
+
+    <!-- Printable Preview Card matching media_1787899069329.png -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: #71717a; -fx-padding: 15;">
+        <VBox alignment="TOP_CENTER" spacing="15">
+            <VBox fx:id="reportPaper" maxWidth="820" spacing="12" style="-fx-background-color: #ffffff; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);">
+                <!-- Document Header -->
+                <VBox alignment="CENTER" spacing="4">
+                    <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING AND TECHNOLOGY , THENI." style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #0f172a;"/>
+                    <HBox alignment="CENTER" spacing="5">
+                        <Label text="LOP DETAILS FOR THE PERIOD OF " style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <Label fx:id="reportSubtitleLabel" text="26/06/2026 To 25/07/2026" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    </HBox>
+                </VBox>
+                <Separator/>
+
+                <!-- Table Preview -->
+                <TableView fx:id="reportTable" VBox.vgrow="ALWAYS" styleClass="data-table" minHeight="480">
+                    <columns>
+                        <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="55"/>
+                        <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="200"/>
+                        <TableColumn fx:id="colDept" text="Dept" prefWidth="90"/>
+                        <TableColumn fx:id="colDesig" text="Designation" prefWidth="120"/>
+                        <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="130"/>
+                        <TableColumn fx:id="colValue" text="LOP Days" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

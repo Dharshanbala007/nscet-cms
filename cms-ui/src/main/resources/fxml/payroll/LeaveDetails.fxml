@@ -9,33 +9,41 @@
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
     <!-- Header Controls -->
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Staff Detailed Leave Check &amp; Summary" styleClass="module-title"/>
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10">
+        <Label text="Leave Details" styleClass="module-title" minWidth="120"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="From Date:"/>
-        <DatePicker fx:id="fromDate" prefWidth="130"/>
-        <Label text="To Date:"/>
-        <DatePicker fx:id="toDate" prefWidth="130"/>
-        <Button text="View Leave Details" styleClass="btn-primary" onAction="#handleView"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDate" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDate" prefWidth="130" minWidth="120"/>
+        <Label text="Category:" minWidth="65"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="150" minWidth="130" promptText="Select"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+        <Button text="Save" styleClass="btn-secondary" minWidth="75" onAction="#handleSave"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
+        <Button text="Commit" styleClass="btn-secondary" minWidth="75" onAction="#handleCommit"/>
     </HBox>
 
+    <!-- Detailed Leave Table -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colCode" text="Staff Code" prefWidth="90"/>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="160"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="120"/>
-            <TableColumn fx:id="colCategory" text="Category" prefWidth="95"/>
-            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="100"/>
-            <TableColumn fx:id="colCl" text="CL" prefWidth="50"/>
-            <TableColumn fx:id="colLop" text="LOP" prefWidth="50"/>
-            <TableColumn fx:id="colAb" text="AB" prefWidth="50"/>
-            <TableColumn fx:id="colSpl" text="SPL" prefWidth="50"/>
-            <TableColumn fx:id="colOd" text="OD" prefWidth="50"/>
-            <TableColumn fx:id="colComp" text="Comp" prefWidth="55"/>
-            <TableColumn fx:id="colFdp" text="FDP" prefWidth="50"/>
-            <TableColumn fx:id="colOdAdmis" text="OD Admis" prefWidth="75"/>
-            <TableColumn fx:id="colOdOthers" text="OD Others" prefWidth="75"/>
-            <TableColumn fx:id="colClBalance" text="CL Balance" prefWidth="85"/>
+            <TableColumn fx:id="colSlNo" text="Sl.No" prefWidth="55"/>
+            <TableColumn fx:id="colName" text="Staff Name" prefWidth="170"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="110"/>
+            <TableColumn fx:id="colClAllowed" text="Casual Leave Allowed" prefWidth="130"/>
+            <TableColumn fx:id="colClTaken" text="Taken" prefWidth="70"/>
+            <TableColumn fx:id="colClDate" text="CL Date" prefWidth="140"/>
+            <TableColumn fx:id="colClBal" text="Balance CL" prefWidth="85"/>
+            <TableColumn fx:id="colLopLastMonth" text="LOP upto Last Month" prefWidth="140"/>
+            <TableColumn fx:id="colLop" text="LOP" prefWidth="65"/>
+            <TableColumn fx:id="colLopDate" text="LOP Date" prefWidth="130"/>
+            <TableColumn fx:id="colTotalLop" text="Total Lop" prefWidth="80"/>
+            <TableColumn fx:id="colMl" text="ML" prefWidth="55"/>
+            <TableColumn fx:id="colMlDate" text="ML Date" prefWidth="110"/>
+            <TableColumn fx:id="colSpl" text="SPL" prefWidth="55"/>
+            <TableColumn fx:id="colSplDate" text="SPL Date" prefWidth="140"/>
+            <TableColumn fx:id="colOd" text="OD" prefWidth="55"/>
+            <TableColumn fx:id="colOdDate" text="OD Date" prefWidth="120"/>
         </columns>
     </TableView>
 </VBox>

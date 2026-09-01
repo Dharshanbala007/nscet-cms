@@ -79,7 +79,9 @@ public class PettyVoucherController implements Initializable {
         colItemAttNo.setCellValueFactory(new PropertyValueFactory<>("attendanceNo"));
         colItemType.setCellValueFactory(new PropertyValueFactory<>("itemType"));
         colItemAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        colItemAction.setCellValueFactory(cellData -> new SimpleStringProperty(""));
+        if (colItemAction != null) {
+            colItemAction.setCellValueFactory(cellData -> new SimpleStringProperty(""));
+        }
 
         itemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {

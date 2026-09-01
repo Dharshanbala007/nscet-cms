@@ -8,37 +8,43 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header Controls -->
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Casual Leave Monthly View (12 Month Grid)" styleClass="module-title"/>
+    <!-- Header Controls matching media_1787899923153.png & media_1787899929853.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Casual Leave Monthly View" styleClass="module-title" minWidth="200"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Category:"/>
-        <ComboBox fx:id="categoryCombo" prefWidth="130"/>
-        <Label text="Leave Type:"/>
-        <ComboBox fx:id="typeCombo" prefWidth="120"/>
-        <Button text="View Monthly Grid" styleClass="btn-primary" onAction="#handleView"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDate" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDate" prefWidth="130" minWidth="120"/>
+        <Label text="Category:" minWidth="65"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="120" minWidth="110" promptText="Select"/>
+        <Label text="Leave Type:" minWidth="75"/>
+        <ComboBox fx:id="typeCombo" prefWidth="110" minWidth="100" promptText="Select"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
     </HBox>
 
+    <!-- 18-Column Data Table matching media_1787899936097.png -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colName" text="Staff Name" prefWidth="160"/>
-            <TableColumn fx:id="colDept" text="Department" prefWidth="110"/>
-            <TableColumn fx:id="colDoj" text="Date of Joining" prefWidth="100"/>
-            <TableColumn fx:id="colAllowed" text="CL Allowed" prefWidth="85"/>
+            <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="180"/>
+            <TableColumn fx:id="colDept" text="Department" prefWidth="100"/>
+            <TableColumn fx:id="colDoj" text="DOJ" prefWidth="90"/>
+            <TableColumn fx:id="colAllowed" text="Casual Leave Allowed" prefWidth="135"/>
             <TableColumn fx:id="colJan" text="Jan" prefWidth="45"/>
             <TableColumn fx:id="colFeb" text="Feb" prefWidth="45"/>
             <TableColumn fx:id="colMar" text="Mar" prefWidth="45"/>
             <TableColumn fx:id="colApr" text="Apr" prefWidth="45"/>
             <TableColumn fx:id="colMay" text="May" prefWidth="45"/>
-            <TableColumn fx:id="colJun" text="Jun" prefWidth="45"/>
-            <TableColumn fx:id="colJul" text="Jul" prefWidth="45"/>
+            <TableColumn fx:id="colJun" text="June" prefWidth="45"/>
+            <TableColumn fx:id="colJul" text="July" prefWidth="45"/>
             <TableColumn fx:id="colAug" text="Aug" prefWidth="45"/>
             <TableColumn fx:id="colSep" text="Sep" prefWidth="45"/>
             <TableColumn fx:id="colOct" text="Oct" prefWidth="45"/>
             <TableColumn fx:id="colNov" text="Nov" prefWidth="45"/>
             <TableColumn fx:id="colDec" text="Dec" prefWidth="45"/>
-            <TableColumn fx:id="colTaken" text="Total Taken" prefWidth="85"/>
-            <TableColumn fx:id="colBalance" text="Balance CL" prefWidth="85"/>
+            <TableColumn fx:id="colTotal" text="Total" prefWidth="55"/>
+            <TableColumn fx:id="colBalance" text="Balance" prefWidth="65"/>
         </columns>
     </TableView>
 </VBox>

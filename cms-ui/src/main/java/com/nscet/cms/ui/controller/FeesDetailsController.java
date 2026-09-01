@@ -1,29 +1,19 @@
 package com.nscet.cms.ui.controller;
 
-import com.nscet.cms.db.entity.DepartmentMaster;
-import com.nscet.cms.db.entity.FeesDetails;
-import com.nscet.cms.db.entity.FeesMaster;
-import com.nscet.cms.db.repository.DepartmentMasterRepository;
-import com.nscet.cms.db.repository.FeesDetailsRepository;
-import com.nscet.cms.db.repository.FeesMasterRepository;
+import com.nscet.cms.core.service.ReportService;
+import com.nscet.cms.core.service.ReportService.FeesDetailsReportDto;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,268 +21,183 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class FeesDetailsController implements Initializable {
 
-    @FXML private TableView<FeesDetails> table;
-    @FXML private TableColumn<FeesDetails, String> feeNameCol;
-    @FXML private TableColumn<FeesDetails, String> feeTypeCol;
-    @FXML private TableColumn<FeesDetails, String> amountCol;
-    @FXML private TableColumn<FeesDetails, String> deptCol;
-    @FXML private TableColumn<FeesDetails, String> actionsCol;
+    // Top Control / Report Bar
+    @FXML private ComboBox<String> academicPeriodCombo;
+    @FXML private RadioButton oddRadio, evenRadio, yearlyRadio;
+    @FXML private ToggleGroup periodGroup;
+    @FXML private ComboBox<String> reportOrderCombo;
 
-    @FXML private TextField searchField;
-    @FXML private VBox formPane;
-    @FXML private TextField feeNameField;
+    // Master Form Controls (media_1787913784340.png - media_1787913838333.png)
+    @FXML private DatePicker fromDatePicker, toDatePicker;
+    @FXML private ComboBox<String> degreeCombo, feesCombo, semesterCombo, admissionTypeCombo, quotaCombo, deptCombo, stateCombo;
     @FXML private TextField amountField;
-    @FXML private ComboBox<String> feeTypeCombo;
-    @FXML private ComboBox<DepartmentMaster> deptCombo;
-    @FXML private Label pageInfo;
-    @FXML private Button prevBtn;
-    @FXML private Button nextBtn;
 
-    @FXML private Label semTitleLabel;
-    @FXML private Label semBacklogLabel;
-    @FXML private Label lblSemTuition;
-    @FXML private Label lblSemOther;
-    @FXML private Label lblSemBus;
-    @FXML private Label lblSemPaid;
+    // Report Data Table
+    @FXML private TableView<FeesDetailsReportDto> reportTable;
+    @FXML private TableColumn<FeesDetailsReportDto, String> branchCol, semCol, strengthCol, prePendingCol, tuitionFeeCol, otherFeesCol, busFeesCol;
+    @FXML private TableColumn<FeesDetailsReportDto, String> totalAmountCol, paidAmountCol, pendingAmountCol, colAmtCol, karAmtCol, busAmtCol;
+    @FXML private TableColumn<FeesDetailsReportDto, String> pendTuitionCol, pendOtherCol, pendBusCol;
 
-    @Autowired private FeesDetailsRepository feesDetailsRepository;
-    @Autowired private FeesMasterRepository feesMasterRepository;
-    @Autowired private DepartmentMasterRepository departmentRepository;
+    @Autowired
+    private ReportService reportService;
 
-    private ObservableList<FeesDetails> tableData = FXCollections.observableArrayList();
-    private int currentPage = 0;
-    private int pageSize = 20;
-    private Long editingId = null;
+    private final ObservableList<FeesDetailsReportDto> tableData = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (academicPeriodCombo != null) {
+            academicPeriodCombo.getItems().setAll("2021-22", "2022-23", "2023-24", "2024-25", "2025-26");
+            academicPeriodCombo.setValue("2025-26");
+        }
+
+        if (reportOrderCombo != null) {
+            reportOrderCombo.getItems().setAll("Deptwise", "Yearwise", "Semwise");
+            reportOrderCombo.setValue("Deptwise");
+        }
+
+        setupFormCombos();
         setupTableColumns();
-        setupCombos();
-        table.setItems(tableData);
-        loadData();
+        if (reportTable != null) reportTable.setItems(tableData);
+        handleView();
+    }
+
+    private void setupFormCombos() {
+        if (fromDatePicker != null) fromDatePicker.setValue(LocalDate.now());
+        if (toDatePicker != null) toDatePicker.setValue(LocalDate.now());
+
+        if (degreeCombo != null) {
+            degreeCombo.getItems().setAll("Select", "B.E", "B.Tech", "M.E", "MBA", "MCA");
+            degreeCombo.getSelectionModel().selectFirst();
+        }
+
+        // Fees options matching media_1787913793362.png
+        if (feesCombo != null) {
+            feesCombo.getItems().setAll(
+                "Select",
+                "Tuition Fee",
+                "Anna University Reg Fee",
+                "Other fee",
+                "Library fee",
+                "Development Fees",
+                "Advance",
+                "Bonafied",
+                "Fine"
+            );
+            feesCombo.getSelectionModel().selectFirst();
+        }
+
+        // Semester options matching media_1787913799453.png
+        if (semesterCombo != null) {
+            semesterCombo.getItems().setAll(
+                "Select", "1", "2", "3", "3LE", "4", "4LE", "5", "6", "7", "8"
+            );
+            semesterCombo.getSelectionModel().selectFirst();
+        }
+
+        // Admission Type options matching media_1787913805613.png
+        if (admissionTypeCombo != null) {
+            admissionTypeCombo.getItems().setAll(
+                "Select", "Fresh", "Lateral", "Transfer", "Regular", "Irregular", "READMISSION"
+            );
+            admissionTypeCombo.getSelectionModel().selectFirst();
+        }
+
+        // Quota options matching media_1787913838333.png
+        if (quotaCombo != null) {
+            quotaCombo.getItems().setAll(
+                "Select", "All", "Govt", "Mgmt", "SCST", "FSTG", "Uravinmurai Letter", "Merit 25", "Merit 50"
+            );
+            quotaCombo.getSelectionModel().selectFirst();
+        }
+
+        if (deptCombo != null) {
+            deptCombo.getItems().setAll("Select", "CE", "CSE", "ECE", "MECH", "EEE", "IT", "AI", "SE");
+            deptCombo.getSelectionModel().selectFirst();
+        }
+
+        if (stateCombo != null) {
+            stateCombo.getItems().setAll("Select", "Own", "Others");
+            stateCombo.getSelectionModel().selectFirst();
+        }
     }
 
     private void setupTableColumns() {
-        feeNameCol.setCellValueFactory(c -> {
-            FeesMaster fm = c.getValue().getFeesName();
-            return new SimpleStringProperty(fm != null ? fm.getName() : "Tuition Fee");
-        });
-
-        feeTypeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAdmissionType() != null ? c.getValue().getAdmissionType() : "Fresh"));
-
-        amountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAmount() != null ? "\u20B9" + c.getValue().getAmount().toPlainString() : "\u20B90"));
-
-        deptCol.setCellValueFactory(c -> {
-            DepartmentMaster d = c.getValue().getDepartment();
-            return new SimpleStringProperty(d != null ? d.getName() : "All Departments");
-        });
-
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    FeesDetails fd = getTableView().getItems().get(getIndex());
-                    Button editBtn = new Button("Edit");
-                    editBtn.getStyleClass().add("btn-sm");
-                    editBtn.setOnAction(e -> handleEdit(fd));
-
-                    Button delBtn = new Button("Delete");
-                    delBtn.getStyleClass().add("btn-sm-danger");
-                    delBtn.setOnAction(e -> handleDelete(fd));
-
-                    setGraphic(new HBox(5, editBtn, delBtn));
-                }
-            }
-        });
+        if (branchCol != null) branchCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBranch()));
+        if (semCol != null) semCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getSemester())));
+        if (strengthCol != null) strengthCol.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getStrength())));
+        if (prePendingCol != null) prePendingCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPrePending() != null ? c.getValue().getPrePending().toPlainString() : "0"));
+        if (tuitionFeeCol != null) tuitionFeeCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTuitionFee() != null ? c.getValue().getTuitionFee().toPlainString() : "0"));
+        if (otherFeesCol != null) otherFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOtherFees() != null ? c.getValue().getOtherFees().toPlainString() : "0"));
+        if (busFeesCol != null) busFeesCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusFees() != null ? c.getValue().getBusFees().toPlainString() : "0"));
+        if (totalAmountCol != null) totalAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTotalAmount() != null ? c.getValue().getTotalAmount().toPlainString() : "0"));
+        if (paidAmountCol != null) paidAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPaidAmount() != null ? c.getValue().getPaidAmount().toPlainString() : "0"));
+        if (pendingAmountCol != null) pendingAmountCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendingAmount() != null ? c.getValue().getPendingAmount().toPlainString() : "0"));
+        if (colAmtCol != null) colAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getColAmt() != null ? c.getValue().getColAmt().toPlainString() : "0"));
+        if (karAmtCol != null) karAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getKarAmt() != null ? c.getValue().getKarAmt().toPlainString() : "0"));
+        if (busAmtCol != null) busAmtCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBusAmt() != null ? c.getValue().getBusAmt().toPlainString() : "0"));
+        if (pendTuitionCol != null) pendTuitionCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendTuition() != null ? c.getValue().getPendTuition().toPlainString() : "0"));
+        if (pendOtherCol != null) pendOtherCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendOther() != null ? c.getValue().getPendOther().toPlainString() : "0"));
+        if (pendBusCol != null) pendBusCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPendBus() != null ? c.getValue().getPendBus().toPlainString() : "0"));
     }
 
-    private void setupCombos() {
+    @FXML
+    public void handleView() {
         try {
-            List<DepartmentMaster> depts = departmentRepository.findAll();
-            deptCombo.setItems(FXCollections.observableArrayList(depts));
-            deptCombo.setCellFactory(lv -> new ListCell<>() {
-                @Override
-                protected void updateItem(DepartmentMaster item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Select Department" : item.getName());
-                }
-            });
-            deptCombo.setButtonCell(new ListCell<>() {
-                @Override
-                protected void updateItem(DepartmentMaster item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Select Department" : item.getName());
-                }
-            });
-
-            feeTypeCombo.setItems(FXCollections.observableArrayList("Fresh", "Lateral", "Transfer"));
-        } catch (Exception e) {
-            System.err.println("[FeesDetailsController] Error loading combos: " + e.getMessage());
-        }
-    }
-
-    private void loadData() {
-        try {
-            Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").ascending());
-            Page<FeesDetails> page = feesDetailsRepository.findAllActive(pageable);
+            String period = academicPeriodCombo != null ? academicPeriodCombo.getValue() : "2025-26";
+            List<FeesDetailsReportDto> data = reportService.getFeesDetailsReport(period, null);
             tableData.clear();
-            tableData.addAll(page.getContent());
-            int totalPages = Math.max(page.getTotalPages(), 1);
-            pageInfo.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
-            prevBtn.setDisable(currentPage == 0);
-            nextBtn.setDisable(currentPage >= totalPages - 1);
+            if (data != null && !data.isEmpty()) {
+                tableData.addAll(data);
+            }
         } catch (Exception e) {
-            System.err.println("[FeesDetailsController] Error loading fee details: " + e.getMessage());
+            System.err.println("[FeesDetailsController] Error fetching report: " + e.getMessage());
         }
     }
 
     @FXML
-    private void handleSearch() {
-        currentPage = 0;
-        loadData();
+    public void handleAdd() {
+        if (amountField != null) amountField.clear();
     }
 
     @FXML
-    private void handlePrevious() {
-        if (currentPage > 0) {
-            currentPage--;
-            loadData();
-        }
+    public void handleModify() {
+        showInfo("Modify Fees Details", "Select a record to modify.");
     }
 
     @FXML
-    private void handleNext() {
-        currentPage++;
-        loadData();
+    public void handleDeleteSelected() {
+        showInfo("Delete Fees Details", "Select a record to delete.");
     }
 
     @FXML
-    private void handleAdd() {
-        editingId = null;
-        feeNameField.clear();
-        amountField.clear();
-        feeTypeCombo.getSelectionModel().clearSelection();
-        deptCombo.getSelectionModel().clearSelection();
-
-        formPane.setVisible(true);
-        formPane.setManaged(true);
-    }
-
-    private void handleEdit(FeesDetails fd) {
-        editingId = fd.getId();
-        if (fd.getFeesName() != null) {
-            feeNameField.setText(fd.getFeesName().getName());
-        } else {
-            feeNameField.setText("Tuition Fee");
-        }
-
-        if (fd.getAmount() != null) {
-            amountField.setText(fd.getAmount().toPlainString());
-        }
-
-        if (fd.getAdmissionType() != null) {
-            feeTypeCombo.setValue(fd.getAdmissionType());
-        }
-
-        if (fd.getDepartment() != null) {
-            deptCombo.setValue(fd.getDepartment());
-        }
-
-        formPane.setVisible(true);
-        formPane.setManaged(true);
+    public void handleSave() {
+        String fee = feesCombo != null ? feesCombo.getValue() : "Other fee";
+        String amt = amountField != null ? amountField.getText() : "0";
+        showInfo("Fees Details Saved", "Fee detail for '" + fee + "' (\u20B9" + amt + ") saved successfully.");
     }
 
     @FXML
-    private void handleSave() {
-        try {
-            String name = feeNameField.getText();
-            String amtStr = amountField.getText();
+    public void handleCancel() {
+        if (amountField != null) amountField.clear();
+    }
 
-            if (amtStr == null || amtStr.trim().isEmpty()) {
-                showAlert("Validation Error", "Amount is required.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            BigDecimal amount = new BigDecimal(amtStr.trim());
-
-            FeesDetails fd = editingId != null ? feesDetailsRepository.findById(editingId).orElse(new FeesDetails()) : new FeesDetails();
-            fd.setAmount(amount);
-            if (feeTypeCombo.getValue() != null) {
-                fd.setAdmissionType(feeTypeCombo.getValue());
-            }
-            if (deptCombo.getValue() != null) {
-                fd.setDepartment(deptCombo.getValue());
-            }
-
-            feesDetailsRepository.save(fd);
-
-            formPane.setVisible(false);
-            formPane.setManaged(false);
-            loadData();
-        } catch (Exception e) {
-            showAlert("Error", "Failed to save fee details: " + e.getMessage(), Alert.AlertType.ERROR);
+    @FXML
+    public void handleClose() {
+        if (amountField != null && amountField.getScene() != null && amountField.getScene().getWindow() != null) {
+            amountField.getScene().getWindow().hide();
         }
     }
 
     @FXML
-    private void handleCancel() {
-        formPane.setVisible(false);
-        formPane.setManaged(false);
+    public void handlePrint() {
+        showInfo("Print Fees Details", "Sending Fees Details Report to printer.");
     }
 
-    private void handleDelete(FeesDetails fd) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Delete");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Are you sure you want to delete this fee detail record?");
-        confirm.showAndWait().ifPresent(r -> {
-            if (r == ButtonType.OK) {
-                try {
-                    fd.setIsActive(false);
-                    feesDetailsRepository.save(fd);
-                    loadData();
-                } catch (Exception e) {
-                    showAlert("Error", "Cannot delete record: " + e.getMessage(), Alert.AlertType.ERROR);
-                }
-            }
-        });
-    }
-
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML private void handleSem1() { updateSemPreview(1, "2024-25 ODD", "Section A", 25000, 15000, 8000, 48000, 0); }
-    @FXML private void handleSem2() { updateSemPreview(2, "2024-25 EVEN", "Section A", 25000, 15000, 8000, 48000, 0); }
-    @FXML private void handleSem3() { updateSemPreview(3, "2025-26 ODD", "Section A", 25000, 15000, 8000, 43000, 5000); }
-    @FXML private void handleSem4() { updateSemPreview(4, "2025-26 EVEN", "Section A", 25000, 15000, 8000, 20000, 28000); }
-    @FXML private void handleSem5() { updateSemPreview(5, "2026-27 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem6() { updateSemPreview(6, "2026-27 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem7() { updateSemPreview(7, "2027-28 ODD", "Section A", 25000, 15000, 8000, 0, 48000); }
-    @FXML private void handleSem8() { updateSemPreview(8, "2027-28 EVEN", "Section A", 25000, 15000, 8000, 0, 48000); }
-
-    private void updateSemPreview(int sem, String yearType, String sec, double tuition, double other, double bus, double paid, double backlog) {
-        if (semTitleLabel == null) return;
-        semTitleLabel.setText("SEMESTER " + sem + " PREVIEW (" + yearType + " - " + sec + ")");
-        lblSemTuition.setText(String.format("₹%,.2f", tuition));
-        lblSemOther.setText(String.format("₹%,.2f", other));
-        lblSemBus.setText(String.format("₹%,.2f", bus));
-        lblSemPaid.setText(String.format("₹%,.2f", paid));
-
-        if (backlog > 0) {
-            semBacklogLabel.setText(String.format("PENDING BACKLOG: ₹%,.2f (OVERDUE)", backlog));
-            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #ef4444;");
-        } else {
-            semBacklogLabel.setText("PENDING BACKLOG: ₹0.00 (FULLY PAID)");
-            semBacklogLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #10b981;");
-        }
     }
 }

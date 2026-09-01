@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,7 +21,7 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class FeesMasterController implements Initializable {
     @FXML private TableView<FeesMaster> table;
-    @FXML private TableColumn<FeesMaster, String> nameCol, groupCol, fromDateCol, toDateCol, semesterFeeCol, actionsCol;
+    @FXML private TableColumn<FeesMaster, String> nameCol, groupCol, fromDateCol, toDateCol, semesterFeeCol;
     @FXML private TextField searchField, nameField;
     @FXML private ComboBox<String> groupCombo;
     @FXML private CheckBox semesterFeeCheck;
@@ -41,45 +40,71 @@ public class FeesMasterController implements Initializable {
         fromDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFromDate() != null ? c.getValue().getFromDate().toString() : ""));
         toDateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getToDate() != null ? c.getValue().getToDate().toString() : ""));
         semesterFeeCol.setCellValueFactory(c -> new SimpleStringProperty(Boolean.TRUE.equals(c.getValue().getSemesterFee()) ? "Yes" : "No"));
-        actionsCol.setCellValueFactory(c -> new SimpleStringProperty(""));
-        actionsCol.setCellFactory(col -> new TableCell<>() {
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); } else {
-                    FeesMaster f = getTableView().getItems().get(getIndex());
-                    Button edit = new Button("Edit"); edit.getStyleClass().add("btn-sm");
-                    edit.setOnAction(e -> handleEdit(f));
-                    Button del = new Button("Delete"); del.getStyleClass().add("btn-sm-danger");
-                    del.setOnAction(e -> handleDelete(f));
-                    setGraphic(new HBox(5, edit, del));
-                }
+
+        groupCombo.getItems().add("Select");
+        groupCombo.getItems().addAll(
+            "College Fees", "Karuna Donar Club", "Bus Fees", "Exam Fees", "Admission Fees", "Alumni Registration", "Other"
+        );
+        groupCombo.getSelectionModel().selectFirst();
+        table.setItems(tableData);
+
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                populateForm(newSel);
             }
         });
-        groupCombo.getItems().add("Select");
-        groupCombo.getItems().addAll("Clg Fees", "Exam Fees", "Miscellaneous", "Bus Fee", "Hostel Fee", "Other");
-        groupCombo.getSelectionModel().selectFirst();
-        table.setItems(tableData); loadData();
+
+        loadData();
     }
 
     private void loadData() {
         Page<FeesMaster> page = service.getAll(searchField.getText(), currentPage, pageSize, "id", "asc");
         tableData.clear(); tableData.addAll(page.getContent());
-        pageInfo.setText(String.format("Page %d of %d", currentPage + 1, page.getTotalPages()));
+        pageInfo.setText(String.format("Page %d of %d (Total: %d)", currentPage + 1, page.getTotalPages(), page.getTotalElements()));
         prevBtn.setDisable(currentPage == 0); nextBtn.setDisable(currentPage >= page.getTotalPages() - 1);
+    }
+
+    private void populateForm(FeesMaster f) {
+        editingId = f.getId();
+        nameField.setText(f.getName() != null ? f.getName() : "");
+        if (f.getFeesGroup() != null && groupCombo.getItems().contains(f.getFeesGroup())) {
+            groupCombo.setValue(f.getFeesGroup());
+        } else {
+            groupCombo.getSelectionModel().selectFirst();
+        }
+        semesterFeeCheck.setSelected(Boolean.TRUE.equals(f.getSemesterFee()));
     }
 
     @FXML private void handleSearch() { currentPage = 0; loadData(); }
     @FXML private void handlePrevious() { currentPage--; loadData(); }
     @FXML private void handleNext() { currentPage++; loadData(); }
+
     @FXML private void handleAdd() {
-        editingId = null; nameField.clear(); groupCombo.getSelectionModel().selectFirst(); semesterFeeCheck.setSelected(false);
-        formPane.setVisible(true); formPane.setManaged(true);
+        editingId = null;
+        nameField.clear();
+        groupCombo.getSelectionModel().selectFirst();
+        semesterFeeCheck.setSelected(false);
+        table.getSelectionModel().clearSelection();
     }
-    @FXML private void handleEdit(FeesMaster f) {
-        editingId = f.getId(); nameField.setText(f.getName()); groupCombo.setValue(f.getFeesGroup());
-        semesterFeeCheck.setSelected(Boolean.TRUE.equals(f.getSemesterFee()));
-        formPane.setVisible(true); formPane.setManaged(true);
+
+    @FXML private void handleModify() {
+        FeesMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to modify.", Alert.AlertType.WARNING);
+            return;
+        }
+        populateForm(selected);
     }
+
+    @FXML private void handleDeleteSelected() {
+        FeesMaster selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Selection Required", "Please select a row from the table to delete.", Alert.AlertType.WARNING);
+            return;
+        }
+        handleDelete(selected);
+    }
+
     @FXML private void handleSave() {
         try {
             FeesMaster f = new FeesMaster();
@@ -87,12 +112,32 @@ public class FeesMasterController implements Initializable {
             f.setFeesGroup(groupCombo.getValue() != null && !"Select".equals(groupCombo.getValue()) ? groupCombo.getValue() : null);
             f.setSemesterFee(semesterFeeCheck.isSelected());
             if (editingId != null) service.update(editingId, f); else service.create(f);
-            formPane.setVisible(false); formPane.setManaged(false); loadData();
-        } catch (Exception e) { new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait(); }
+            handleAdd();
+            loadData();
+        } catch (Exception e) { showAlert("Error", e.getMessage(), Alert.AlertType.ERROR); }
     }
-    @FXML private void handleCancel() { formPane.setVisible(false); formPane.setManaged(false); }
+
+    @FXML private void handleCancel() {
+        handleAdd();
+    }
+
     private void handleDelete(FeesMaster f) {
-        Alert c = new Alert(Alert.AlertType.CONFIRMATION); c.setContentText("Delete: " + f.getName() + "?");
-        c.showAndWait().ifPresent(r -> { if (r == ButtonType.OK) { service.softDelete(f.getId()); loadData(); } });
+        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+        c.setContentText("Are you sure you want to delete fee: " + f.getName() + "?");
+        c.showAndWait().ifPresent(r -> {
+            if (r == ButtonType.OK) {
+                service.softDelete(f.getId());
+                handleAdd();
+                loadData();
+            }
+        });
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

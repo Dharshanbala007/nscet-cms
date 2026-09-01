@@ -11,51 +11,91 @@
     <!-- Background -->
     <ImageView fx:id="bgImage" fitWidth="1024" fitHeight="700" preserveRatio="false" opacity="0.12"/>
 
-    <VBox alignment="CENTER" spacing="30">
-        <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+    <VBox alignment="TOP_CENTER" spacing="20">
+        <!-- Top College Real Header -->
+        <HBox alignment="CENTER" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 8 25 8 25; -fx-border-color: #cbd5e1; -fx-border-width: 0 0 1 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);" maxWidth="Infinity">
+            <!-- Left College Logo -->
+            <ImageView fitHeight="72" preserveRatio="true">
+                <image>
+                    <Image url="@/images/college_logo_left.png"/>
+                </image>
+            </ImageView>
 
-        <!-- Header -->
-        <VBox alignment="CENTER" spacing="8">
-            <Label text="NSCET" styleClass="login-title"/>
-            <Label text="College Management System" styleClass="login-subtitle"/>
-            <Label text="Nadar Saraswathi College of Engineering and Technology, Theni" styleClass="footer-text"/>
-        </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
 
-        <!-- Portal Cards -->
-        <HBox alignment="CENTER" spacing="30">
-            <!-- Admin Portal -->
-            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
-                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
-                <Label text="A" styleClass="portal-icon portal-icon-admin"/>
-                <Label text="Admin Portal" styleClass="portal-card-title"/>
-                <Label text="System administration,\nmaster data, users\nand full access" styleClass="portal-card-desc"/>
-                <Region prefHeight="10"/>
-                <Button text="OPEN ADMIN" styleClass="portal-btn-admin" onAction="#handleAdmin" maxWidth="Infinity"/>
+            <!-- Center College Text Header -->
+            <VBox alignment="CENTER" spacing="2">
+                <Label text="Theni Melapettai Hindu Nadargal Uravinmurai" 
+                       style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #991b1b; -fx-font-style: italic;"/>
+                
+                <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING &amp; TECHNOLOGY" 
+                       style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
+                
+                <Label text="Approved by AICTE, New Delhi | Affiliated to Anna University, Chennai" 
+                       style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10.5px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                
+                <Label text="Accredited by NAAC with 'A' Grade | Recognized under Section 2(f) | ISO 9001:2015 Certified Institution" 
+                       style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
+                
+                <Label text="Vadapudupatti, Annanji (P.O), Theni - 625 531" 
+                       style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
             </VBox>
 
-            <!-- Accounts Portal -->
-            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
-                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
-                <Label text="Ac" styleClass="portal-icon portal-icon-accounts"/>
-                <Label text="Accounts Portal" styleClass="portal-card-title"/>
-                <Label text="Financial operations,\nledgers, vouchers\nand reporting" styleClass="portal-card-desc"/>
-                <Region prefHeight="10"/>
-                <Button text="OPEN ACCOUNTS" styleClass="portal-btn-admin" onAction="#handleAccounts" maxWidth="Infinity"/>
-            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Payroll Portal -->
-            <VBox alignment="CENTER" spacing="15" styleClass="portal-card" prefWidth="250" prefHeight="280">
-                <padding><Insets top="30" right="25" bottom="30" left="25"/></padding>
-                <Label text="P" styleClass="portal-icon portal-icon-payroll"/>
-                <Label text="Payroll Portal" styleClass="portal-card-title"/>
-                <Label text="Salary processing,\nattendance, deductions\nand payslips" styleClass="portal-card-desc"/>
-                <Region prefHeight="10"/>
-                <Button text="OPEN PAYROLL" styleClass="portal-btn-admin" onAction="#handlePayroll" maxWidth="Infinity"/>
-            </VBox>
+            <!-- Right Kamarajar / TMHNU Logo -->
+            <ImageView fitHeight="72" preserveRatio="true">
+                <image>
+                    <Image url="@/images/college_logo_right.png"/>
+                </image>
+            </ImageView>
         </HBox>
 
-        <!-- Footer -->
-        <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
+        <VBox alignment="CENTER" spacing="25" VBox.vgrow="ALWAYS">
+            <padding><Insets top="10" right="40" bottom="30" left="40"/></padding>
+
+            <!-- Header Title -->
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="COLLEGE MANAGEMENT SYSTEM" styleClass="login-title" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0f172a;"/>
+                <Label text="Select Portal to Continue" styleClass="login-subtitle" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            </VBox>
+
+            <!-- Portal Cards -->
+            <HBox alignment="CENTER" spacing="30">
+                <!-- Admin Portal -->
+                <VBox alignment="CENTER" spacing="12" styleClass="portal-card" prefWidth="250" prefHeight="270">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="A" styleClass="portal-icon portal-icon-admin"/>
+                    <Label text="Admin Portal" styleClass="portal-card-title"/>
+                    <Label text="System administration, master data, users and full access" styleClass="portal-card-desc" wrapText="true" textAlignment="CENTER"/>
+                    <Region prefHeight="10"/>
+                    <Button text="OPEN ADMIN" styleClass="portal-btn-admin" onAction="#handleAdmin" maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- Accounts Portal -->
+                <VBox alignment="CENTER" spacing="12" styleClass="portal-card" prefWidth="250" prefHeight="270">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="Ac" styleClass="portal-icon portal-icon-accounts"/>
+                    <Label text="Accounts Portal" styleClass="portal-card-title"/>
+                    <Label text="Financial operations, ledgers, vouchers and reporting" styleClass="portal-card-desc" wrapText="true" textAlignment="CENTER"/>
+                    <Region prefHeight="10"/>
+                    <Button text="OPEN ACCOUNTS" styleClass="portal-btn-admin" onAction="#handleAccounts" maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- Payroll Portal -->
+                <VBox alignment="CENTER" spacing="12" styleClass="portal-card" prefWidth="250" prefHeight="270">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="P" styleClass="portal-icon portal-icon-payroll"/>
+                    <Label text="Payroll Portal" styleClass="portal-card-title"/>
+                    <Label text="Salary processing, attendance, deductions and payslips" styleClass="portal-card-desc" wrapText="true" textAlignment="CENTER"/>
+                    <Region prefHeight="10"/>
+                    <Button text="OPEN PAYROLL" styleClass="portal-btn-admin" onAction="#handlePayroll" maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+
+            <!-- Footer -->
+            <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
+        </VBox>
     </VBox>
 
     <!-- Secondary Login Verification Overlay -->

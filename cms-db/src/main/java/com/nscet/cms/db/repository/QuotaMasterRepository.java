@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface QuotaMasterRepository extends JpaRepository<QuotaMaster, Long> {
 
@@ -18,4 +20,8 @@ public interface QuotaMasterRepository extends JpaRepository<QuotaMaster, Long> 
            "AND (LOWER(q.code) LIKE LOWER(CONCAT('%', :search, '%')) " +
            "OR LOWER(q.name) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<QuotaMaster> search(@Param("search") String search, Pageable pageable);
+
+    boolean existsByCode(String code);
+
+    Optional<QuotaMaster> findByCode(String code);
 }

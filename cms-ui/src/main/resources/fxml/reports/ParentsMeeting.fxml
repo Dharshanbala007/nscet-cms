@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.ParentsMeetingController"
+      styleClass="master-container" spacing="10" style="-fx-padding: 12; -fx-background-color: #f8fafc;">
+
+    <!-- Title Header matching media_1788255099653.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #ffffff; -fx-padding: 8 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+        <Label text="Parents Meeting" styleClass="module-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
+    </HBox>
+
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+
+        <!-- Top Filter Bar matching media_1788255099653.png Row 1 -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <Label text="Dept:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="deptCombo" prefWidth="120" promptText="CSE"/>
+
+            <Label text="Batch:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="batchCombo" prefWidth="120" promptText="2022-2026"/>
+
+            <Label text="Section:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <ComboBox fx:id="sectionCombo" prefWidth="80" promptText="A"/>
+
+            <Label text="Meeting Date:" style="-fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-size: 11.5px;"/>
+            <DatePicker fx:id="meetingDatePicker" prefWidth="150"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="View" styleClass="btn-primary" prefWidth="75" onAction="#handleView"/>
+            <Button text="Save" styleClass="btn-secondary" prefWidth="75" onAction="#handleSave"/>
+            <Button text="Print" styleClass="btn-secondary" prefWidth="75" onAction="#handlePrint"/>
+            <Button text="Address Print" styleClass="btn-secondary" prefWidth="110" onAction="#handleAddressPrint"/>
+        </HBox>
+
+        <!-- Row 2 Controls: Radio, Attendance Period TitledPane, Univ/Internal Letters matching media_1788255099653.png -->
+        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 10 15; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+            <VBox spacing="8">
+                <fx:define>
+                    <ToggleGroup fx:id="meetingTypeGroup"/>
+                </fx:define>
+                <HBox spacing="15">
+                    <RadioButton fx:id="parentsMeetingRadio" text="Parents Meeting" selected="true" toggleGroup="$meetingTypeGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                    <RadioButton fx:id="internalTestRadio" text="Internal Test" toggleGroup="$meetingTypeGroup" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                </HBox>
+
+                <!-- Attendance Period Titled Box -->
+                <TitledPane text="Attendance Period" expanded="true" collapsible="false" style="-fx-font-weight: bold;">
+                    <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 8;">
+                        <Label text="From Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                        <DatePicker fx:id="fromDatePicker" prefWidth="125"/>
+                        <Label text="To Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155; -fx-font-size: 11px;"/>
+                        <DatePicker fx:id="toDatePicker" prefWidth="125"/>
+                    </HBox>
+                </TitledPane>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <VBox spacing="10" alignment="CENTER_RIGHT">
+                <CheckBox fx:id="univIntMarkCheck" text="Univ.Int.Mark" style="-fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                <HBox spacing="10">
+                    <Button text="Univ Mark Letter" styleClass="btn-secondary" prefWidth="130" onAction="#handleUnivMarkLetter"/>
+                    <Button text="Internal Mark Letter" styleClass="btn-secondary" prefWidth="140" onAction="#handleInternalMarkLetter"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Table View for Parents Meeting matching media_1788255099653.png -->
+        <TableView fx:id="studentTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="slNoCol" text="Sl No" prefWidth="55"/>
+                <TableColumn fx:id="rollNoCol" text="Roll No" prefWidth="110"/>
+                <TableColumn fx:id="nameCol" text="Student Name" prefWidth="180"/>
+                <TableColumn fx:id="fatherNameCol" text="Father Name" prefWidth="170"/>
+                <TableColumn fx:id="attendanceCol" text="Attendance %" prefWidth="100"/>
+                <TableColumn fx:id="internalMarksCol" text="Internal Marks" prefWidth="110"/>
+                <TableColumn fx:id="remarksCol" text="Remarks" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

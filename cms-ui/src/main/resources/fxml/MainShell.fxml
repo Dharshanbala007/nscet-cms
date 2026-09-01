@@ -3,36 +3,79 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
 
 <BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.nscet.cms.ui.controller.MainShellController"
             styleClass="main-shell">
 
-    <!-- Top Bar -->
+    <!-- Top Bar with Real College Header -->
     <top>
-        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="0">
-            <padding>
-                <Insets top="0" right="25" bottom="0" left="25"/>
-            </padding>
+        <VBox styleClass="header-container">
+            <!-- Real College Header Layout with Left & Right Logos -->
+            <HBox alignment="CENTER" spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 8 25 8 25; -fx-border-color: #cbd5e1; -fx-border-width: 0 0 1 0;">
+                <!-- Left College Logo -->
+                <ImageView fitHeight="70" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/college_logo_left.png"/>
+                    </image>
+                </ImageView>
 
-            <Label text="NSCET CMS" styleClass="app-logo"/>
-            <Label text="  |  " styleClass="top-bar-separator"/>
-            <Label fx:id="portalLabel" styleClass="portal-badge"/>
+                <Region HBox.hgrow="ALWAYS"/>
 
-            <Region HBox.hgrow="ALWAYS"/>
+                <!-- Center College Text Header -->
+                <VBox alignment="CENTER" spacing="3">
+                    <Label text="Theni Melapettai Hindu Nadargal Uravinmurai" 
+                           style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #991b1b; -fx-font-style: italic;"/>
+                    
+                    <Label text="NADAR SARASWATHI COLLEGE OF ENGINEERING &amp; TECHNOLOGY" 
+                           style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;"/>
+                    
+                    <Label text="Approved by AICTE, New Delhi | Affiliated to Anna University, Chennai" 
+                           style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10.5px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+                    
+                    <Label text="Accredited by NAAC with 'A' Grade | Recognized under Section 2(f) | ISO 9001:2015 Certified Institution" 
+                           style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
+                    
+                    <Label text="Vadapudupatti, Annanji (P.O), Theni - 625 531" 
+                           style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 10px; -fx-text-fill: #334155;"/>
+                </VBox>
 
-            <Label fx:id="academicYearLabel" styleClass="year-badge"/>
+                <Region HBox.hgrow="ALWAYS"/>
 
-            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
-
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label fx:id="userNameLabel" styleClass="user-name"/>
+                <!-- Right Kamarajar / TMHNU Logo -->
+                <ImageView fitHeight="70" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/college_logo_right.png"/>
+                    </image>
+                </ImageView>
             </HBox>
 
-            <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+            <!-- Top Navigation / User Status Bar -->
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="0">
+                <padding>
+                    <Insets top="0" right="25" bottom="0" left="25"/>
+                </padding>
 
-            <Button text="Logout" styleClass="logout-button" onAction="#handleLogout"/>
-        </HBox>
+                <Label text="NSCET CMS" styleClass="app-logo"/>
+                <Label text="  |  " styleClass="top-bar-separator"/>
+                <Label fx:id="portalLabel" styleClass="portal-badge"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="academicYearLabel" styleClass="year-badge"/>
+
+                <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label fx:id="userNameLabel" styleClass="user-name"/>
+                </HBox>
+
+                <Separator orientation="VERTICAL" prefHeight="24" styleClass="top-bar-vsep"/>
+
+                <Button text="Logout" styleClass="logout-button" onAction="#handleLogout"/>
+            </HBox>
+        </VBox>
     </top>
 
     <!-- Left Sidebar -->
@@ -76,24 +119,29 @@
                 <VBox fx:id="toolsMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
                     <padding><Insets left="10"/></padding>
                 </VBox>
+
             </VBox>
         </ScrollPane>
     </left>
 
-    <!-- Content Area -->
+    <!-- Content Area with ScrollPane so Footer stays pinned on screen -->
     <center>
-        <StackPane fx:id="contentArea" styleClass="content-area">
-            <Label text="Welcome to NSCET CMS" styleClass="welcome-label"/>
-        </StackPane>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <StackPane fx:id="contentArea" styleClass="content-area">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+            </StackPane>
+        </ScrollPane>
     </center>
 
-    <!-- Footer -->
+    <!-- Bottom Footer Bar matching media_1788246107773.png -->
     <bottom>
-        <HBox styleClass="footer-bar" alignment="CENTER" spacing="10">
-            <padding>
-                <Insets top="4" right="20" bottom="4" left="20"/>
-            </padding>
-            <Label text="NSCET College Management System v1.0" styleClass="footer-text"/>
+        <HBox alignment="CENTER" style="-fx-background-color: #1b2a4a; -fx-padding: 6 25 6 25; -fx-border-color: #0f172a; -fx-border-width: 1 0 0 0;">
+            <Label fx:id="footerInfoLabel" 
+                   text="Logged User: SYSTEM ADMINISTRATOR | Username: admin | Role: ADMIN | Academic Year: 2025-26 | Nadar Saraswathi College of Engineering and Technology, Theni - Admin Portal"
+                   style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 11px; -fx-text-fill: #ffffff;"/>
         </HBox>
     </bottom>
+
 </BorderPane>

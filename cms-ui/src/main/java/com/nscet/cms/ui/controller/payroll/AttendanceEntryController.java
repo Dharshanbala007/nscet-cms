@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,98 +23,103 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class AttendanceEntryController implements Initializable {
 
+    @FXML private RadioButton manualRadio;
+    @FXML private RadioButton deviceRadio;
     @FXML private DatePicker datePicker;
-    @FXML private ComboBox<String> sessionCombo;
+
+    @FXML private RadioButton foreNoonRadio;
+    @FXML private RadioButton afterNoonRadio;
+    @FXML private ComboBox<String> categoryCombo;
+    @FXML private CheckBox allCheck;
 
     @FXML private TableView<AttendanceRecord> table;
     @FXML private TableColumn<AttendanceRecord, String> colCode;
     @FXML private TableColumn<AttendanceRecord, String> colName;
-    @FXML private TableColumn<AttendanceRecord, String> colDept;
     @FXML private TableColumn<AttendanceRecord, String> colDesig;
-    @FXML private TableColumn<AttendanceRecord, String> colStatus;
-    @FXML private TableColumn<AttendanceRecord, String> colRemarks;
+    @FXML private TableColumn<AttendanceRecord, String> colAttendance;
 
     @Autowired private PayrollService payrollService;
 
     private ObservableList<AttendanceRecord> attendanceList = FXCollections.observableArrayList();
+    private List<StaffSalary> allStaff;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         datePicker.setValue(LocalDate.now());
-        sessionCombo.getItems().setAll("FULL_DAY", "FORENOON", "AFTERNOON");
-        sessionCombo.getSelectionModel().selectFirst();
 
-        datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) handleLoadStaff();
-        });
+        ToggleGroup modeGroup = new ToggleGroup();
+        manualRadio.setToggleGroup(modeGroup);
+        deviceRadio.setToggleGroup(modeGroup);
+
+        ToggleGroup sessionGroup = new ToggleGroup();
+        foreNoonRadio.setToggleGroup(sessionGroup);
+        afterNoonRadio.setToggleGroup(sessionGroup);
+
+        categoryCombo.setItems(FXCollections.observableArrayList("Select", "Teaching", "Contract", "NT-Tech", "NT-Non Tech", "Officer"));
+        categoryCombo.setValue("Teaching");
 
         setupTable();
-        handleLoadStaff();
+        loadAttendanceData();
+
+        categoryCombo.setOnAction(e -> handleView());
+        allCheck.setOnAction(e -> handleView());
     }
 
     private void setupTable() {
         table.setEditable(true);
         colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffCode()));
         colName.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStaffName()));
-        colDept.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment()));
-        colDesig.setCellValueFactory(c -> new SimpleStringProperty("Active Staff"));
+        colDesig.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartment() != null ? c.getValue().getDepartment() + " - AP" : "Staff"));
 
-        colStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAttendanceType()));
-        colStatus.setCellFactory(ComboBoxTableCell.forTableColumn("PRESENT", "LOP", "CL", "OD", "LATE"));
-        colStatus.setOnEditCommit(e -> e.getRowValue().setAttendanceType(e.getNewValue()));
-
-        colRemarks.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRemarks() != null ? c.getValue().getRemarks() : ""));
-        colRemarks.setCellFactory(TextFieldTableCell.forTableColumn());
-        colRemarks.setOnEditCommit(e -> e.getRowValue().setRemarks(e.getNewValue()));
+        colAttendance.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAttendanceType() != null ? c.getValue().getAttendanceType() : "P"));
+        colAttendance.setCellFactory(ComboBoxTableCell.forTableColumn("P", "LOP", "CL", "OD", "OHP", "AB", "ML", "CPL"));
+        colAttendance.setOnEditCommit(e -> e.getRowValue().setAttendanceType(e.getNewValue()));
 
         table.setItems(attendanceList);
     }
 
-    @FXML private Label statusLabel;
-
-    @FXML
-    private void handleLoadStaff() {
+    private void loadAttendanceData() {
         LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
-        String session = sessionCombo.getValue() != null ? sessionCombo.getValue() : "FULL_DAY";
+        String session = foreNoonRadio.isSelected() ? "FORENOON" : "AFTERNOON";
+        String selectedCategory = categoryCombo.getValue();
+        boolean showAll = allCheck.isSelected();
 
         try {
+            allStaff = payrollService.getAllStaffSalaries();
             List<AttendanceRecord> existing = payrollService.getAttendanceByDate(date);
-            java.util.Map<String, AttendanceRecord> uniqueAttendance = new java.util.LinkedHashMap<>();
+            java.util.Map<String, AttendanceRecord> existingMap = new java.util.HashMap<>();
             for (AttendanceRecord r : existing) {
-                if (r.getStaffCode() != null && !uniqueAttendance.containsKey(r.getStaffCode())) {
-                    uniqueAttendance.put(r.getStaffCode(), r);
-                }
+                if (r.getStaffCode() != null) existingMap.put(r.getStaffCode(), r);
             }
 
-            if (!uniqueAttendance.isEmpty()) {
-                attendanceList.setAll(uniqueAttendance.values());
-                if (statusLabel != null) statusLabel.setText("Status: Loaded Saved Attendance for " + date);
-            } else {
-                List<StaffSalary> staffList = payrollService.getAllStaffSalaries();
-                java.util.Map<String, StaffSalary> uniqueStaff = new java.util.LinkedHashMap<>();
-                for (StaffSalary s : staffList) {
-                    if (s.getStaffCode() != null && !uniqueStaff.containsKey(s.getStaffCode())) {
-                        uniqueStaff.put(s.getStaffCode(), s);
-                    }
+            attendanceList.clear();
+            for (StaffSalary s : allStaff) {
+                if (!showAll && selectedCategory != null && !"Select".equals(selectedCategory)
+                        && s.getCategory() != null && !s.getCategory().equalsIgnoreCase(selectedCategory)) {
+                    continue;
                 }
 
-                attendanceList.clear();
-                for (StaffSalary s : uniqueStaff.values()) {
+                if (existingMap.containsKey(s.getStaffCode())) {
+                    attendanceList.add(existingMap.get(s.getStaffCode()));
+                } else {
                     AttendanceRecord rec = new AttendanceRecord();
                     rec.setAttendanceDate(date);
                     rec.setStaffCode(s.getStaffCode());
                     rec.setStaffName(s.getStaffName());
                     rec.setDepartment(s.getDepartment());
                     rec.setSessionType(session);
-                    rec.setAttendanceType("PRESENT");
-                    rec.setRemarks("New entry for " + date);
+                    rec.setAttendanceType("P");
                     attendanceList.add(rec);
                 }
-                if (statusLabel != null) statusLabel.setText("Status: New Attendance Entry for " + date);
             }
         } catch (Exception e) {
-            System.err.println("[AttendanceEntryController] Error loading staff: " + e.getMessage());
+            System.err.println("[AttendanceEntryController] Error loading attendance: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleView() {
+        loadAttendanceData();
     }
 
     @FXML
@@ -127,11 +131,10 @@ public class AttendanceEntryController implements Initializable {
                 payrollService.saveAttendance(rec);
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
+            alert.setTitle("Saved");
             alert.setHeaderText(null);
             alert.setContentText("Attendance records saved successfully for " + date + "!");
             alert.showAndWait();
-            handleLoadStaff();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -139,5 +142,10 @@ public class AttendanceEntryController implements Initializable {
             alert.setContentText("Failed to save attendance: " + e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    @FXML
+    private void handleClose() {
+        table.getItems().clear();
     }
 }

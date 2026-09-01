@@ -8,18 +8,21 @@
       styleClass="master-container" spacing="12">
     <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
 
-    <!-- Header Controls -->
-    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
-        <Label text="Payroll Acquittance &amp; Tally Report" styleClass="module-title"/>
+    <!-- Header Controls Container matching media_1787897929870.png -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="12">
+        <Label text="Payroll Report" styleClass="module-title" minWidth="130"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Category:"/>
-        <ComboBox fx:id="categoryCombo" prefWidth="130"/>
-        <Label text="Department:"/>
-        <ComboBox fx:id="deptCombo" prefWidth="150"/>
-        <Button text="Generate Report" styleClass="btn-primary" onAction="#handleGenerate"/>
+        <Label text="From Date:" minWidth="75"/>
+        <DatePicker fx:id="fromDatePicker" prefWidth="130" minWidth="120"/>
+        <Label text="To Date:" minWidth="65"/>
+        <DatePicker fx:id="toDatePicker" prefWidth="130" minWidth="120"/>
+        <Label text="Category:" minWidth="65"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="160" minWidth="140" promptText="Select"/>
+        <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleGenerate"/>
+        <Button text="Print" styleClass="btn-secondary" minWidth="75" onAction="#handlePrint"/>
     </HBox>
 
-    <!-- Report Table -->
+    <!-- Acquittance Report Table -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
             <TableColumn fx:id="colCode" text="Staff Code" prefWidth="100"/>

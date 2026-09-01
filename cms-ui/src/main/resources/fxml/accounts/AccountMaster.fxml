@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nscet.cms.ui.controller.accounts.AccountMasterController"
+      styleClass="master-container" spacing="12">
+    <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+
+    <!-- Top Action Bar -->
+    <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
+        <Label text="Account Master" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Find Table" styleClass="btn-primary" style="-fx-font-weight: bold;" onAction="#handleFind"/>
+        <Button text="Export CSV" styleClass="btn-secondary" onAction="#handleExportCsv"/>
+        <Button text="Export PDF" styleClass="btn-secondary" onAction="#handleExportPdf"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Account Master Entry Card (Left) -->
+        <TitledPane text="Account Master Entry" expanded="true" prefWidth="460" collapsible="false">
+            <VBox spacing="12">
+                <padding><Insets top="15" right="12" bottom="15" left="12"/></padding>
+
+                <GridPane hgap="10" vgap="10">
+                    <Label text="Account Group:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="accGroupField" promptText="Select/Enter Group Name" GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS"/>
+
+                    <Label text="Account Code:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="accCodeField" promptText="Enter Account Code" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Account Name:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="accNameField" promptText="Enter Account Name" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+
+                <Label text="Display Mode:" style="-fx-font-weight: bold;"/>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <CheckBox fx:id="chkTrial" text="Trial"/>
+                    <CheckBox fx:id="chkIE" text="IE"/>
+                    <CheckBox fx:id="chkBS" text="BS"/>
+                </HBox>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <CheckBox fx:id="chkSupplier" text="Supplier"/>
+                    <CheckBox fx:id="chkActive" text="Active" selected="true"/>
+                </HBox>
+
+                <Region prefHeight="10"/>
+
+                <!-- Buttons: Add, Modify, Delete, Save, Cancel, Close -->
+                <HBox spacing="5" alignment="CENTER">
+                    <Button text="Add" styleClass="btn-action-add" onAction="#handleAdd"/>
+                    <Button text="Modify" styleClass="btn-action-mod" onAction="#handleModify"/>
+                    <Button text="Delete" styleClass="btn-action-del" onAction="#handleDelete"/>
+                    <Button text="Save" styleClass="btn-action-save" onAction="#handleSave"/>
+                    <Button text="Cancel" styleClass="btn-action-cancel" onAction="#handleClear"/>
+                    <Button text="Close" styleClass="btn-action-close" onAction="#handleClose"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+        <!-- Find Table Container (Hidden by default for security, shown on Find) -->
+        <TitledPane fx:id="tableContainer" visible="false" managed="false" text="Find - Account Masters" expanded="true" HBox.hgrow="ALWAYS" collapsible="false">
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f1f5f9; -fx-padding: 6 12; -fx-border-color: #cbd5e1; -fx-border-radius: 4;">
+                    <Label text="Account Master Results" styleClass="form-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="✖ Close Table" styleClass="btn-danger" style="-fx-font-weight: bold;" onAction="#handleCloseTable"/>
+                </HBox>
+                
+                <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colAccCode" text="Account Code" prefWidth="100"/>
+                        <TableColumn fx:id="colAccName" text="Account Name" prefWidth="250"/>
+                        <TableColumn fx:id="colGroupName" text="Group Name" prefWidth="150"/>
+                        <TableColumn fx:id="colSupplier" text="Supplier" prefWidth="80"/>
+                        <TableColumn fx:id="colActive" text="Active" prefWidth="80"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </TitledPane>
+    </HBox>
+</VBox>
