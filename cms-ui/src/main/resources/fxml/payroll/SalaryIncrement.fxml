@@ -11,6 +11,9 @@
     <!-- Module Header -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
         <Label text="Increment / Revised Salary Details" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="⚡ Bulk Entry" styleClass="btn-primary" onAction="#handleBulkEntry"
+                style="-fx-font-weight: bold; -fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 6 16;"/>
     </HBox>
 
     <!-- Table View -->
@@ -98,6 +101,8 @@
             <HBox spacing="8" alignment="CENTER" style="-fx-padding: 8 0 0 0;">
                 <Button text="Add" minWidth="80" styleClass="btn-secondary" onAction="#handleAdd"/>
                 <Button text="Modify" minWidth="80" styleClass="btn-secondary" onAction="#handleModify"/>
+                <Button text="Bulk Entry" minWidth="90" styleClass="btn-primary" onAction="#handleBulkEntry"
+                        style="-fx-font-weight: bold;"/>
                 <Button text="Delete" minWidth="80" styleClass="btn-danger" onAction="#handleDelete"/>
                 <Button text="Save" minWidth="80" styleClass="btn-primary" onAction="#handleSave"/>
                 <Button text="Cancel" minWidth="80" styleClass="btn-secondary" onAction="#handleCancel"/>

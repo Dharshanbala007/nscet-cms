@@ -7,8 +7,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -99,6 +104,34 @@ public class SalaryIncrementController implements Initializable {
     @FXML
     private void handleAdd() {
         handleCancel();
+    }
+
+    @FXML
+    private void handleBulkEntry() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/payroll/BulkSalaryIncrementDialog.fxml"));
+            loader.setControllerFactory(com.nscet.cms.ui.NscetCmsApp.getContext()::getBean);
+            Parent root = loader.load();
+
+            BulkSalaryIncrementController controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Bulk Salary Increment / Revision Entry");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            if (table.getScene() != null && table.getScene().getWindow() != null) {
+                stage.initOwner(table.getScene().getWindow());
+            }
+            stage.setScene(new Scene(root, 1050, 680));
+            stage.showAndWait();
+
+            if (controller != null && controller.isSavedSuccessfully()) {
+                loadIncrements();
+            }
+        } catch (Exception e) {
+            System.err.println("[SalaryIncrementController] Failed to open BulkSalaryIncrementDialog: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Error", "Could not open Bulk Increment dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @FXML

@@ -38,11 +38,13 @@ public class PayrollShellController implements Initializable {
     @FXML private ToggleButton transactionsToggle;
     @FXML private ToggleButton reportsToggle;
     @FXML private ToggleButton toolsToggle;
+    @FXML private ToggleButton staffClubToggle;
 
     @FXML private VBox mastersMenu;
     @FXML private VBox transactionsMenu;
     @FXML private VBox reportsMenu;
     @FXML private VBox toolsMenu;
+    @FXML private VBox staffClubMenu;
 
     @Autowired private UserSession userSession;
 
@@ -131,6 +133,10 @@ public class PayrollShellController implements Initializable {
         addMenuItem(toolsMenu, "Deduction Salary", "deductionSalaryReport");
         addMenuItem(toolsMenu, "leave check old", "salaryLeaveCheck");
         addMenuItem(toolsMenu, "Salary Structure", "salaryStructure");
+
+        // STAFF CLUB
+        staffClubMenu.getChildren().clear();
+        addMenuItem(staffClubMenu, "Staff Club Details", "staffClub");
     }
 
     private Button lastActiveButton = null;
@@ -172,6 +178,12 @@ public class PayrollShellController implements Initializable {
     private void toggleTools() {
         toolsMenu.setVisible(!toolsMenu.isVisible());
         toolsMenu.setManaged(toolsMenu.isVisible());
+    }
+
+    @FXML
+    private void toggleStaffClub() {
+        staffClubMenu.setVisible(!staffClubMenu.isVisible());
+        staffClubMenu.setManaged(staffClubMenu.isVisible());
     }
 
     @FXML

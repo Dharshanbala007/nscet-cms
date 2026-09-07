@@ -2,6 +2,12 @@ package com.nscet.cms.ui.controller.payroll;
 
 import com.nscet.cms.core.service.PayrollService;
 import com.nscet.cms.db.entity.payroll.StaffSalary;
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import com.nscet.cms.ui.controller.payroll.AddPayrollEntryController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -119,6 +125,40 @@ public class PayrollCalculationController implements Initializable {
     @FXML
     private void handleView() {
         loadData();
+    }
+
+    @FXML
+    private void handleAdd() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/payroll/AddPayrollEntryDialog.fxml"));
+            loader.setControllerFactory(com.nscet.cms.ui.NscetCmsApp.getContext()::getBean);
+            Parent root = loader.load();
+
+            AddPayrollEntryController controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Add Staff Payroll Entry");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            if (table.getScene() != null && table.getScene().getWindow() != null) {
+                stage.initOwner(table.getScene().getWindow());
+            }
+            stage.setScene(new Scene(root, 650, 620));
+            stage.setResizable(false);
+            controller.setDialogStage(stage);
+            stage.showAndWait();
+
+            if (controller != null && controller.isConfirmed()) {
+                StaffSalary result = controller.getResultSalary();
+                if (result != null) {
+                    salaryList.add(result);
+                    table.setItems(salaryList);
+                    showAlert("Success", "Staff payroll entry added to calculation batch.", Alert.AlertType.INFORMATION);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[PayrollCalculationController] Error opening Add dialog: " + e.getMessage());
+            showAlert("Error", "Failed to open Add Payroll Entry dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @FXML

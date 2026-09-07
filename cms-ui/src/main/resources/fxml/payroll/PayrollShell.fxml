@@ -120,6 +120,13 @@
                     <padding><Insets left="10"/></padding>
                 </VBox>
 
+                <!-- Staff Club -->
+                <ToggleButton fx:id="staffClubToggle" text="Staff Club" styleClass="sidebar-toggle"
+                              onAction="#toggleStaffClub" maxWidth="Infinity"/>
+                <VBox fx:id="staffClubMenu" visible="false" managed="false" spacing="2" styleClass="submenu">
+                    <padding><Insets left="10"/></padding>
+                </VBox>
+
             </VBox>
         </ScrollPane>
     </left>

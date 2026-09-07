@@ -34,6 +34,7 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
+            <Button text="Add" styleClass="btn-secondary" minWidth="75" onAction="#handleAdd"/>
             <Button text="View" styleClass="btn-primary" minWidth="75" onAction="#handleView"/>
             <Button text="Save" styleClass="btn-secondary" minWidth="75" onAction="#handleSave"/>
             <ComboBox fx:id="selectCombo" promptText="Select" prefWidth="130" minWidth="120" onAction="#handleFilterCategory"/>

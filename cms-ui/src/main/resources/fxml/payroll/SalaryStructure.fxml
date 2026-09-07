@@ -16,17 +16,19 @@
     <!-- Data Table Grid matching media_1787900181431.png -->
     <TableView fx:id="table" VBox.vgrow="ALWAYS" styleClass="data-table">
         <columns>
-            <TableColumn fx:id="colSNo" text="S.No" prefWidth="50"/>
-            <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="180"/>
-            <TableColumn fx:id="colDesig" text="Designation" prefWidth="150"/>
-            <TableColumn fx:id="colDoj" text="DOJ" prefWidth="95"/>
-            <TableColumn fx:id="colGrossPay" text="Gross Pay" prefWidth="95"/>
-            <TableColumn fx:id="colBasicPay" text="Basic Pay" prefWidth="85"/>
-            <TableColumn fx:id="colHra" text="HRA" prefWidth="80"/>
-            <TableColumn fx:id="colWashing" text="Washing Allowance" prefWidth="130"/>
-            <TableColumn fx:id="colTravelling" text="Travelling Allowance" prefWidth="130"/>
-            <TableColumn fx:id="colSpl" text="Spl.Allowance" prefWidth="100"/>
-            <TableColumn fx:id="colDiff" text="Diff" prefWidth="55"/>
+            <TableColumn fx:id="colSNo" text="S.No" prefWidth="45"/>
+            <TableColumn fx:id="colStaffName" text="Staff Name" prefWidth="160"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="140"/>
+            <TableColumn fx:id="colDoj" text="DOJ" prefWidth="80"/>
+            <TableColumn fx:id="colLopDays" text="LOP Days" prefWidth="65"/>
+            <TableColumn fx:id="colGrossPay" text="Gross Pay" prefWidth="90"/>
+            <TableColumn fx:id="colSpl" text="Spl.Allownce" prefWidth="90"/>
+            <TableColumn fx:id="colBasicPay" text="Basic Pay" prefWidth="80"/>
+            <TableColumn fx:id="colHra" text="HRA" prefWidth="70"/>
+            <TableColumn fx:id="colWashing" text="Wash.Allownce" prefWidth="95"/>
+            <TableColumn fx:id="colTravelling" text="Travel.Allownce" prefWidth="100"/>
+            <TableColumn fx:id="colLopAmt" text="LOP Amt" prefWidth="75"/>
+            <TableColumn fx:id="colDiff" text="Diff" prefWidth="45"/>
         </columns>
     </TableView>
 

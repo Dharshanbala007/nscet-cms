@@ -11,6 +11,9 @@
     <!-- Header Controls -->
     <HBox styleClass="module-header" alignment="CENTER_LEFT" spacing="15">
         <Label text="Late / Permission Details Logging" styleClass="module-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Add" styleClass="btn-secondary" minWidth="80" onAction="#handleAdd"/>
+        <Button text="Delete" styleClass="btn-danger" minWidth="80" onAction="#handleDelete"/>
     </HBox>
 
     <TitledPane text="Permission Entry" expanded="true">
@@ -26,7 +29,7 @@
                 </columnConstraints>
 
                 <Label text="Staff Member:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <ComboBox fx:id="staffCombo" prefWidth="220" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="staffCombo" prefWidth="220" editable="true" promptText="Select or type (Code - Name)" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                 <Label text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
                 <DatePicker fx:id="datePicker" prefWidth="220" GridPane.columnIndex="3" GridPane.rowIndex="0"/>

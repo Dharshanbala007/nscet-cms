@@ -19,17 +19,20 @@ public class PayrollService {
     private final AttendanceRecordRepository attendanceRepo;
     private final SalaryIncrementRepository incrementRepo;
     private final MonthlyPayrollRunRepository monthlyRunRepo;
+    private final LatePermissionRepository latePermissionRepo;
 
     public PayrollService(LeaveMasterRepository leaveRepo,
                           StaffSalaryRepository staffSalaryRepo,
                           AttendanceRecordRepository attendanceRepo,
                           SalaryIncrementRepository incrementRepo,
-                          MonthlyPayrollRunRepository monthlyRunRepo) {
+                          MonthlyPayrollRunRepository monthlyRunRepo,
+                          LatePermissionRepository latePermissionRepo) {
         this.leaveRepo = leaveRepo;
         this.staffSalaryRepo = staffSalaryRepo;
         this.attendanceRepo = attendanceRepo;
         this.incrementRepo = incrementRepo;
         this.monthlyRunRepo = monthlyRunRepo;
+        this.latePermissionRepo = latePermissionRepo;
     }
 
     // Leave Master
@@ -129,6 +132,16 @@ public class PayrollService {
         return saved;
     }
 
+    @Transactional
+    public List<SalaryIncrement> applyBulkIncrements(List<SalaryIncrement> increments) {
+        if (increments == null || increments.isEmpty()) return List.of();
+        List<SalaryIncrement> savedList = new java.util.ArrayList<>();
+        for (SalaryIncrement inc : increments) {
+            savedList.add(applyIncrement(inc));
+        }
+        return savedList;
+    }
+
     // Monthly Payroll Calculation Run
     public List<MonthlyPayrollRun> getMonthlyRun(String payPeriod) {
         return monthlyRunRepo.findByPayPeriod(payPeriod);
@@ -141,6 +154,7 @@ public class PayrollService {
     @Transactional
     public List<MonthlyPayrollRun> calculateMonthlyRun(String payPeriod, int workingDays) {
         List<StaffSalary> allStaff = staffSalaryRepo.findAllActive();
+        List<MonthlyPayrollRun> runs = new java.util.ArrayList<>();
         for (StaffSalary s : allStaff) {
             MonthlyPayrollRun run = new MonthlyPayrollRun();
             run.setPayPeriod(payPeriod);
@@ -165,17 +179,48 @@ public class PayrollService {
             run.setProfessionalTax(s.getProfessionalTax());
             run.setStaffClub(s.getStaffClub());
 
-            BigDecimal totalDeductions = s.getEpfDeduction()
-                    .add(s.getEsiDeduction())
-                    .add(s.getIncomeTax())
-                    .add(s.getProfessionalTax())
-                    .add(s.getStaffClub());
+            BigDecimal totalDeductions = (s.getEpfDeduction() != null ? s.getEpfDeduction() : BigDecimal.ZERO)
+                    .add(s.getEsiDeduction() != null ? s.getEsiDeduction() : BigDecimal.ZERO)
+                    .add(s.getIncomeTax() != null ? s.getIncomeTax() : BigDecimal.ZERO)
+                    .add(s.getProfessionalTax() != null ? s.getProfessionalTax() : BigDecimal.ZERO)
+                    .add(s.getStaffClub() != null ? s.getStaffClub() : BigDecimal.ZERO);
             run.setTotalDeductions(totalDeductions);
-            run.setNetPay(s.getGrossSalary().subtract(totalDeductions));
+            BigDecimal gross = s.getGrossSalary() != null ? s.getGrossSalary() : BigDecimal.ZERO;
+            run.setNetPay(gross.subtract(totalDeductions));
             run.setIsActive(true);
-
-            monthlyRunRepo.save(run);
+            runs.add(run);
         }
-        return getMonthlyRun(payPeriod);
+        return monthlyRunRepo.saveAll(runs);
+    }
+
+    @Transactional
+    public List<MonthlyPayrollRun> saveMonthlyPayrollRuns(List<MonthlyPayrollRun> runs) {
+        if (runs == null || runs.isEmpty()) return List.of();
+        for (MonthlyPayrollRun r : runs) {
+            if (r.getIsActive() == null) r.setIsActive(true);
+        }
+        return monthlyRunRepo.saveAll(runs);
+    }
+
+    // Late / Permission Details
+    public List<LatePermission> getAllLatePermissions() {
+        return latePermissionRepo.findAllActive();
+    }
+
+    public List<LatePermission> getLatePermissionsByDateRange(LocalDate start, LocalDate end) {
+        return latePermissionRepo.findByDateRange(start, end);
+    }
+
+    @Transactional
+    public LatePermission saveLatePermission(LatePermission lp) {
+        if (lp.getIsActive() == null) lp.setIsActive(true);
+        return latePermissionRepo.save(lp);
+    }
+
+    @Transactional
+    public void deleteLatePermission(Long id) {
+        if (id != null) {
+            latePermissionRepo.deleteById(id);
+        }
     }
 }

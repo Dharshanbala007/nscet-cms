@@ -84,4 +84,10 @@ public class StaffSalary extends BaseEntity {
 
     @Column(name = "el_balance")
     private Integer elBalance = 10;
+
+    @Transient
+    private Integer lopDays = 0;
+
+    @Transient
+    private BigDecimal lopAmount = BigDecimal.ZERO;
 }

@@ -102,6 +102,7 @@ public class NavigationManager {
         MODULE_FXML_MAP.put("resignTermination", "/fxml/payroll/ResignTermination.fxml");
         MODULE_FXML_MAP.put("salaryTally", "/fxml/payroll/SalaryTally.fxml");
         MODULE_FXML_MAP.put("netSalaryDiff", "/fxml/payroll/NetSalaryDiff.fxml");
+        MODULE_FXML_MAP.put("staffClub", "/fxml/payroll/StaffClub.fxml");
     }
 
     private static String currentStylesheet;
